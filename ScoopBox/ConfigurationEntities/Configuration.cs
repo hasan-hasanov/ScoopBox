@@ -2,16 +2,16 @@
 
 namespace ScoopBox.ConfigurationEntities
 {
-    [XmlRoot(ElementName = "Configuration")]
+    [XmlRoot(ElementName = nameof(Configuration))]
     public class Configuration
     {
-        [XmlElement(ElementName = "VGpu")]
+        [XmlElement(ElementName = nameof(VGpu))]
         public string VGpu { get; set; }
 
-        [XmlElement(ElementName = "Networking")]
+        [XmlElement(ElementName = nameof(Networking))]
         public string Networking { get; set; }
 
-        [XmlElement(ElementName = "LogonCommand")]
+        [XmlElement(ElementName = nameof(LogonCommand))]
         public LogonCommand LogonCommand { get; set; }
     }
 }
