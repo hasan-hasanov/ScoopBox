@@ -3,9 +3,9 @@ using System.Text;
 
 namespace ScoopBox.Scripts
 {
-    public class ScoopInstaller : IScoopInstaller
+    public class ScoopInstallerBuilder : IScoopInstallerBuilder
     {
-        public string Install()
+        public string Build()
         {
             StringBuilder installerBuilder = new StringBuilder();
 

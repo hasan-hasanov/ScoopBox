@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ScoopBox.Scripts
 {
-    public class AppInstaller : IAppInstaller
+    public class AppInstallerBuilder : IAppInstallerBuilder
     {
-        public string Install(List<string> apps)
+        public string Build(List<string> apps)
         {
             StringBuilder appsBuilder = new StringBuilder();
 

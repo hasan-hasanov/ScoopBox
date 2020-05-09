@@ -2,8 +2,8 @@
 
 namespace ScoopBox.Scripts.Abstract
 {
-    public interface IAppInstaller
+    public interface IAppInstallerBuilder
     {
-        string Install(List<string> apps);
+        string Build(List<string> apps);
     }
 }

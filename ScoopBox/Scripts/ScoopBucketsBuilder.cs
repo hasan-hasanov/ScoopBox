@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ScoopBox.Scripts
 {
-    public class ScoopBuckets : IScoopBuckets
+    public class ScoopBucketsBuilder : IScoopBucketsBuilder
     {
-        public string Add(List<string> buckets)
+        public string Build(List<string> buckets)
         {
             StringBuilder extrasInstaller = new StringBuilder();
 
@@ -19,9 +19,9 @@ namespace ScoopBox.Scripts
             return extrasInstaller.ToString();
         }
 
-        public string Add(params string[] buckets)
+        public string Build(params string[] buckets)
         {
-            return this.Add(buckets.ToList());
+            return this.Build(buckets.ToList());
         }
     }
 }

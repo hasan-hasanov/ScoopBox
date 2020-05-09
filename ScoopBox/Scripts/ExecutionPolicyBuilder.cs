@@ -3,9 +3,9 @@ using System.Text;
 
 namespace ScoopBox.Scripts
 {
-    public class SetExecutionPolicy : ISetExecutionPolicy
+    public class ExecutionPolicyBuilder : IExecutionPolicyBuilder
     {
-        public string Set()
+        public string Build()
         {
             StringBuilder executionPolicy = new StringBuilder();
 

@@ -5,16 +5,16 @@ namespace ScoopBox.Scripts
 {
     public class ScriptBuilder : IScriptBuilder
     {
-        private readonly ISetExecutionPolicy setExecutionPolicy;
-        private readonly IScoopInstaller scoopInstaller;
-        private readonly IScoopBuckets scoopBuckets;
-        private readonly IAppInstaller appInstaller;
+        private readonly IExecutionPolicyBuilder setExecutionPolicy;
+        private readonly IScoopInstallerBuilder scoopInstaller;
+        private readonly IScoopBucketsBuilder scoopBuckets;
+        private readonly IAppInstallerBuilder appInstaller;
 
         public ScriptBuilder(
-            ISetExecutionPolicy setExecutionPolicy,
-            IScoopInstaller scoopInstaller,
-            IScoopBuckets scoopBuckets,
-            IAppInstaller appInstaller)
+            IExecutionPolicyBuilder setExecutionPolicy,
+            IScoopInstallerBuilder scoopInstaller,
+            IScoopBucketsBuilder scoopBuckets,
+            IAppInstallerBuilder appInstaller)
         {
             this.setExecutionPolicy = setExecutionPolicy;
             this.scoopInstaller = scoopInstaller;
@@ -26,10 +26,10 @@ namespace ScoopBox.Scripts
         {
             StringBuilder installerBuilder = new StringBuilder();
 
-            installerBuilder.AppendLine(this.setExecutionPolicy.Set());
-            installerBuilder.AppendLine(this.scoopInstaller.Install());
-            installerBuilder.AppendLine(this.scoopBuckets.Add("extras"));
-            installerBuilder.AppendLine(this.appInstaller.Install(scoopBoxOptions.Apps));
+            installerBuilder.AppendLine(this.setExecutionPolicy.Build());
+            installerBuilder.AppendLine(this.scoopInstaller.Build());
+            installerBuilder.AppendLine(this.scoopBuckets.Build("extras"));
+            installerBuilder.AppendLine(this.appInstaller.Build(scoopBoxOptions.Apps));
 
             return installerBuilder.ToString();
         }
