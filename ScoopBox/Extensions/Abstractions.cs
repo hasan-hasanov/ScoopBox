@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ScoopBox.Sandbox;
+using ScoopBox.Sandbox.Abstract;
 using ScoopBox.Scoop;
 using ScoopBox.Scoop.Abstract;
-using ScoopBox.Scripts;
-using ScoopBox.Scripts.Abstract;
+using ScoopBox.Scripts.InstallerScripts;
+using ScoopBox.Scripts.InstallerScripts.Abstract;
+using ScoopBox.Scripts.SandboxScripts;
+using ScoopBox.Scripts.SandboxScripts.Abstract;
 
 namespace ScoopBox.Extensions
 {
@@ -10,13 +14,16 @@ namespace ScoopBox.Extensions
     {
         public static IServiceCollection UseScoopBox(this IServiceCollection services)
         {
-            services.AddSingleton<IScoopScriptGenerator, ScoopScriptGenerator>();
+            services.AddScoped<IScoopScriptGenerator, ScoopScriptGenerator>();
+            services.AddScoped<ISandboxScriptGenerator, SandboxScriptGenerator>();
 
-            services.AddSingleton<IExecutionPolicyBuilder, ExecutionPolicyBuilder>();
-            services.AddSingleton<IScoopInstallerBuilder, ScoopInstallerBuilder>();
-            services.AddSingleton<IScoopBucketsBuilder, ScoopBucketsBuilder>();
-            services.AddSingleton<IAppInstallerBuilder, AppInstallerBuilder>();
-            services.AddSingleton<IScriptBuilder, ScriptBuilder>();
+            services.AddScoped<IExecutionPolicyBuilder, ExecutionPolicyBuilder>();
+            services.AddScoped<IScoopInstallerBuilder, ScoopInstallerBuilder>();
+            services.AddScoped<IScoopBucketsBuilder, ScoopBucketsBuilder>();
+            services.AddScoped<IAppInstallerBuilder, AppInstallerBuilder>();
+            services.AddScoped<IInstallerScriptBuilder, InstallerScriptBuilder>();
+
+            services.AddScoped<ISandboxScriptBuilder, SandboxScriptBuilder>();
 
             return services;
         }

@@ -1,9 +1,9 @@
-﻿using ScoopBox.Scripts.Abstract;
+﻿using ScoopBox.Scripts.InstallerScripts.Abstract;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ScoopBox.Scripts
+namespace ScoopBox.Scripts.InstallerScripts
 {
     public class ScoopBucketsBuilder : IScoopBucketsBuilder
     {
@@ -21,7 +21,7 @@ namespace ScoopBox.Scripts
 
         public string Build(params string[] buckets)
         {
-            return this.Build(buckets.ToList());
+            return Build(buckets.ToList());
         }
     }
 }

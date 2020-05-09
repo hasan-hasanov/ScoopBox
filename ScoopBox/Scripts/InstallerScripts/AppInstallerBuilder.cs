@@ -1,8 +1,8 @@
-﻿using ScoopBox.Scripts.Abstract;
+﻿using ScoopBox.Scripts.InstallerScripts.Abstract;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ScoopBox.Scripts
+namespace ScoopBox.Scripts.InstallerScripts
 {
     public class AppInstallerBuilder : IAppInstallerBuilder
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ScoopBox;
 using ScoopBox.Extensions;
+using ScoopBox.Sandbox.Abstract;
 using ScoopBox.Scoop.Abstract;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,13 +16,16 @@ namespace Playground
             .UseScoopBox()
             .BuildServiceProvider();
 
-            var scoopBuilder = serviceProvider.GetService<IScoopScriptGenerator>();
+            var scoopScriptGenerator = serviceProvider.GetService<IScoopScriptGenerator>();
+            var sandboxScriptGenerator = serviceProvider.GetService<ISandboxScriptGenerator>();
+
             var apps = new List<string>() { "curl", "openssh" };
             string path = @"C:\Users\Hasan\Desktop\\";
 
             ScoopBoxOptions options = new ScoopBoxOptions(apps, path);
 
-            await scoopBuilder.Generate(options);
+            await scoopScriptGenerator.Generate(options);
+            await sandboxScriptGenerator.Generate(options);
         }
     }
 }

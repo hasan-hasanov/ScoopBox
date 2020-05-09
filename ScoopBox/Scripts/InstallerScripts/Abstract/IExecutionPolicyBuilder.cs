@@ -1,4 +1,4 @@
-﻿namespace ScoopBox.Scripts.Abstract
+﻿namespace ScoopBox.Scripts.InstallerScripts.Abstract
 {
     public interface IExecutionPolicyBuilder
     {

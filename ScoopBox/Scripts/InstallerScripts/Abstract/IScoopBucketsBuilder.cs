@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ScoopBox.Scripts.Abstract
+namespace ScoopBox.Scripts.InstallerScripts.Abstract
 {
     public interface IScoopBucketsBuilder
     {
