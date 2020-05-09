@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ScoopBox.Abstract
+namespace ScoopBox.Scoop.Abstract
 {
-    public interface IScriptGenerator
+    public interface IScoopScriptGenerator
     {
         Task Generate(ScoopBoxOptions scoopBoxOptions);
     }
