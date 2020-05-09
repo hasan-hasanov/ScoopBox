@@ -2,7 +2,7 @@
 
 namespace ScoopBox
 {
-    public class SandboxOptions
+    public class ScoopBoxOptions
     {
         public List<string> PackageNames { get; set; }
     }

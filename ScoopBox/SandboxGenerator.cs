@@ -5,7 +5,7 @@ namespace ScoopBox
 {
     public class SandboxGenerator : ISandboxGenerator
     {
-        public async Task Generate(SandboxOptions options)
+        public async Task Generate(ScoopBoxOptions options)
         {
 
         }

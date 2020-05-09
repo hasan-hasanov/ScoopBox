@@ -2,6 +2,6 @@
 {
     public interface IScoopBuilder
     {
-        string BuildInstaller();
+        string BuildInstaller(ScoopBoxOptions scoopBoxOptions);
     }
 }

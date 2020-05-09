@@ -8,24 +8,25 @@ namespace ScoopBox.Scoop
     {
         private readonly ISetExecutionPolicy setExecutionPolicy;
         private readonly IScoopInstaller scoopInstaller;
+        private readonly IScoopBuckets scoopBuckets;
 
         public ScoopBuilder(
             ISetExecutionPolicy setExecutionPolicy,
-            IScoopInstaller scoopInstaller)
+            IScoopInstaller scoopInstaller,
+            IScoopBuckets scoopBuckets)
         {
             this.setExecutionPolicy = setExecutionPolicy;
             this.scoopInstaller = scoopInstaller;
+            this.scoopBuckets = scoopBuckets;
         }
 
-        public string BuildInstaller()
+        public string BuildInstaller(ScoopBoxOptions scoopBoxOptions)
         {
             StringBuilder installerBuilder = new StringBuilder();
 
-            string executionPolicy = this.setExecutionPolicy.Set();
-            installerBuilder.AppendLine(executionPolicy);
-
-            string scoopInstaller = this.scoopInstaller.Install();
-            installerBuilder.AppendLine(scoopInstaller);
+            installerBuilder.AppendLine(this.setExecutionPolicy.Set());
+            installerBuilder.AppendLine(this.scoopInstaller.Install());
+            installerBuilder.AppendLine(this.scoopBuckets.Add("extras"));
 
             return installerBuilder.ToString();
         }

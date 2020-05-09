@@ -4,6 +4,6 @@ namespace ScoopBox.Abstract
 {
     public interface ISandboxGenerator
     {
-        Task Generate(SandboxOptions options);
+        Task Generate(ScoopBoxOptions options);
     }
 }
