@@ -1,4 +1,4 @@
-﻿using ScoopBox.ConfigurationEntities;
+﻿using ScoopBox.Entities;
 
 namespace ScoopBox.Scripts.SandboxScripts.Abstract
 {

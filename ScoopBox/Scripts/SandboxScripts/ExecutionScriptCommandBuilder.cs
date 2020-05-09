@@ -10,7 +10,7 @@ namespace ScoopBox.Scripts.SandboxScripts
             StringBuilder executionPolicy = new StringBuilder();
 
             executionPolicy.Append("powershell.exe ");
-            executionPolicy.Append($"\"{options.SandboxFilesPath}\\sandbox.ps1\"");
+            executionPolicy.Append($"\"{options.SandboxFilesPath}\\{Constants.InstallerName}\"");
 
             executionPolicy.AppendLine();
             return executionPolicy.ToString();
