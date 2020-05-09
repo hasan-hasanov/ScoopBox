@@ -1,17 +1,16 @@
-﻿using ScoopBox.Abstract;
-using ScoopBox.Scripts.Abstract;
+﻿using ScoopBox.Scripts.Abstract;
 using System.Text;
 
-namespace ScoopBox.Scoop
+namespace ScoopBox.Scripts
 {
-    public class ScoopBuilder : IScoopBuilder
+    public class ScriptBuilder : IScriptBuilder
     {
         private readonly ISetExecutionPolicy setExecutionPolicy;
         private readonly IScoopInstaller scoopInstaller;
         private readonly IScoopBuckets scoopBuckets;
         private readonly IAppInstaller appInstaller;
 
-        public ScoopBuilder(
+        public ScriptBuilder(
             ISetExecutionPolicy setExecutionPolicy,
             IScoopInstaller scoopInstaller,
             IScoopBuckets scoopBuckets,
@@ -23,7 +22,7 @@ namespace ScoopBox.Scoop
             this.appInstaller = appInstaller;
         }
 
-        public string BuildInstaller(ScoopBoxOptions scoopBoxOptions)
+        public string Build(ScoopBoxOptions scoopBoxOptions)
         {
             StringBuilder installerBuilder = new StringBuilder();
 

@@ -10,12 +10,13 @@ namespace ScoopBox.Extensions
     {
         public static IServiceCollection UseScoopBox(this IServiceCollection services)
         {
-            services.AddSingleton<IScoopBuilder, ScoopBuilder>();
+            services.AddSingleton<IScriptGenerator, ScriptGenerator>();
 
             services.AddSingleton<ISetExecutionPolicy, SetExecutionPolicy>();
             services.AddSingleton<IScoopInstaller, ScoopInstaller>();
             services.AddSingleton<IScoopBuckets, ScoopBuckets>();
             services.AddSingleton<IAppInstaller, AppInstaller>();
+            services.AddSingleton<IScriptBuilder, ScriptBuilder>();
 
             return services;
         }
