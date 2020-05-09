@@ -1,6 +1,6 @@
-﻿using ScoopBox.ConfigurationEntities;
-using ScoopBox.Sandbox.Abstract;
+﻿using ScoopBox.Sandbox.Abstract;
 using ScoopBox.Scripts.SandboxScripts.Abstract;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ScoopBox.Sandbox
@@ -14,10 +14,13 @@ namespace ScoopBox.Sandbox
             this.sandboxScriptBuilder = sandboxScriptBuilder;
         }
 
-        public async Task Generate(ScoopBoxOptions options)
+        public async Task Generate(ScoopBoxOptions scoopBoxOptions)
         {
-            Configuration configuration = new Configuration(options);
-            string sandboxScript = this.sandboxScriptBuilder.Build(configuration);
+            string script = this.sandboxScriptBuilder.Build(scoopBoxOptions);
+            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.SandboxFilesPath}\sandbox.wsb"))
+            {
+                await writer.WriteAsync(script);
+            }
         }
     }
 }

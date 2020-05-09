@@ -8,8 +8,17 @@ namespace ScoopBox.Scripts.SandboxScripts
 {
     public class SandboxScriptBuilder : ISandboxScriptBuilder
     {
-        public string Build(Configuration configuration)
+        private readonly IConfigurationBuilder configurationBuilder;
+
+        public SandboxScriptBuilder(IConfigurationBuilder configurationBuilder)
         {
+            this.configurationBuilder = configurationBuilder;
+        }
+
+        public string Build(ScoopBoxOptions options)
+        {
+            Configuration configuration = this.configurationBuilder.Build(options);
+
             XmlSerializer configurationSerializer = new XmlSerializer(typeof(Configuration));
             XmlSerializerNamespaces emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
             var settings = new XmlWriterSettings

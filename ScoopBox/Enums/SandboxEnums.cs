@@ -5,4 +5,10 @@
         Enabled,
         Disabled
     }
+
+    public enum ReadOnly
+    {
+        True,
+        False
+    }
 }

@@ -5,18 +5,15 @@ namespace ScoopBox.Scripts.InstallerScripts
 {
     public class InstallerScriptBuilder : IInstallerScriptBuilder
     {
-        private readonly IExecutionPolicyBuilder setExecutionPolicy;
         private readonly IScoopInstallerBuilder scoopInstaller;
         private readonly IScoopBucketsBuilder scoopBuckets;
         private readonly IAppInstallerBuilder appInstaller;
 
         public InstallerScriptBuilder(
-            IExecutionPolicyBuilder setExecutionPolicy,
             IScoopInstallerBuilder scoopInstaller,
             IScoopBucketsBuilder scoopBuckets,
             IAppInstallerBuilder appInstaller)
         {
-            this.setExecutionPolicy = setExecutionPolicy;
             this.scoopInstaller = scoopInstaller;
             this.scoopBuckets = scoopBuckets;
             this.appInstaller = appInstaller;
@@ -26,7 +23,6 @@ namespace ScoopBox.Scripts.InstallerScripts
         {
             StringBuilder installerBuilder = new StringBuilder();
 
-            installerBuilder.AppendLine(setExecutionPolicy.Build());
             installerBuilder.AppendLine(scoopInstaller.Build());
             installerBuilder.AppendLine(scoopBuckets.Build("extras"));
             installerBuilder.AppendLine(appInstaller.Build(scoopBoxOptions.Apps));

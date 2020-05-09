@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace ScoopBox.ConfigurationEntities
 {
@@ -6,6 +7,6 @@ namespace ScoopBox.ConfigurationEntities
     public class LogonCommand
     {
         [XmlElement(ElementName = nameof(Command))]
-        public string Command { get; set; }
+        public List<string> Command { get; set; }
     }
 }

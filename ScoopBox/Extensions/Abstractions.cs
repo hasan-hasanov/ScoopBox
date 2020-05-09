@@ -17,13 +17,17 @@ namespace ScoopBox.Extensions
             services.AddScoped<IScoopScriptGenerator, ScoopScriptGenerator>();
             services.AddScoped<ISandboxScriptGenerator, SandboxScriptGenerator>();
 
-            services.AddScoped<IExecutionPolicyBuilder, ExecutionPolicyBuilder>();
+            services.AddScoped<IExecutionPolicyCommandBuilder, ExecutionPolicyCommandBuilder>();
             services.AddScoped<IScoopInstallerBuilder, ScoopInstallerBuilder>();
             services.AddScoped<IScoopBucketsBuilder, ScoopBucketsBuilder>();
             services.AddScoped<IAppInstallerBuilder, AppInstallerBuilder>();
             services.AddScoped<IInstallerScriptBuilder, InstallerScriptBuilder>();
 
             services.AddScoped<ISandboxScriptBuilder, SandboxScriptBuilder>();
+            services.AddScoped<IExecutionScriptCommandBuilder, ExecutionScriptCommandBuilder>();
+            services.AddScoped<IExecutionPolicyCommandBuilder, ExecutionPolicyCommandBuilder>();
+            services.AddScoped<IConfigurationBuilder, ConfigurationBuilder>();
+            services.AddScoped<ICommandBuilder, CommandBuilder>();
 
             return services;
         }

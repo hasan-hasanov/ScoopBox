@@ -2,8 +2,8 @@
 
 namespace ScoopBox.Scripts.SandboxScripts.Abstract
 {
-    public interface ISandboxScriptBuilder
+    public interface IConfigurationBuilder
     {
-        string Build(ScoopBoxOptions options);
+        Configuration Build(ScoopBoxOptions options);
     }
 }

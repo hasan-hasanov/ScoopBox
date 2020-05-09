@@ -1,5 +1,6 @@
 ﻿using ScoopBox.Enums;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace ScoopBox.ConfigurationEntities
@@ -11,12 +12,14 @@ namespace ScoopBox.ConfigurationEntities
         {
         }
 
-        public Configuration(ScoopBoxOptions options)
+        public Configuration(
+            ScoopBoxOptions options,
+            List<string> commands)
         {
             this.LogonCommand = new LogonCommand();
 
             this.VGpu = Enum.GetName(typeof(VGpuOptions), options.VGpu);
-            this.LogonCommand.Command = $@"{options.SandboxFilesPath}\sandbox.ps1";
+            this.LogonCommand.Command = commands;
         }
 
         [XmlElement(ElementName = nameof(VGpu))]
