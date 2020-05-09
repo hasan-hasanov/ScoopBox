@@ -2,6 +2,6 @@
 {
     public interface IScoopBuilder
     {
-        string Build();
+        string BuildInstaller();
     }
 }

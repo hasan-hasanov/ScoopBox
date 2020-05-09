@@ -10,9 +10,8 @@ namespace ScoopBox.Scripts
             StringBuilder executionPolicy = new StringBuilder();
 
             executionPolicy.Append("Set-ExecutionPolicy ");
-            executionPolicy.Append("RemoteSigned ");
-            executionPolicy.Append("-scope");
-            executionPolicy.Append("CurrentUser");
+            executionPolicy.Append("Bypass ");
+            executionPolicy.Append("-Force");
 
             return executionPolicy.ToString();
         }

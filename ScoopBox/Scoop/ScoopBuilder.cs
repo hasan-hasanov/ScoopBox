@@ -17,7 +17,7 @@ namespace ScoopBox.Scoop
             this.scoopInstaller = scoopInstaller;
         }
 
-        public string Build()
+        public string BuildInstaller()
         {
             StringBuilder installerBuilder = new StringBuilder();
 

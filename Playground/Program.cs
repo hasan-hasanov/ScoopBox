@@ -13,7 +13,7 @@ namespace Playground
             .BuildServiceProvider();
 
             var scoopBuilder = serviceProvider.GetService<IScoopBuilder>();
-            string scoop = scoopBuilder.Build();
+            string scoop = scoopBuilder.BuildInstaller();
         }
     }
 }
