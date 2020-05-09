@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ScoopBox.ConfigurationEntities
+namespace ScoopBox.Entities
 {
     [XmlRoot(ElementName = nameof(MappedFolder))]
     public class MappedFolder

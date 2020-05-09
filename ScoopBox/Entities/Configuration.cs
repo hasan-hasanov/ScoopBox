@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ScoopBox.ConfigurationEntities
+namespace ScoopBox.Entities
 {
     [XmlRoot(ElementName = nameof(Configuration))]
     public class Configuration
@@ -16,10 +16,10 @@ namespace ScoopBox.ConfigurationEntities
             ScoopBoxOptions options,
             List<string> commands)
         {
-            this.LogonCommand = new LogonCommand();
+            LogonCommand = new LogonCommand();
 
-            this.VGpu = Enum.GetName(typeof(VGpuOptions), options.VGpu);
-            this.LogonCommand.Command = commands;
+            VGpu = Enum.GetName(typeof(VGpuOptions), options.VGpu);
+            LogonCommand.Command = commands;
         }
 
         [XmlElement(ElementName = nameof(VGpu))]
