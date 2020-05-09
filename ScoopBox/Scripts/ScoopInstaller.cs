@@ -15,6 +15,7 @@ namespace ScoopBox.Scripts
             installerBuilder.Append(".DownloadString");
             installerBuilder.Append("('https://get.scoop.sh')");
 
+            installerBuilder.AppendLine();
             return installerBuilder.ToString();
         }
     }

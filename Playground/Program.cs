@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ScoopBox;
 using ScoopBox.Abstract;
 using ScoopBox.Extensions;
+using System.Collections.Generic;
 
 namespace Playground
 {
@@ -13,7 +15,17 @@ namespace Playground
             .BuildServiceProvider();
 
             var scoopBuilder = serviceProvider.GetService<IScoopBuilder>();
-            string scoop = scoopBuilder.BuildInstaller();
+
+            ScoopBoxOptions options = new ScoopBoxOptions()
+            {
+                Apps = new List<string>()
+                {
+                    "curl",
+                    "openssh"
+                }
+            };
+
+            string scoop = scoopBuilder.BuildInstaller(options);
         }
     }
 }

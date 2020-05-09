@@ -13,6 +13,7 @@ namespace ScoopBox.Scripts
             executionPolicy.Append("Bypass ");
             executionPolicy.Append("-Force");
 
+            executionPolicy.AppendLine();
             return executionPolicy.ToString();
         }
     }

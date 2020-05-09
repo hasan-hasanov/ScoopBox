@@ -14,6 +14,8 @@ namespace ScoopBox.Extensions
 
             services.AddSingleton<ISetExecutionPolicy, SetExecutionPolicy>();
             services.AddSingleton<IScoopInstaller, ScoopInstaller>();
+            services.AddSingleton<IScoopBuckets, ScoopBuckets>();
+            services.AddSingleton<IAppInstaller, AppInstaller>();
 
             return services;
         }

@@ -4,6 +4,6 @@ namespace ScoopBox
 {
     public class ScoopBoxOptions
     {
-        public List<string> PackageNames { get; set; }
+        public List<string> Apps { get; set; }
     }
 }
