@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoopBox", "ScoopBox\ScoopBox.csproj", "{FC4370C8-7994-4C74-B21E-D87C7DFF029D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4333514B-E825-4013-9EDC-C13AB97A5FBD}
+	EndGlobalSection
+EndGlobal
