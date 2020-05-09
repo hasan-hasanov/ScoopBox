@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29920.165
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScoopBox", "ScoopBox\ScoopBox.csproj", "{FC4370C8-7994-4C74-B21E-D87C7DFF029D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoopBox", "ScoopBox\ScoopBox.csproj", "{FC4370C8-7994-4C74-B21E-D87C7DFF029D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "Playground\Playground.csproj", "{52AF102C-7C52-4314-BDD7-CD486973BC58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC4370C8-7994-4C74-B21E-D87C7DFF029D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
