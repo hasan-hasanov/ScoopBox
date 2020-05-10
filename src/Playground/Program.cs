@@ -19,7 +19,7 @@ namespace Playground
             var scoopScriptGenerator = serviceProvider.GetService<IScoopScriptGenerator>();
             var sandboxScriptGenerator = serviceProvider.GetService<ISandboxScriptGenerator>();
 
-            var apps = new List<string>() { "git", "curl", "openssh" };
+            var apps = new List<string>() { "git", "curl", "openssh", "vscode", "fiddler" };
             ScoopBoxOptions options = new ScoopBoxOptions(apps);
 
             await scoopScriptGenerator.Generate(options);
