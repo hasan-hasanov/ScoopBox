@@ -2,7 +2,7 @@
 
 namespace ScoopBox.Scoop.Abstract
 {
-    public interface IScoopScriptGenerator
+    public interface IScoopScript
     {
         Task Generate(ScoopBoxOptions scoopBoxOptions);
     }

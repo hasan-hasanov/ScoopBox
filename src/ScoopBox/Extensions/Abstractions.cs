@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ScoopBox.Sandbox;
 using ScoopBox.Sandbox.Abstract;
+using ScoopBox.SandboxProcess;
+using ScoopBox.SandboxProcess.Abstract;
 using ScoopBox.Scoop;
 using ScoopBox.Scoop.Abstract;
 using ScoopBox.Scripts.InstallerScripts;
@@ -14,8 +16,8 @@ namespace ScoopBox.Extensions
     {
         public static IServiceCollection UseScoopBox(this IServiceCollection services)
         {
-            services.AddScoped<IScoopScriptGenerator, ScoopScriptGenerator>();
-            services.AddScoped<ISandboxScriptGenerator, SandboxScriptGenerator>();
+            services.AddScoped<IScoopScript, ScoopScript>();
+            services.AddScoped<ISandboxScript, SandboxScript>();
 
             services.AddScoped<IExecutionPolicyCommandBuilder, ExecutionPolicyCommandBuilder>();
             services.AddScoped<IScoopInstallerBuilder, ScoopInstallerBuilder>();
@@ -29,6 +31,8 @@ namespace ScoopBox.Extensions
             services.AddScoped<IConfigurationBuilder, ConfigurationBuilder>();
             services.AddScoped<ICommandBuilder, CommandBuilder>();
             services.AddScoped<IMappedFoldersBuilder, MappedFoldersBuilder>();
+
+            services.AddScoped<IScoopBoxProcess, ScoopBoxProcess>();
 
             return services;
         }

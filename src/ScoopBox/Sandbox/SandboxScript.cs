@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ScoopBox.Sandbox
 {
-    public class SandboxScriptGenerator : ISandboxScriptGenerator
+    public class SandboxScript : ISandboxScript
     {
         private readonly ISandboxScriptBuilder sandboxScriptBuilder;
 
-        public SandboxScriptGenerator(ISandboxScriptBuilder sandboxScriptBuilder)
+        public SandboxScript(ISandboxScriptBuilder sandboxScriptBuilder)
         {
             this.sandboxScriptBuilder = sandboxScriptBuilder;
         }

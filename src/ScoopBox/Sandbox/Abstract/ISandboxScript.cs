@@ -2,7 +2,7 @@
 
 namespace ScoopBox.Sandbox.Abstract
 {
-    public interface ISandboxScriptGenerator
+    public interface ISandboxScript
     {
         Task Generate(ScoopBoxOptions options);
     }

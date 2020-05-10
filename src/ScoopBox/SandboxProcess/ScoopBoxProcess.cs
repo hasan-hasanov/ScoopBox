@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+﻿using ScoopBox.SandboxProcess.Abstract;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
-namespace ScoopBox
+namespace ScoopBox.SandboxProcess
 {
-    public class ScoopBoxProcess
+    public class ScoopBoxProcess : IScoopBoxProcess
     {
-        public void Run(ScoopBoxOptions options)
+        public async Task Run(ScoopBoxOptions options)
         {
             string wsb = $"{options.UserFilesPath}\\{Constants.SandboxScriptName}";
 
@@ -23,8 +25,8 @@ namespace ScoopBox
 
             cmd.Start();
 
-            cmd.StandardInput.WriteLine(wsb);
-            cmd.StandardInput.Flush();
+            await cmd.StandardInput.WriteLineAsync(wsb);
+            await cmd.StandardInput.FlushAsync();
             cmd.StandardInput.Close();
             cmd.WaitForExit();
         }

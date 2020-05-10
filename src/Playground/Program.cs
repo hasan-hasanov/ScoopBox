@@ -2,6 +2,7 @@
 using ScoopBox;
 using ScoopBox.Extensions;
 using ScoopBox.Sandbox.Abstract;
+using ScoopBox.SandboxProcess.Abstract;
 using ScoopBox.Scoop.Abstract;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,16 +17,16 @@ namespace Playground
             .UseScoopBox()
             .BuildServiceProvider();
 
-            var scoopScriptGenerator = serviceProvider.GetService<IScoopScriptGenerator>();
-            var sandboxScriptGenerator = serviceProvider.GetService<ISandboxScriptGenerator>();
+            var scoopScriptGenerator = serviceProvider.GetService<IScoopScript>();
+            var sandboxScriptGenerator = serviceProvider.GetService<ISandboxScript>();
+            var scoopBoxProcess = serviceProvider.GetService<IScoopBoxProcess>();
 
             var apps = new List<string>() { "git", "curl", "openssh", "vscode", "fiddler" };
             ScoopBoxOptions options = new ScoopBoxOptions(apps);
 
             await scoopScriptGenerator.Generate(options);
             await sandboxScriptGenerator.Generate(options);
-            ScoopBoxProcess process = new ScoopBoxProcess();
-            process.Run(options);
+            await scoopBoxProcess.Run(options);
         }
     }
 }

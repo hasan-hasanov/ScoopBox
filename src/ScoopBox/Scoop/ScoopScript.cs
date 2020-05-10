@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ScoopBox.Scoop
 {
-    public class ScoopScriptGenerator : IScoopScriptGenerator
+    public class ScoopScript : IScoopScript
     {
         private readonly IInstallerScriptBuilder scriptBuilder;
 
-        public ScoopScriptGenerator(IInstallerScriptBuilder scriptBuilder)
+        public ScoopScript(IInstallerScriptBuilder scriptBuilder)
         {
             this.scriptBuilder = scriptBuilder;
         }
