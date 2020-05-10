@@ -28,6 +28,7 @@ namespace ScoopBox.Extensions
             services.AddScoped<IExecutionPolicyCommandBuilder, ExecutionPolicyCommandBuilder>();
             services.AddScoped<IConfigurationBuilder, ConfigurationBuilder>();
             services.AddScoped<ICommandBuilder, CommandBuilder>();
+            services.AddScoped<IMappedFoldersBuilder, MappedFoldersBuilder>();
 
             return services;
         }

@@ -5,12 +5,12 @@ namespace ScoopBox.Scripts.SandboxScripts
 {
     public class ExecutionScriptCommandBuilder : IExecutionScriptCommandBuilder
     {
-        public string Build(ScoopBoxOptions options)
+        public string Build()
         {
             StringBuilder executionPolicy = new StringBuilder();
 
             executionPolicy.Append("powershell.exe ");
-            executionPolicy.Append($"\"{options.SandboxFilesPath}\\{Constants.InstallerName}\"");
+            executionPolicy.Append($"\"{Constants.SandboxInstallerLocation}\"");
 
             executionPolicy.AppendLine();
             return executionPolicy.ToString();

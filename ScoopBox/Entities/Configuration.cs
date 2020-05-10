@@ -14,12 +14,14 @@ namespace ScoopBox.Entities
 
         public Configuration(
             ScoopBoxOptions options,
-            List<string> commands)
+            List<string> commands,
+            MappedFolders mappedFolders)
         {
             LogonCommand = new LogonCommand();
 
             VGpu = Enum.GetName(typeof(VGpuOptions), options.VGpu);
             LogonCommand.Command = commands;
+            this.MappedFolders = mappedFolders;
         }
 
         [XmlElement(ElementName = nameof(VGpu))]
@@ -27,6 +29,9 @@ namespace ScoopBox.Entities
 
         [XmlElement(ElementName = nameof(Networking))]
         public string Networking => "true";
+
+        [XmlElement(ElementName = nameof(MappedFolders))]
+        public MappedFolders MappedFolders { get; set; }
 
         [XmlElement(ElementName = nameof(LogonCommand))]
         public LogonCommand LogonCommand { get; set; }

@@ -20,7 +20,7 @@ namespace ScoopBox.Scripts.SandboxScripts
         public List<string> Build(ScoopBoxOptions options)
         {
             string executionPolicyBuilder = this.executionPolicyBuilder.Build(options);
-            string executionScriptBuilder = this.executionScriptCommandBuilder.Build(options);
+            string executionScriptBuilder = this.executionScriptCommandBuilder.Build();
 
             return new List<string>()
             {

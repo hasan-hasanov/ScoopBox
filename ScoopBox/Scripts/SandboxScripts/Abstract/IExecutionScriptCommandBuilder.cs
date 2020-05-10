@@ -2,6 +2,6 @@
 {
     public interface IExecutionScriptCommandBuilder
     {
-        string Build(ScoopBoxOptions options);
+        string Build();
     }
 }

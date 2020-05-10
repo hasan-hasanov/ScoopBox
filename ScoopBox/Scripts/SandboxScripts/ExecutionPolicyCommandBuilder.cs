@@ -13,7 +13,7 @@ namespace ScoopBox.Scripts.InstallerScripts
             executionPolicy.Append("-ExecutionPolicy ");
             executionPolicy.Append("Bypass ");
             executionPolicy.Append("-File ");
-            executionPolicy.Append($@"{options.SandboxFilesPath}\{Constants.InstallerName}");
+            executionPolicy.Append(Constants.SandboxInstallerLocation);
 
             executionPolicy.AppendLine();
             return executionPolicy.ToString();
