@@ -22,7 +22,7 @@ namespace ScoopBox
 
         public List<string> Apps { get; set; }
 
-        public string SandboxFilesPath => Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolder}").FullName;
+        public string UserFilesPath => Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName;
 
         public VGpuOptions VGpu { get; set; }
     }

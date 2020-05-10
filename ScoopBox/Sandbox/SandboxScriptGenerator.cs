@@ -17,7 +17,7 @@ namespace ScoopBox.Sandbox
         public async Task Generate(ScoopBoxOptions scoopBoxOptions)
         {
             string script = this.sandboxScriptBuilder.Build(scoopBoxOptions);
-            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.SandboxFilesPath}\sandbox.wsb"))
+            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.UserFilesPath}\sandbox.wsb"))
             {
                 await writer.WriteAsync(script);
             }

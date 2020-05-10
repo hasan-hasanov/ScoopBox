@@ -18,7 +18,7 @@ namespace ScoopBox.Scoop
         {
             string script = scriptBuilder.Build(scoopBoxOptions);
 
-            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.SandboxFilesPath}\sandbox.ps1"))
+            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.UserFilesPath}\sandbox.ps1"))
             {
                 await writer.WriteAsync(script);
             }

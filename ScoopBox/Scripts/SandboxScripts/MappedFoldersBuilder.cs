@@ -17,7 +17,7 @@ namespace ScoopBox.Scripts.SandboxScripts
 
             mappedFolders.MappedFolder.Add(new MappedFolder()
             {
-                HostFolder = options.SandboxFilesPath,
+                HostFolder = options.UserFilesPath,
                 ReadOnly = Enum.GetName(typeof(ReadOnly), ReadOnly.False).ToLower()
             });
 
