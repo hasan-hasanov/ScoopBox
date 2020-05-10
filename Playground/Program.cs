@@ -24,6 +24,8 @@ namespace Playground
 
             await scoopScriptGenerator.Generate(options);
             await sandboxScriptGenerator.Generate(options);
+            ScoopBoxProcess process = new ScoopBoxProcess();
+            process.Run(options);
         }
     }
 }

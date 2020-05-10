@@ -19,5 +19,13 @@ namespace ScoopBox.Scripts.InstallerScripts
             appsBuilder.AppendLine();
             return appsBuilder.ToString();
         }
+
+        public string Build(string app)
+        {
+            StringBuilder appsBuilder = new StringBuilder();
+            appsBuilder.AppendLine($"scoop install {app}");
+
+            return appsBuilder.ToString();
+        }
     }
 }

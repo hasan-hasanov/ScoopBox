@@ -24,6 +24,7 @@ namespace ScoopBox.Scripts.InstallerScripts
             StringBuilder installerBuilder = new StringBuilder();
 
             installerBuilder.AppendLine(scoopInstaller.Build());
+            installerBuilder.AppendLine(appInstaller.Build("git"));
             installerBuilder.AppendLine(scoopBuckets.Build("extras"));
             installerBuilder.AppendLine(appInstaller.Build(scoopBoxOptions.Apps));
 
