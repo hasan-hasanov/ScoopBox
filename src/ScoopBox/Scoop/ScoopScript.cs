@@ -17,8 +17,7 @@ namespace ScoopBox.Scoop
         public async Task Generate(ScoopBoxOptions scoopBoxOptions)
         {
             string script = scriptBuilder.Build(scoopBoxOptions);
-
-            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.UserFilesPath}\sandbox.ps1"))
+            using (StreamWriter writer = File.CreateText($@"{scoopBoxOptions.UserFilesPath}\{Constants.InstallerScriptName}"))
             {
                 await writer.WriteAsync(script);
             }

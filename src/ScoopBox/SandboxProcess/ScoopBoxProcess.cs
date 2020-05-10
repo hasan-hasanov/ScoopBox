@@ -25,7 +25,7 @@ namespace ScoopBox.SandboxProcess
 
             cmd.Start();
 
-            await cmd.StandardInput.WriteLineAsync(wsb);
+            await cmd.StandardInput.WriteLineAsync($"\"{wsb}\"");
             await cmd.StandardInput.FlushAsync();
             cmd.StandardInput.Close();
             cmd.WaitForExit();
