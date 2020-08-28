@@ -4,6 +4,6 @@ namespace ScoopBox
 {
     public interface ISandboxProcess
     {
-        Task Start();
+        Task StartAsync();
     }
 }

@@ -48,7 +48,7 @@ namespace ScoopBox
             string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
             await GenerateSandboxConfiguration(sandboxConfiguration);
 
-            await _scoopBoxProcess.Start();
+            await _scoopBoxProcess.StartAsync();
         }
 
         public Task Run(IEnumerable<string> applications)
@@ -68,8 +68,7 @@ namespace ScoopBox
 
         private async Task GenerateSandboxConfiguration(string configuration)
         {
-            // TODO: Fix this since it is used in many places.
-            using (StreamWriter writer = File.CreateText($@"{Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName}\{Constants.SandboxScriptName}"))
+            using (StreamWriter writer = File.CreateText(Constants.SandboxConfigurationFileLocation))
             {
                 await writer.WriteAsync(configuration);
             }
