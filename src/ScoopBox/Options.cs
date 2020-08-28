@@ -6,7 +6,7 @@ namespace ScoopBox
 {
     public class Options
     {
-        public string UserFilesPath { get; set; } = Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName;
+        public Dictionary<string, ReadOnlyOptions> UserMappedDirectories { get; set; } = new Dictionary<string, ReadOnlyOptions>();
 
         public VGpuOptions VGpu { get; set; } = VGpuOptions.Disabled;
 

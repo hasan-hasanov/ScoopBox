@@ -28,7 +28,7 @@ namespace ScoopBox.Entities
         public string VGpu { get; set; }
 
         [XmlElement(ElementName = nameof(Networking))]
-        public string Networking => "true";
+        public string Networking { get; set; }
 
         [XmlElement(ElementName = nameof(MappedFolders))]
         public MappedFolders MappedFolders { get; set; }

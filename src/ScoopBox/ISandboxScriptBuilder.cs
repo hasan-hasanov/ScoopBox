@@ -4,9 +4,10 @@ namespace ScoopBox
 {
     public interface ISandboxScriptBuilder
     {
-        void BuildExecutionPolicy();
-        void BuildExecutionScript();
+        void BuildVGpu();
+        void BuildNetworking();
         void BuildMappedFolders();
-        Configuration Build();
+        void BuildLogonCommand();
+        string Build();
     }
 }
