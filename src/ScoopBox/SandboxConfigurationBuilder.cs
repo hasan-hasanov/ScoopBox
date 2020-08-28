@@ -42,6 +42,36 @@ namespace ScoopBox
             _configuration.Networking = Enum.GetName(typeof(NetworkingOptions), _options.Networking);
         }
 
+        public void BuildAudioInput()
+        {
+            _configuration.AudioInput = Enum.GetName(typeof(AudioInputOptions), _options.AudioInput);
+        }
+
+        public void BuildVideoInput()
+        {
+            _configuration.VideoInput = Enum.GetName(typeof(VideoInputOptions), _options.VideoInput);
+        }
+
+        public void BuildProtectedClient()
+        {
+            _configuration.ProtectedClient = Enum.GetName(typeof(ProtectedClientOptions), _options.ProtectedClient);
+        }
+
+        public void BuildPrinterRedirection()
+        {
+            _configuration.PrinterRedirection = Enum.GetName(typeof(PrinterRedirectionOptions), _options.PrinterRedirection);
+        }
+
+        public void BuildClipboardRedirection()
+        {
+            _configuration.ClipboardRedirection = Enum.GetName(typeof(ClipboardRedirectionOptions), _options.ClipboardRedirection);
+        }
+
+        public void BuildMemoryInMB()
+        {
+            _configuration.MemoryInMB = _options.MemoryInMB.ToString();
+        }
+
         public void BuildMappedFolders()
         {
             _configuration.MappedFolders = new MappedFolders()
@@ -95,6 +125,12 @@ namespace ScoopBox
         {
             this.BuildVGpu();
             this.BuildNetworking();
+            this.BuildAudioInput();
+            this.BuildVideoInput();
+            this.BuildPrinterRedirection();
+            this.BuildClipboardRedirection();
+            this.BuildProtectedClient();
+            this.BuildMemoryInMB();
             this.BuildMappedFolders();
             this.BuildLogonCommand();
 

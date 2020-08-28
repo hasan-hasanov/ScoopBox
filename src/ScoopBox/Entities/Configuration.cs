@@ -35,5 +35,23 @@ namespace ScoopBox.Entities
 
         [XmlElement(ElementName = nameof(LogonCommand))]
         public LogonCommand LogonCommand { get; set; }
+
+        [XmlElement(ElementName = nameof(AudioInput))]
+        public string AudioInput { get; set; }
+
+        [XmlElement(ElementName = nameof(VideoInput))]
+        public string VideoInput { get; set; }
+
+        [XmlElement(ElementName = nameof(ProtectedClient))]
+        public string ProtectedClient { get; set; }
+
+        [XmlElement(ElementName = nameof(PrinterRedirection))]
+        public string PrinterRedirection { get; set; }
+
+        [XmlElement(ElementName = nameof(ClipboardRedirection))]
+        public string ClipboardRedirection { get; set; }
+
+        [XmlElement(ElementName = nameof(MemoryInMB))]
+        public string MemoryInMB { get; set; }
     }
 }
