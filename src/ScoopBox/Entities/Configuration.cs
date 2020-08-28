@@ -13,7 +13,7 @@ namespace ScoopBox.Entities
         }
 
         public Configuration(
-            ScoopBoxOptions options,
+            Options options,
             List<string> commands,
             MappedFolders mappedFolders)
         {

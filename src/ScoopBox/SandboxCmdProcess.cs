@@ -2,7 +2,7 @@
 
 namespace ScoopBox
 {
-    public class ScoopBoxCmdProcess : IScoopBoxProcess
+    public class SandboxCmdProcess : ISandboxoxProcess
     {
         public Task Start()
         {

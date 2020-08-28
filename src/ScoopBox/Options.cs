@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ScoopBox
 {
-    public class ScoopBoxOptions
+    public class Options
     {
         public string UserFilesPath { get; set; } = Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName;
 

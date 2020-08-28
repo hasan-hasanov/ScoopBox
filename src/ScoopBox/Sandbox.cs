@@ -7,31 +7,31 @@ namespace ScoopBox
 {
     public class Sandbox : ISandbox
     {
-        private readonly ScoopBoxOptions _options;
-        private readonly IScoopBoxProcess _scoopBoxProcess;
+        private readonly Options _options;
+        private readonly ISandboxoxProcess _scoopBoxProcess;
         private readonly IPackageManager _packageManager;
 
         public Sandbox()
-            : this(new ScoopBoxOptions())
+            : this(new Options())
         {
         }
 
-        public Sandbox(ScoopBoxOptions options)
-            : this(options, new ScoopBoxCmdProcess())
+        public Sandbox(Options options)
+            : this(options, new SandboxCmdProcess())
         {
         }
 
-        public Sandbox(ScoopBoxOptions options, IScoopBoxProcess scoopBoxProcess)
-            : this(options, new ScoopBoxCmdProcess(), new ScoopPackageManager())
+        public Sandbox(Options options, ISandboxoxProcess scoopBoxProcess)
+            : this(options, new SandboxCmdProcess(), new ScoopPackageManager())
         {
         }
 
-        public Sandbox(ScoopBoxOptions options, IPackageManager packageManager)
-            : this(options, new ScoopBoxCmdProcess(), packageManager)
+        public Sandbox(Options options, IPackageManager packageManager)
+            : this(options, new SandboxCmdProcess(), packageManager)
         {
         }
 
-        public Sandbox(ScoopBoxOptions options, IScoopBoxProcess scoopBoxProcess, IPackageManager packageManager)
+        public Sandbox(Options options, ISandboxoxProcess scoopBoxProcess, IPackageManager packageManager)
         {
             this._options = options ?? throw new ArgumentNullException(nameof(options));
             this._scoopBoxProcess = scoopBoxProcess ?? throw new ArgumentNullException(nameof(scoopBoxProcess));
