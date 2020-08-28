@@ -6,9 +6,15 @@
         Disabled
     }
 
-    public enum ReadOnly
+    public enum ReadOnlyOptions
     {
         True,
         False
+    }
+
+    public enum NetworkingOptions
+    {
+        Disable,
+        Default
     }
 }

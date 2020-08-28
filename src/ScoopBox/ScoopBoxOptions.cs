@@ -6,24 +6,10 @@ namespace ScoopBox
 {
     public class ScoopBoxOptions
     {
-        public ScoopBoxOptions(List<string> apps)
-            : this(apps, VGpuOptions.Disabled)
-        {
-        }
+        public string UserFilesPath { get; set; } = Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName;
 
-        public ScoopBoxOptions(
-            List<string> apps,
-            VGpuOptions gpuOptions)
-        {
-            Apps = apps;
-            this.VGpu = gpuOptions;
+        public VGpuOptions VGpu { get; set; } = VGpuOptions.Disabled;
 
-        }
-
-        public List<string> Apps { get; set; }
-
-        public string UserFilesPath => Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName;
-
-        public VGpuOptions VGpu { get; set; }
+        public NetworkingOptions Networking { get; set; } = NetworkingOptions.Default;
     }
 }
