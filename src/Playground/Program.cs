@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using ScoopBox;
 using System.Threading.Tasks;
 
 namespace Playground
@@ -7,8 +7,8 @@ namespace Playground
     {
         static async Task Main(string[] args)
         {
-            FileStream test = File.OpenRead("");
-            FileStream.Synchronized(File.OpenRead(""));
+            ISandbox sandbox = new Sandbox();
+            await sandbox.Run();
         }
     }
 }

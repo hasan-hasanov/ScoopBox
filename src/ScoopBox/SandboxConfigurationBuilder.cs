@@ -39,7 +39,7 @@ namespace ScoopBox
 
         public void BuildNetworking()
         {
-            _configuration.Networking = Enum.GetName(typeof(VGpuOptions), _options.Networking);
+            _configuration.Networking = Enum.GetName(typeof(NetworkingOptions), _options.Networking);
         }
 
         public void BuildMappedFolders()
@@ -86,6 +86,11 @@ namespace ScoopBox
             logonBuilder.AppendLine();
         }
 
+        public string BuildPartial()
+        {
+            return SerializeXMLToString();
+        }
+
         public string Build()
         {
             this.BuildVGpu();
@@ -93,6 +98,11 @@ namespace ScoopBox
             this.BuildMappedFolders();
             this.BuildLogonCommand();
 
+            return SerializeXMLToString();
+        }
+
+        private string SerializeXMLToString()
+        {
             using (var configStringWriter = new StringWriter())
             {
                 using (XmlWriter configXmlWriter = XmlWriter.Create(configStringWriter, _configurationSettings))

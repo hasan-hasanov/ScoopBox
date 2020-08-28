@@ -8,6 +8,7 @@ namespace ScoopBox
         void BuildNetworking();
         void BuildMappedFolders();
         void BuildLogonCommand();
+        string BuildPartial();
         string Build();
     }
 }

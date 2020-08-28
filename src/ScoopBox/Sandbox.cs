@@ -8,7 +8,7 @@ namespace ScoopBox
     public class Sandbox : ISandbox
     {
         private readonly ISandboxProcess _scoopBoxProcess;
-        private readonly ISandboxConfigurationBuilder _sandboxScriptBuilder;
+        private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
         private readonly IPackageManager _packageManager;
 
         public Sandbox()
@@ -31,20 +31,23 @@ namespace ScoopBox
         {
         }
 
-        public Sandbox(ISandboxConfigurationBuilder sandboxScriptBuilder)
-            : this(new SandboxCmdProcess(), sandboxScriptBuilder, new ScoopPackageManager())
+        public Sandbox(ISandboxConfigurationBuilder sandboxConfigurationBuilder)
+            : this(new SandboxCmdProcess(), sandboxConfigurationBuilder, new ScoopPackageManager())
         {
         }
 
-        public Sandbox(ISandboxProcess scoopBoxProcess, ISandboxConfigurationBuilder sandboxScriptBuilder, IPackageManager packageManager)
+        public Sandbox(ISandboxProcess scoopBoxProcess, ISandboxConfigurationBuilder sandboxConfigurationBuilder, IPackageManager packageManager)
         {
             _scoopBoxProcess = scoopBoxProcess ?? throw new ArgumentNullException(nameof(scoopBoxProcess));
-            _sandboxScriptBuilder = sandboxScriptBuilder ?? throw new ArgumentNullException(nameof(sandboxScriptBuilder));
+            _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
             _packageManager = packageManager ?? throw new ArgumentNullException(nameof(packageManager));
         }
 
         public async Task Run()
         {
+            string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
+            await GenerateSandboxConfiguration(sandboxConfiguration);
+
             await _scoopBoxProcess.Start();
         }
 
@@ -61,6 +64,15 @@ namespace ScoopBox
         public Task Run(FileStream scriptBefore, IEnumerable<string> applications, FileStream scriptAfter)
         {
             throw new System.NotImplementedException();
+        }
+
+        private async Task GenerateSandboxConfiguration(string configuration)
+        {
+            // TODO: Fix this since it is used in many places.
+            using (StreamWriter writer = File.CreateText($@"{Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName}\{Constants.SandboxScriptName}"))
+            {
+                await writer.WriteAsync(configuration);
+            }
         }
     }
 }
