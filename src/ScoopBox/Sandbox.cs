@@ -54,9 +54,14 @@ namespace ScoopBox
             await _scoopBoxProcess.StartAsync();
         }
 
-        public Task Run(FileStream script)
+        public async Task Run(FileStream script)
         {
-            throw new System.NotImplementedException();
+            await Run(new List<FileStream>() { script });
+        }
+
+        public Task Run(IEnumerable<FileStream> scripts)
+        {
+            throw new NotImplementedException();
         }
 
         public Task Run(IEnumerable<string> applications)
@@ -64,14 +69,34 @@ namespace ScoopBox
             throw new System.NotImplementedException();
         }
 
-        public Task Run(FileStream scriptBefore, IEnumerable<string> applications)
+        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications)
         {
-            throw new System.NotImplementedException();
+            await Run(new List<FileStream>() { scriptBefore }, applications);
         }
 
-        public Task Run(FileStream scriptBefore, IEnumerable<string> applications, FileStream scriptAfter)
+        public Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications, FileStream scriptAfter)
+        {
+            await Run(new List<FileStream>() { scriptBefore }, applications, new List<FileStream>() { scriptAfter });
+        }
+
+        public async Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications, FileStream scriptAfter)
+        {
+            await Run(scriptsBefore, applications, new List<FileStream>() { scriptAfter });
+        }
+
+        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications, IEnumerable<FileStream> scriptsAfter)
+        {
+            await Run(new List<FileStream>() { scriptBefore }, applications, scriptsAfter);
+        }
+
+        public Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications, IEnumerable<FileStream> scriptsAfter)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task GenerateConfigurationFile(string configuration)
