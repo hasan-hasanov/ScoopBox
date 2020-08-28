@@ -49,7 +49,7 @@ namespace ScoopBox
         public async Task Run()
         {
             string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
-            await GenerateSandboxConfiguration(sandboxConfiguration);
+            await GenerateConfigurationFile(sandboxConfiguration);
 
             await _scoopBoxProcess.StartAsync();
         }
@@ -74,7 +74,7 @@ namespace ScoopBox
             throw new System.NotImplementedException();
         }
 
-        private async Task GenerateSandboxConfiguration(string configuration)
+        private async Task GenerateConfigurationFile(string configuration)
         {
             using (StreamWriter writer = File.CreateText(Constants.SandboxConfigurationFileLocation))
             {
