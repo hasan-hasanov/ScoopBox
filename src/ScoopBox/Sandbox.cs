@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ScoopBox.PackageManager;
+using ScoopBox.SandboxConfigurations;
+using ScoopBox.SandboxProcesses;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -49,6 +52,11 @@ namespace ScoopBox
             await GenerateSandboxConfiguration(sandboxConfiguration);
 
             await _scoopBoxProcess.StartAsync();
+        }
+
+        public Task Run(FileStream script)
+        {
+            throw new System.NotImplementedException();
         }
 
         public Task Run(IEnumerable<string> applications)

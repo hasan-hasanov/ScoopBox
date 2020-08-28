@@ -1,7 +1,7 @@
 ﻿using ScoopBox.Enums;
 using System.Collections.Generic;
 
-namespace ScoopBox
+namespace ScoopBox.SandboxConfigurations
 {
     public class SandboxConfigurationOptions
     {

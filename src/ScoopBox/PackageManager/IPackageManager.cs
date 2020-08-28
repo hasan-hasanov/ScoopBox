@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ScoopBox
+namespace ScoopBox.PackageManager
 {
     public interface IPackageManager
     {

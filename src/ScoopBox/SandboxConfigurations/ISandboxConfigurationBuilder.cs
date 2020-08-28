@@ -1,6 +1,6 @@
 ﻿using ScoopBox.Entities;
 
-namespace ScoopBox
+namespace ScoopBox.SandboxConfigurations
 {
     public interface ISandboxConfigurationBuilder
     {

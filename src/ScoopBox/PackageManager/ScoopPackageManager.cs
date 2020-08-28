@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ScoopBox
+namespace ScoopBox.PackageManager
 {
     public class ScoopPackageManager : IPackageManager
     {

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ScoopBox
+namespace ScoopBox.SandboxProcesses
 {
     public interface ISandboxProcess
     {

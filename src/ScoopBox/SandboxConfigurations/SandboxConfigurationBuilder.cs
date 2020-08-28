@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace ScoopBox
+namespace ScoopBox.SandboxConfigurations
 {
     public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
     {
@@ -123,16 +123,16 @@ namespace ScoopBox
 
         public string Build()
         {
-            this.BuildVGpu();
-            this.BuildNetworking();
-            this.BuildAudioInput();
-            this.BuildVideoInput();
-            this.BuildPrinterRedirection();
-            this.BuildClipboardRedirection();
-            this.BuildProtectedClient();
-            this.BuildMemoryInMB();
-            this.BuildMappedFolders();
-            this.BuildLogonCommand();
+            BuildVGpu();
+            BuildNetworking();
+            BuildAudioInput();
+            BuildVideoInput();
+            BuildPrinterRedirection();
+            BuildClipboardRedirection();
+            BuildProtectedClient();
+            BuildMemoryInMB();
+            BuildMappedFolders();
+            BuildLogonCommand();
 
             return SerializeXMLToString();
         }
