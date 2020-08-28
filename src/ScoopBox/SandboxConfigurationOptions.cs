@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ScoopBox
 {
-    public class Options
+    public class SandboxConfigurationOptions
     {
         public Dictionary<string, ReadOnlyOptions> UserMappedDirectories { get; set; } = new Dictionary<string, ReadOnlyOptions>();
 

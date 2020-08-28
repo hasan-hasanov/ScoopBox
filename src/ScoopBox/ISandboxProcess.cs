@@ -2,7 +2,7 @@
 
 namespace ScoopBox
 {
-    public interface ISandboxoxProcess
+    public interface ISandboxProcess
     {
         Task Start();
     }

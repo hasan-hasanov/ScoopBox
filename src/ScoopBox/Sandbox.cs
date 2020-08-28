@@ -7,40 +7,45 @@ namespace ScoopBox
 {
     public class Sandbox : ISandbox
     {
-        private readonly Options _options;
-        private readonly ISandboxoxProcess _scoopBoxProcess;
+        private readonly ISandboxProcess _scoopBoxProcess;
+        private readonly ISandboxConfigurationBuilder _sandboxScriptBuilder;
         private readonly IPackageManager _packageManager;
 
         public Sandbox()
-            : this(new Options())
+            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), new ScoopPackageManager())
         {
         }
 
-        public Sandbox(Options options)
-            : this(options, new SandboxCmdProcess())
+        public Sandbox(SandboxConfigurationOptions options)
+            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(options), new ScoopPackageManager())
         {
         }
 
-        public Sandbox(Options options, ISandboxoxProcess scoopBoxProcess)
-            : this(options, new SandboxCmdProcess(), new ScoopPackageManager())
+        public Sandbox(ISandboxProcess scoopBoxProcess)
+            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), new ScoopPackageManager())
         {
         }
 
-        public Sandbox(Options options, IPackageManager packageManager)
-            : this(options, new SandboxCmdProcess(), packageManager)
+        public Sandbox(IPackageManager packageManager)
+            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), packageManager)
         {
         }
 
-        public Sandbox(Options options, ISandboxoxProcess scoopBoxProcess, IPackageManager packageManager)
+        public Sandbox(ISandboxConfigurationBuilder sandboxScriptBuilder)
+            : this(new SandboxCmdProcess(), sandboxScriptBuilder, new ScoopPackageManager())
         {
-            this._options = options ?? throw new ArgumentNullException(nameof(options));
-            this._scoopBoxProcess = scoopBoxProcess ?? throw new ArgumentNullException(nameof(scoopBoxProcess));
-            this._packageManager = packageManager ?? throw new ArgumentNullException(nameof(packageManager));
+        }
+
+        public Sandbox(ISandboxProcess scoopBoxProcess, ISandboxConfigurationBuilder sandboxScriptBuilder, IPackageManager packageManager)
+        {
+            _scoopBoxProcess = scoopBoxProcess ?? throw new ArgumentNullException(nameof(scoopBoxProcess));
+            _sandboxScriptBuilder = sandboxScriptBuilder ?? throw new ArgumentNullException(nameof(sandboxScriptBuilder));
+            _packageManager = packageManager ?? throw new ArgumentNullException(nameof(packageManager));
         }
 
         public async Task Run()
         {
-            await this._scoopBoxProcess.Start();
+            await _scoopBoxProcess.Start();
         }
 
         public Task Run(IEnumerable<string> applications)

@@ -2,7 +2,7 @@
 
 namespace ScoopBox
 {
-    public interface ISandboxScriptBuilder
+    public interface ISandboxConfigurationBuilder
     {
         void BuildVGpu();
         void BuildNetworking();

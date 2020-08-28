@@ -9,16 +9,16 @@ using System.Xml.Serialization;
 
 namespace ScoopBox
 {
-    public class SandboxBuilder : ISandboxScriptBuilder
+    public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
     {
         private readonly Configuration _configuration;
-        private readonly Options _options;
+        private readonly SandboxConfigurationOptions _options;
 
         private readonly XmlSerializer _configurationSerializer;
         private readonly XmlSerializerNamespaces _emptyNamespaces;
         private readonly XmlWriterSettings _configurationSettings;
 
-        public SandboxBuilder(Options options)
+        public SandboxConfigurationBuilder(SandboxConfigurationOptions options)
         {
             _configuration = new Configuration();
             _options = options;
