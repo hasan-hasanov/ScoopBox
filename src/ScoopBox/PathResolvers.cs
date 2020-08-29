@@ -6,17 +6,17 @@ namespace ScoopBox
     {
         public static string GetBeforeScriptsPath(string rootFilesDirectoryLocation)
         {
-            return Directory.CreateDirectory($"{Path.Combine(rootFilesDirectoryLocation, "BeforeScripts")}").FullName;
+            return Path.Combine(rootFilesDirectoryLocation, "BeforeScripts");
         }
 
         public static string GetAfterScriptsPath(string rootFilesDirectoryLocation)
         {
-            return Directory.CreateDirectory($"{Path.Combine(rootFilesDirectoryLocation, "AfterScripts")}").FullName;
+            return Path.Combine(rootFilesDirectoryLocation, "AfterScripts");
         }
 
         public static string GetPackageManagerScriptsPath(string rootFilesDirectoryLocation)
         {
-            return Directory.CreateDirectory($"{Path.Combine(rootFilesDirectoryLocation, "PackageManagerScripts")}").FullName;
+            return Path.Combine(rootFilesDirectoryLocation, "PackageManagerScripts");
         }
     }
 }

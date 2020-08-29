@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ScoopBox.CommandBuilders
 {
     public class CmdCommandBuilder : ICommandBuilder
     {
-        public string Build(string fullScriptName)
+        public IEnumerable<string> Build(string fullScriptName)
         {
             return Build(fullScriptName, null, null);
         }
 
-        public string Build(string fullScriptName, string[] argumentsBeforeScript, string[] argumentsAfterScript)
+        public IEnumerable<string> Build(string fullScriptName, string[] argumentsBeforeScript, string[] argumentsAfterScript)
         {
             if (string.IsNullOrWhiteSpace(fullScriptName))
             {
@@ -42,7 +43,7 @@ namespace ScoopBox.CommandBuilders
                     .Append(afterArguments);
             }
 
-            return sbCmdCommandBuilder.ToString();
+            return new List<string>() { sbCmdCommandBuilder.ToString() };
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 
 namespace ScoopBox.PackageManager
 {
     public interface IPackageManager
     {
-        IEnumerable<string> Applications { get; set; }
+        string PackageManagerScriptName { get; }
 
-        string GenerateScript();
+        Task<string> GenerateScriptFile(string location);
     }
 }

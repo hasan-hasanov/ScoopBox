@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -39,6 +40,14 @@ namespace ScoopBox.SandboxConfigurations
         public void AddCommand(string command)
         {
             Commands.Add(command);
+        }
+
+        public void AddCommands(IEnumerable<string> commands)
+        {
+            foreach (var command in commands)
+            {
+                Commands.Add(command);
+            }
         }
 
         public void BuildVGpu()
@@ -110,12 +119,16 @@ namespace ScoopBox.SandboxConfigurations
             }
         }
 
-        public string BuildPartial()
+        public async Task CreatePartialConfigurationFile()
         {
-            return SerializeXMLToString();
+            string content = SerializeXMLToString();
+            using (StreamWriter writer = File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
+            {
+                await writer.WriteAsync(content);
+            }
         }
 
-        public string Build()
+        public async Task CreateConfigurationFile()
         {
             BuildVGpu();
             BuildNetworking();
@@ -128,7 +141,7 @@ namespace ScoopBox.SandboxConfigurations
             BuildMappedFolders();
             BuildLogonCommand();
 
-            return SerializeXMLToString();
+            await CreatePartialConfigurationFile();
         }
 
         private string SerializeXMLToString()

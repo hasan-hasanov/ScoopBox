@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ScoopBox.SandboxConfigurations
 {
@@ -7,6 +8,8 @@ namespace ScoopBox.SandboxConfigurations
         IList<string> Commands { get; }
 
         void AddCommand(string command);
+
+        void AddCommands(IEnumerable<string> commands);
 
         void BuildVGpu();
 
@@ -28,8 +31,8 @@ namespace ScoopBox.SandboxConfigurations
 
         void BuildLogonCommand();
 
-        string BuildPartial();
+        Task CreatePartialConfigurationFile();
 
-        string Build();
+        Task CreateConfigurationFile();
     }
 }

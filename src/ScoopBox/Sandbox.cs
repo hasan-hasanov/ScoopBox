@@ -1,6 +1,5 @@
 ﻿using ScoopBox.CommandBuilders;
 using ScoopBox.PackageManager;
-using ScoopBox.PackageManager.Scoop;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
 using ScoopBox.SandboxProcesses.CMD;
@@ -57,13 +56,15 @@ namespace ScoopBox
             _options = options;
             _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
+
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "BeforeScripts")}");
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "AfterScripts")}");
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
         }
 
         public async Task Run()
         {
-            string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
-            await GenerateConfigurationFile(sandboxConfiguration);
-
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _scoopBoxProcess.StartAsync();
         }
 
@@ -78,34 +79,45 @@ namespace ScoopBox
         {
             foreach (var script in scripts)
             {
-                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
-                File.Copy(Path.GetFullPath(script.Key.Name), fullSandboxScriptPath);
-                _sandboxConfigurationBuilder.AddCommand(script.Value.Build(fullSandboxScriptPath));
+                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+
+                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
             }
 
-            string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
-            await GenerateConfigurationFile(sandboxConfiguration);
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _scoopBoxProcess.StartAsync();
         }
 
-        public Task Run(HashSet<IPackageManager> applications)
+        public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            throw new System.NotImplementedException();
+            foreach (var packageManager in packageManagers)
+            {
+                string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
+                string fullSandboxScriptName = Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+
+                _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
+            }
+
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
+            await _scoopBoxProcess.StartAsync();
         }
 
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilder,
-            HashSet<IPackageManager> applications)
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
             await Run(
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilder } },
-                applications);
+                packageManagers);
         }
 
         public Task Run(
             IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            HashSet<IPackageManager> applications)
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
             throw new NotImplementedException();
         }
@@ -113,51 +125,43 @@ namespace ScoopBox
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilderBefore,
-            HashSet<IPackageManager> applications,
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
             FileStream scriptAfter,
             ICommandBuilder commandBuilderAfter)
         {
             await Run(
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
-                applications,
+                packageManagers,
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
         }
 
         public async Task Run(
             IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            HashSet<IPackageManager> applications,
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
             FileStream scriptAfter,
             ICommandBuilder commandBuilderAfter)
         {
             await Run(
                 scriptsBefore,
-                applications,
+                packageManagers,
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
         }
 
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilderBefore,
-            HashSet<IPackageManager> applications,
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
             IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             await Run(
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
-                applications,
+                packageManagers,
                 scriptsAfter);
         }
 
-        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, HashSet<IPackageManager> applications, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             throw new NotImplementedException();
-        }
-
-        private async Task GenerateConfigurationFile(string configuration)
-        {
-            using (StreamWriter writer = File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
-            {
-                await writer.WriteAsync(configuration);
-            }
         }
     }
 }
