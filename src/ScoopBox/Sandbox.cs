@@ -201,8 +201,8 @@ namespace ScoopBox
 
             foreach (var script in scriptsAfter)
             {
-                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
-                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+                string fullLocalScriptPath = Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
 
                 File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
 
