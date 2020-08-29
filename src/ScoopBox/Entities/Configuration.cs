@@ -9,22 +9,6 @@ namespace ScoopBox.Entities
     [XmlRoot(ElementName = nameof(Configuration))]
     public class Configuration
     {
-        public Configuration()
-        {
-        }
-
-        public Configuration(
-            SandboxConfigurationOptions options,
-            List<string> commands,
-            MappedFolders mappedFolders)
-        {
-            LogonCommand = new LogonCommand();
-
-            VGpu = Enum.GetName(typeof(VGpuOptions), options.VGpu);
-            LogonCommand.Command = commands;
-            this.MappedFolders = mappedFolders;
-        }
-
         [XmlElement(ElementName = nameof(VGpu))]
         public string VGpu { get; set; }
 

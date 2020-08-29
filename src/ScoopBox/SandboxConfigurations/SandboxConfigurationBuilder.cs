@@ -90,8 +90,7 @@ namespace ScoopBox.SandboxConfigurations
 
             _configuration.MappedFolders.MappedFolder.Add(new MappedFolder()
             {
-                // TODO: Make these come from the options
-                HostFolder = Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName,
+                HostFolder = Constants.SandboxFilesDirectoryLocation,
                 ReadOnly = Enum.GetName(typeof(ReadOnlyOptions), ReadOnlyOptions.False).ToLower()
             });
         }
