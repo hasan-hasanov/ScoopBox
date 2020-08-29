@@ -1,7 +1,13 @@
-﻿namespace ScoopBox.SandboxConfigurations
+﻿using System.Collections.Generic;
+
+namespace ScoopBox.SandboxConfigurations
 {
     public interface ISandboxConfigurationBuilder
     {
+        IList<string> Commands { get; }
+
+        void AddCommand(string command);
+
         void BuildVGpu();
 
         void BuildNetworking();

@@ -3,7 +3,7 @@ using ScoopBox.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -18,6 +18,8 @@ namespace ScoopBox.SandboxConfigurations
         private readonly XmlSerializerNamespaces _emptyNamespaces;
         private readonly XmlWriterSettings _configurationSettings;
 
+        public IList<string> Commands { get; }
+
         public SandboxConfigurationBuilder(IOptions options)
         {
             _configuration = new Configuration();
@@ -30,6 +32,13 @@ namespace ScoopBox.SandboxConfigurations
                 Indent = true,
                 OmitXmlDeclaration = true
             };
+
+            Commands = new List<string>();
+        }
+
+        public void AddCommand(string command)
+        {
+            Commands.Add(command);
         }
 
         public void BuildVGpu()
@@ -92,24 +101,13 @@ namespace ScoopBox.SandboxConfigurations
 
         public void BuildLogonCommand()
         {
-            // TODO: Decide for one or multiple package managers!!!
-
-            //StringBuilder logonBuilder = new StringBuilder();
-
-            //logonBuilder
-            //    .Append("powershell.exe ")
-            //    .Append("-ExecutionPolicy ")
-            //    .Append("Bypass ")
-            //    .Append("-File ")
-            //    .Append(Constants.SandboxInstallerLocation);
-
-            //logonBuilder.AppendLine();
-
-            //logonBuilder
-            //    .Append("powershell.exe ")
-            //    .Append($"\"{Constants.SandboxInstallerLocation}\"");
-
-            //logonBuilder.AppendLine();
+            if (Commands != null && Commands.Any())
+            {
+                _configuration.LogonCommand = new LogonCommand
+                {
+                    Command = Commands.ToList()
+                };
+            }
         }
 
         public string BuildPartial()

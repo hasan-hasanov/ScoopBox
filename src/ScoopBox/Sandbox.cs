@@ -1,4 +1,5 @@
-﻿using ScoopBox.PackageManager;
+﻿using ScoopBox.CommandBuilders;
+using ScoopBox.PackageManager;
 using ScoopBox.PackageManager.Scoop;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
@@ -18,31 +19,55 @@ namespace ScoopBox
         private readonly IPackageManager _packageManager;
 
         public Sandbox()
-            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), new ScoopPackageManager())
+            : this(
+                  new Options(),
+                  new SandboxCmdProcess(),
+                  new SandboxConfigurationBuilder(new Options()),
+                  new ScoopPackageManager())
         {
         }
 
         public Sandbox(IOptions options)
-            : this(options, new SandboxCmdProcess(options.RootFilesDirectoryLocation, options.SandboxConfigurationFileName), new SandboxConfigurationBuilder(options), new ScoopPackageManager())
+            : this(
+                  options,
+                  new SandboxCmdProcess(options.RootFilesDirectoryLocation, options.SandboxConfigurationFileName),
+                  new SandboxConfigurationBuilder(options),
+                  new ScoopPackageManager())
         {
         }
 
         public Sandbox(ISandboxProcess scoopBoxProcess)
-            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), new ScoopPackageManager())
+            : this(
+                  new Options(),
+                  new SandboxCmdProcess(),
+                  new SandboxConfigurationBuilder(new Options()),
+                  new ScoopPackageManager())
         {
         }
 
         public Sandbox(IPackageManager packageManager)
-            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), packageManager)
+            : this(
+                  new Options(),
+                  new SandboxCmdProcess(),
+                  new SandboxConfigurationBuilder(new Options()),
+                  packageManager)
         {
         }
 
         public Sandbox(ISandboxConfigurationBuilder sandboxConfigurationBuilder)
-            : this(new Options(), new SandboxCmdProcess(), sandboxConfigurationBuilder, new ScoopPackageManager())
+            : this(
+                  new Options(),
+                  new SandboxCmdProcess(),
+                  sandboxConfigurationBuilder,
+                  new ScoopPackageManager())
         {
         }
 
-        public Sandbox(IOptions options, ISandboxProcess sandboxProcess, ISandboxConfigurationBuilder sandboxConfigurationBuilder, IPackageManager packageManager)
+        public Sandbox(
+            IOptions options,
+            ISandboxProcess sandboxProcess,
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
+            IPackageManager packageManager)
         {
             _options = options;
             _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
@@ -58,47 +83,87 @@ namespace ScoopBox
             await _scoopBoxProcess.StartAsync();
         }
 
-        public async Task Run(FileStream script)
+        public async Task Run(
+            FileStream script,
+            ICommandBuilder commandBuilder)
         {
-            await Run(new List<FileStream>() { script });
+            await Run(new Dictionary<FileStream, ICommandBuilder>() { { script, commandBuilder } });
         }
 
-        public Task Run(IEnumerable<FileStream> scripts)
+        public async Task Run(IDictionary<FileStream, ICommandBuilder> scripts)
         {
-            throw new NotImplementedException();
+            foreach (var script in scripts)
+            {
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                File.Copy(Path.GetFullPath(script.Key.Name), fullSandboxScriptPath);
+                _sandboxConfigurationBuilder.AddCommand(script.Value.Build(fullSandboxScriptPath));
+            }
+
+            string sandboxConfiguration = _sandboxConfigurationBuilder.Build();
+            await GenerateConfigurationFile(sandboxConfiguration);
+            await _scoopBoxProcess.StartAsync();
         }
 
-        public Task Run(IEnumerable<string> applications)
+        public Task Run(IDictionary<string, IPackageManager> applications)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications)
+        public async Task Run(
+            FileStream scriptBefore,
+            ICommandBuilder commandBuilder,
+            IDictionary<string, IPackageManager> applications)
         {
-            await Run(new List<FileStream>() { scriptBefore }, applications);
+            await Run(
+                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilder } },
+                applications);
         }
 
-        public Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications)
+        public Task Run(
+            IDictionary<FileStream, ICommandBuilder> scriptsBefore,
+            IDictionary<string, IPackageManager> applications)
         {
             throw new NotImplementedException();
         }
 
-        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications, FileStream scriptAfter)
+        public async Task Run(
+            FileStream scriptBefore,
+            ICommandBuilder commandBuilderBefore,
+            IDictionary<string, IPackageManager> applications,
+            FileStream scriptAfter,
+            ICommandBuilder commandBuilderAfter)
         {
-            await Run(new List<FileStream>() { scriptBefore }, applications, new List<FileStream>() { scriptAfter });
+            await Run(
+                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
+                applications,
+                new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
         }
 
-        public async Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications, FileStream scriptAfter)
+        public async Task Run(
+            IDictionary<FileStream, ICommandBuilder> scriptsBefore,
+            IDictionary<string, IPackageManager> applications,
+            FileStream scriptAfter,
+            ICommandBuilder commandBuilderAfter)
         {
-            await Run(scriptsBefore, applications, new List<FileStream>() { scriptAfter });
+            await Run(
+                scriptsBefore,
+                applications,
+                new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
         }
 
-        public async Task Run(FileStream scriptBefore, IEnumerable<string> applications, IEnumerable<FileStream> scriptsAfter)
+        public async Task Run(
+            FileStream scriptBefore,
+            ICommandBuilder commandBuilderBefore,
+            IDictionary<string, IPackageManager> applications,
+            IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
-            await Run(new List<FileStream>() { scriptBefore }, applications, scriptsAfter);
+            await Run(
+                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
+                applications,
+                scriptsAfter);
         }
 
-        public Task Run(IEnumerable<FileStream> scriptsBefore, IEnumerable<string> applications, IEnumerable<FileStream> scriptsAfter)
+        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, IDictionary<string, IPackageManager> applications, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             throw new NotImplementedException();
         }
