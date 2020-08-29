@@ -1,8 +1,4 @@
-﻿using ScoopBox.Enums;
-using ScoopBox.SandboxConfigurations;
-using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace ScoopBox.Entities
 {

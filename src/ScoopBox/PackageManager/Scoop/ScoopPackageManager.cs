@@ -9,7 +9,7 @@ namespace ScoopBox.PackageManager.Scoop
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<string> Suggestions(string characters)
+        public IEnumerable<string> Autocomplete(string characters)
         {
             throw new System.NotImplementedException();
         }
