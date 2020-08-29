@@ -2,7 +2,7 @@
 using ScoopBox.PackageManager;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
-using ScoopBox.SandboxProcesses.CMD;
+using ScoopBox.SandboxProcesses.Cmd;
 using System;
 using System.Collections.Generic;
 using System.IO;
