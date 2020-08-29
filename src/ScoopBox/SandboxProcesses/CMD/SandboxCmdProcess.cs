@@ -1,10 +1,36 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ScoopBox.SandboxProcesses.CMD
 {
     public class SandboxCmdProcess : ISandboxProcess
     {
+        private readonly string configurationFileLocation;
+
+        public SandboxCmdProcess()
+            : this(
+                  Directory.CreateDirectory($"{Path.GetTempPath()}/Sandbox").FullName,
+                  "sandbox.wsb")
+        {
+        }
+
+        public SandboxCmdProcess(string rootFilesDirectoryLocation, string sandboxConfigurationFileName)
+        {
+            if (string.IsNullOrWhiteSpace(rootFilesDirectoryLocation))
+            {
+                throw new ArgumentNullException(nameof(rootFilesDirectoryLocation));
+            }
+
+            if (string.IsNullOrWhiteSpace(sandboxConfigurationFileName))
+            {
+                throw new ArgumentNullException(nameof(sandboxConfigurationFileName));
+            }
+
+            configurationFileLocation = Path.Combine(rootFilesDirectoryLocation, sandboxConfigurationFileName);
+        }
+
         public async Task StartAsync()
         {
             Process cmd = new Process()
@@ -22,7 +48,7 @@ namespace ScoopBox.SandboxProcesses.CMD
 
             cmd.Start();
 
-            await cmd.StandardInput.WriteLineAsync($"\"{Constants.SandboxConfigurationFileLocation}\"");
+            await cmd.StandardInput.WriteLineAsync($"\"{configurationFileLocation}\"");
             await cmd.StandardInput.FlushAsync();
             cmd.StandardInput.Close();
             cmd.WaitForExit();

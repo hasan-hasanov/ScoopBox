@@ -1,42 +1,40 @@
-﻿using System;
+﻿using ScoopBox.Entities;
+using ScoopBox.Enums;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ScoopBox
 {
     public class Options : IOptions
     {
-        public Options()
-            : this(
-                  @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\BeforeScripts",
-                  @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\AfterScripts",
-                  @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\PackageManagerScripts",
-                  "sandbox.wsb",
-                  Directory.CreateDirectory($"{Path.GetTempPath()}/{Constants.SandboxFolderName}").FullName)
-        {
-        }
+        public string SandboxBeforeScriptsLocation { get; set; } = "BeforeScripts";
 
-        public Options(
-            string sandboxBeforeScriptsLocation,
-            string sandboxAfterScriptsLocation,
-            string sandboxPackageManagerScriptsLocation,
-            string sandboxConfigurationFileName,
-            string rootFilesDirectoryLocation)
-        {
-            this.SandboxBeforeScriptsLocation = sandboxBeforeScriptsLocation ?? throw new ArgumentNullException(nameof(sandboxBeforeScriptsLocation));
-            this.SandboxAfterScriptsLocation = sandboxAfterScriptsLocation ?? throw new ArgumentNullException(nameof(sandboxAfterScriptsLocation));
-            this.SandboxPackageManagerScriptsLocation = sandboxPackageManagerScriptsLocation ?? throw new ArgumentNullException(nameof(sandboxPackageManagerScriptsLocation));
-            this.SandboxConfigurationFileName = sandboxConfigurationFileName ?? throw new ArgumentNullException(nameof(sandboxConfigurationFileName));
-            this.RootFilesDirectoryLocation = rootFilesDirectoryLocation ?? throw new ArgumentNullException(nameof(rootFilesDirectoryLocation));
-        }
+        public string SandboxAfterScriptsLocation { get; set; } = "AfterScripts";
 
-        public string SandboxBeforeScriptsLocation { get; }
+        public string SandboxPackageManagerScriptsLocation { get; set; } = "PackageManagerScripts";
 
-        public string SandboxAfterScriptsLocation { get; }
+        public string SandboxConfigurationFileName { get; set; } = "sandbox.wsb";
 
-        public string SandboxPackageManagerScriptsLocation { get; }
+        public string RootSandboxFilesDirectoryLocation { get; set; } = @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\";
 
-        public string SandboxConfigurationFileName { get; }
+        public string RootFilesDirectoryLocation { get; set; } = Directory.CreateDirectory($"{Path.GetTempPath()}/Sandbox").FullName;
 
-        public string RootFilesDirectoryLocation { get; }
+        public VGpuOptions VGpu { get; set; } = VGpuOptions.Disabled;
+
+        public NetworkingOptions Networking { get; set; } = NetworkingOptions.Default;
+
+        public AudioInputOptions AudioInput { get; set; } = AudioInputOptions.Default;
+
+        public VideoInputOptions VideoInput { get; set; } = VideoInputOptions.Default;
+
+        public ProtectedClientOptions ProtectedClient { get; set; } = ProtectedClientOptions.Default;
+
+        public PrinterRedirectionOptions PrinterRedirection { get; set; } = PrinterRedirectionOptions.Default;
+
+        public ClipboardRedirectionOptions ClipboardRedirection { get; set; } = ClipboardRedirectionOptions.Default;
+
+        public int MemoryInMB { get; set; } = 0;
+
+        public IEnumerable<MappedFolder> UserMappedDirectories { get; set; } = new List<MappedFolder>();
     }
 }

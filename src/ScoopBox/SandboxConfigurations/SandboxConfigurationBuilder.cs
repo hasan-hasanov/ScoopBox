@@ -12,13 +12,13 @@ namespace ScoopBox.SandboxConfigurations
     public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
     {
         private readonly Configuration _configuration;
-        private readonly SandboxConfigurationOptions _options;
+        private readonly IOptions _options;
 
         private readonly XmlSerializer _configurationSerializer;
         private readonly XmlSerializerNamespaces _emptyNamespaces;
         private readonly XmlWriterSettings _configurationSettings;
 
-        public SandboxConfigurationBuilder(SandboxConfigurationOptions options)
+        public SandboxConfigurationBuilder(IOptions options)
         {
             _configuration = new Configuration();
             _options = options;
@@ -79,40 +79,37 @@ namespace ScoopBox.SandboxConfigurations
                 MappedFolder = new List<MappedFolder>()
             };
 
-            foreach (var directoryConfig in _options.UserMappedDirectories)
-            {
-                _configuration.MappedFolders.MappedFolder.Add(new MappedFolder()
-                {
-                    HostFolder = directoryConfig.Key,
-                    ReadOnly = Enum.GetName(typeof(ReadOnlyOptions), directoryConfig.Value).ToLower()
-                });
-            }
+            _configuration.MappedFolders.MappedFolder.AddRange(_options.UserMappedDirectories);
 
+            // TODO: Consider using mapped folder here too.
             _configuration.MappedFolders.MappedFolder.Add(new MappedFolder()
             {
-                HostFolder = Constants.SandboxFilesDirectoryLocation,
+                HostFolder = _options.RootFilesDirectoryLocation,
+                SandboxFolder = _options.RootSandboxFilesDirectoryLocation,
                 ReadOnly = Enum.GetName(typeof(ReadOnlyOptions), ReadOnlyOptions.False).ToLower()
             });
         }
 
         public void BuildLogonCommand()
         {
-            StringBuilder logonBuilder = new StringBuilder();
+            // TODO: Decide for one or multiple package managers!!!
 
-            logonBuilder
-                .Append("powershell.exe ")
-                .Append("-ExecutionPolicy ")
-                .Append("Bypass ")
-                .Append("-File ")
-                .Append(Constants.SandboxInstallerLocation);
+            //StringBuilder logonBuilder = new StringBuilder();
 
-            logonBuilder.AppendLine();
+            //logonBuilder
+            //    .Append("powershell.exe ")
+            //    .Append("-ExecutionPolicy ")
+            //    .Append("Bypass ")
+            //    .Append("-File ")
+            //    .Append(Constants.SandboxInstallerLocation);
 
-            logonBuilder
-                .Append("powershell.exe ")
-                .Append($"\"{Constants.SandboxInstallerLocation}\"");
+            //logonBuilder.AppendLine();
 
-            logonBuilder.AppendLine();
+            //logonBuilder
+            //    .Append("powershell.exe ")
+            //    .Append($"\"{Constants.SandboxInstallerLocation}\"");
+
+            //logonBuilder.AppendLine();
         }
 
         public string BuildPartial()

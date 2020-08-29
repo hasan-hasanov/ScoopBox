@@ -12,38 +12,40 @@ namespace ScoopBox
 {
     public class Sandbox : ISandbox
     {
+        private readonly IOptions _options;
         private readonly ISandboxProcess _scoopBoxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
         private readonly IPackageManager _packageManager;
 
         public Sandbox()
-            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), new ScoopPackageManager())
+            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), new ScoopPackageManager())
         {
         }
 
-        public Sandbox(SandboxConfigurationOptions options)
-            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(options), new ScoopPackageManager())
+        public Sandbox(IOptions options)
+            : this(options, new SandboxCmdProcess(options.RootFilesDirectoryLocation, options.SandboxConfigurationFileName), new SandboxConfigurationBuilder(options), new ScoopPackageManager())
         {
         }
 
         public Sandbox(ISandboxProcess scoopBoxProcess)
-            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), new ScoopPackageManager())
+            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), new ScoopPackageManager())
         {
         }
 
         public Sandbox(IPackageManager packageManager)
-            : this(new SandboxCmdProcess(), new SandboxConfigurationBuilder(new SandboxConfigurationOptions()), packageManager)
+            : this(new Options(), new SandboxCmdProcess(), new SandboxConfigurationBuilder(new Options()), packageManager)
         {
         }
 
         public Sandbox(ISandboxConfigurationBuilder sandboxConfigurationBuilder)
-            : this(new SandboxCmdProcess(), sandboxConfigurationBuilder, new ScoopPackageManager())
+            : this(new Options(), new SandboxCmdProcess(), sandboxConfigurationBuilder, new ScoopPackageManager())
         {
         }
 
-        public Sandbox(ISandboxProcess scoopBoxProcess, ISandboxConfigurationBuilder sandboxConfigurationBuilder, IPackageManager packageManager)
+        public Sandbox(IOptions options, ISandboxProcess sandboxProcess, ISandboxConfigurationBuilder sandboxConfigurationBuilder, IPackageManager packageManager)
         {
-            _scoopBoxProcess = scoopBoxProcess ?? throw new ArgumentNullException(nameof(scoopBoxProcess));
+            _options = options;
+            _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
             _packageManager = packageManager ?? throw new ArgumentNullException(nameof(packageManager));
         }
@@ -103,7 +105,7 @@ namespace ScoopBox
 
         private async Task GenerateConfigurationFile(string configuration)
         {
-            using (StreamWriter writer = File.CreateText(Constants.SandboxConfigurationFileLocation))
+            using (StreamWriter writer = File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
             {
                 await writer.WriteAsync(configuration);
             }
