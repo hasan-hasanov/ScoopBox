@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ScoopBox;
-using ScoopBox.Extensions;
-using ScoopBox.Sandbox.Abstract;
-using ScoopBox.SandboxProcess.Abstract;
-using ScoopBox.Scoop.Abstract;
+﻿using ScoopBox;
+using ScoopBox.CommandBuilders;
+using ScoopBox.PackageManager;
+using ScoopBox.PackageManager.Scoop;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Playground
@@ -13,20 +12,14 @@ namespace Playground
     {
         static async Task Main(string[] args)
         {
-            ServiceProvider serviceProvider = new ServiceCollection()
-            .UseScoopBox()
-            .BuildServiceProvider();
+            //ISandbox sandbox = new Sandbox();
+            //await sandbox.Run(new Dictionary<IPackageManager, ICommandBuilder>()
+            //{
+            //    { new ScoopPackageManager(new List<string>() { "git", "curl", "fiddler" }), new PowershellCommandBuilder() }
+            //});
 
-            var scoopScriptGenerator = serviceProvider.GetService<IScoopScript>();
-            var sandboxScriptGenerator = serviceProvider.GetService<ISandboxScript>();
-            var scoopBoxProcess = serviceProvider.GetService<IScoopBoxProcess>();
-
-            var apps = new List<string>() { "git", "curl", "openssh", "vscode", "fiddler" };
-            ScoopBoxOptions options = new ScoopBoxOptions(apps);
-
-            await scoopScriptGenerator.Generate(options);
-            await sandboxScriptGenerator.Generate(options);
-            await scoopBoxProcess.Run(options);
+            ISandbox sandbox2 = new Sandbox();
+            await sandbox2.Run(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test.txt"), new PowershellCommandBuilder());
         }
     }
 }
