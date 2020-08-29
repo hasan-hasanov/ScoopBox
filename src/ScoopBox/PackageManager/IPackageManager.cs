@@ -6,6 +6,6 @@ namespace ScoopBox.PackageManager
     {
         IEnumerable<string> Suggestions(string characters);
 
-        string GetScript(IEnumerable<string> applications);
+        string BuildScript(IEnumerable<string> applications);
     }
 }

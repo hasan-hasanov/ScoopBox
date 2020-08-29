@@ -1,6 +1,8 @@
 ﻿using ScoopBox.PackageManager;
+using ScoopBox.PackageManager.Scoop;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
+using ScoopBox.SandboxProcesses.CMD;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ScoopBox.PackageManager
+namespace ScoopBox.PackageManager.Scoop
 {
     public class ScoopPackageManager : IPackageManager
     {
-        public string GetScript(IEnumerable<string> applications)
+        public string BuildScript(IEnumerable<string> applications)
         {
             throw new System.NotImplementedException();
         }

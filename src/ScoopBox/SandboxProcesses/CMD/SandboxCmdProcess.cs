@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ScoopBox.SandboxProcesses
+namespace ScoopBox.SandboxProcesses.CMD
 {
     public class SandboxCmdProcess : ISandboxProcess
     {
