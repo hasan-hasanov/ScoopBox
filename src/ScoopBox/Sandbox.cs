@@ -16,14 +16,12 @@ namespace ScoopBox
         private readonly IOptions _options;
         private readonly ISandboxProcess _scoopBoxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
-        private readonly IPackageManager _packageManager;
 
         public Sandbox()
             : this(
                   new Options(),
                   new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()),
-                  new ScoopPackageManager())
+                  new SandboxConfigurationBuilder(new Options()))
         {
         }
 
@@ -31,8 +29,7 @@ namespace ScoopBox
             : this(
                   options,
                   new SandboxCmdProcess(options.RootFilesDirectoryLocation, options.SandboxConfigurationFileName),
-                  new SandboxConfigurationBuilder(options),
-                  new ScoopPackageManager())
+                  new SandboxConfigurationBuilder(options))
         {
         }
 
@@ -40,17 +37,7 @@ namespace ScoopBox
             : this(
                   new Options(),
                   new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()),
-                  new ScoopPackageManager())
-        {
-        }
-
-        public Sandbox(IPackageManager packageManager)
-            : this(
-                  new Options(),
-                  new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()),
-                  packageManager)
+                  new SandboxConfigurationBuilder(new Options()))
         {
         }
 
@@ -58,21 +45,18 @@ namespace ScoopBox
             : this(
                   new Options(),
                   new SandboxCmdProcess(),
-                  sandboxConfigurationBuilder,
-                  new ScoopPackageManager())
+                  sandboxConfigurationBuilder)
         {
         }
 
         public Sandbox(
             IOptions options,
             ISandboxProcess sandboxProcess,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
-            IPackageManager packageManager)
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
         {
             _options = options;
             _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
-            _packageManager = packageManager ?? throw new ArgumentNullException(nameof(packageManager));
         }
 
         public async Task Run()
@@ -104,7 +88,7 @@ namespace ScoopBox
             await _scoopBoxProcess.StartAsync();
         }
 
-        public Task Run(IDictionary<string, IPackageManager> applications)
+        public Task Run(HashSet<IPackageManager> applications)
         {
             throw new System.NotImplementedException();
         }
@@ -112,7 +96,7 @@ namespace ScoopBox
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilder,
-            IDictionary<string, IPackageManager> applications)
+            HashSet<IPackageManager> applications)
         {
             await Run(
                 new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilder } },
@@ -121,7 +105,7 @@ namespace ScoopBox
 
         public Task Run(
             IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            IDictionary<string, IPackageManager> applications)
+            HashSet<IPackageManager> applications)
         {
             throw new NotImplementedException();
         }
@@ -129,7 +113,7 @@ namespace ScoopBox
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilderBefore,
-            IDictionary<string, IPackageManager> applications,
+            HashSet<IPackageManager> applications,
             FileStream scriptAfter,
             ICommandBuilder commandBuilderAfter)
         {
@@ -141,7 +125,7 @@ namespace ScoopBox
 
         public async Task Run(
             IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            IDictionary<string, IPackageManager> applications,
+            HashSet<IPackageManager> applications,
             FileStream scriptAfter,
             ICommandBuilder commandBuilderAfter)
         {
@@ -154,7 +138,7 @@ namespace ScoopBox
         public async Task Run(
             FileStream scriptBefore,
             ICommandBuilder commandBuilderBefore,
-            IDictionary<string, IPackageManager> applications,
+            HashSet<IPackageManager> applications,
             IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             await Run(
@@ -163,7 +147,7 @@ namespace ScoopBox
                 scriptsAfter);
         }
 
-        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, IDictionary<string, IPackageManager> applications, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, HashSet<IPackageManager> applications, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             throw new NotImplementedException();
         }

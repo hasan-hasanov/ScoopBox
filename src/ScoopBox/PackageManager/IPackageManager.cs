@@ -4,8 +4,8 @@ namespace ScoopBox.PackageManager
 {
     public interface IPackageManager
     {
-        IEnumerable<string> Autocomplete(string characters);
+        IEnumerable<string> Applications { get; set; }
 
-        string BuildScript(IEnumerable<string> applications);
+        string GenerateScript();
     }
 }
