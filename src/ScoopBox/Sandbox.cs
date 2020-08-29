@@ -57,9 +57,7 @@ namespace ScoopBox
             _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
 
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "BeforeScripts")}");
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "AfterScripts")}");
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
+            InitializeDirectoryStructure();
         }
 
         public async Task Run()
@@ -162,6 +160,27 @@ namespace ScoopBox
         public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
             throw new NotImplementedException();
+        }
+
+        private void InitializeDirectoryStructure()
+        {
+            // TODO: Think if this really should stay that way!!!
+            Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
+            DirectoryInfo di = new DirectoryInfo(_options.RootFilesDirectoryLocation);
+
+            foreach (FileInfo file in di.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            foreach (DirectoryInfo dir in di.EnumerateDirectories())
+            {
+                dir.Delete(true);
+            }
+
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "BeforeScripts")}");
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "AfterScripts")}");
+            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
         }
     }
 }

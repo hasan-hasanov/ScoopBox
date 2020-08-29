@@ -11,7 +11,7 @@ namespace ScoopBox
 
         public string RootSandboxFilesDirectoryLocation { get; set; } = @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\";
 
-        public string RootFilesDirectoryLocation { get; set; } = Directory.CreateDirectory($"{Path.GetTempPath()}/Sandbox").FullName;
+        public string RootFilesDirectoryLocation { get; set; } = $"{Path.GetTempPath()}Sandbox";
 
         public VGpuOptions VGpu { get; set; } = VGpuOptions.Disabled;
 
