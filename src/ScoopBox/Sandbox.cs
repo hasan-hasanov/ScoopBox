@@ -113,11 +113,30 @@ namespace ScoopBox
                 packageManagers);
         }
 
-        public Task Run(
+        public async Task Run(
             IDictionary<FileStream, ICommandBuilder> scriptsBefore,
             IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            throw new NotImplementedException();
+            foreach (var script in scriptsBefore)
+            {
+                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+
+                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
+            }
+
+            foreach (var packageManager in packageManagers)
+            {
+                string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
+                string fullSandboxScriptName = Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+
+                _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
+            }
+
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
+            await _scoopBoxProcess.StartAsync();
         }
 
         public async Task Run(
@@ -157,9 +176,41 @@ namespace ScoopBox
                 scriptsAfter);
         }
 
-        public Task Run(IDictionary<FileStream, ICommandBuilder> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        public async Task Run(
+            IDictionary<FileStream, ICommandBuilder> scriptsBefore, 
+            IDictionary<IPackageManager, ICommandBuilder> packageManagers, 
+            IDictionary<FileStream, ICommandBuilder> scriptsAfter)
         {
-            throw new NotImplementedException();
+            foreach (var script in scriptsBefore)
+            {
+                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+
+                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
+            }
+
+            foreach (var packageManager in packageManagers)
+            {
+                string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
+                string fullSandboxScriptName = Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+
+                _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
+            }
+
+            foreach (var script in scriptsAfter)
+            {
+                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+
+                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
+            }
+
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
+            await _scoopBoxProcess.StartAsync();
         }
 
         private void InitializeDirectoryStructure()
