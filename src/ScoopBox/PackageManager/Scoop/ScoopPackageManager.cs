@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace ScoopBox.PackageManager.Scoop
     {
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
         private readonly IEnumerable<string> _applications;
+        private readonly IFileSystem _fileSystem;
 
         public string PackageManagerScriptName { get; }
 
@@ -19,11 +21,17 @@ namespace ScoopBox.PackageManager.Scoop
         }
 
         public ScoopPackageManager(string scriptName, IEnumerable<string> applications)
+            : this(scriptName, applications, new FileSystem())
+        {
+        }
+
+        public ScoopPackageManager(string scriptName, IEnumerable<string> applications, IFileSystem fileSystem)
         {
             PackageManagerScriptName = scriptName ?? throw new ArgumentNullException(nameof(scriptName));
             _applications = applications ?? throw new ArgumentNullException(nameof(applications));
 
             _sbScoopPackageManagerBuilder = new StringBuilder();
+            _fileSystem = fileSystem;
         }
 
         public async Task<string> GenerateScriptFile(string location)
@@ -35,7 +43,7 @@ namespace ScoopBox.PackageManager.Scoop
 
             string content = _sbScoopPackageManagerBuilder.ToString();
 
-            using (StreamWriter writer = File.CreateText(Path.Combine(location, PackageManagerScriptName)))
+            using (StreamWriter writer = _fileSystem.File.CreateText(Path.Combine(location, PackageManagerScriptName)))
             {
                 await writer.WriteAsync(content);
             }
@@ -63,7 +71,7 @@ namespace ScoopBox.PackageManager.Scoop
             _sbScoopPackageManagerBuilder
                 .Append("scoop install")
                 .Append(" ")
-                .Append(string.Join(" ", _applications));
+                .AppendLine(string.Join(" ", _applications));
         }
     }
 }
