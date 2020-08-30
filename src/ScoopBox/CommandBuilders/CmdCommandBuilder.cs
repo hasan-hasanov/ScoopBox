@@ -40,6 +40,7 @@ namespace ScoopBox.CommandBuilders
                 string afterArguments = string.Join(" ", argumentsAfterScript);
 
                 sbCmdCommandBuilder
+                    .Append(" ")
                     .Append(afterArguments);
             }
 
