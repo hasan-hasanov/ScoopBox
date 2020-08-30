@@ -11,7 +11,7 @@ namespace ScoopBox.SandboxProcesses.Cmd
 
         public SandboxCmdProcess()
             : this(
-                  Directory.CreateDirectory($"{Path.GetTempPath()}/Sandbox").FullName,
+                  $"{Path.GetTempPath()}/Sandbox",
                   "sandbox.wsb")
         {
         }

@@ -13,7 +13,7 @@ namespace ScoopBox
     public class Sandbox : ISandbox
     {
         private readonly IOptions _options;
-        private readonly ISandboxProcess _scoopBoxProcess;
+        private readonly ISandboxProcess _sandboxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
 
         public Sandbox()
@@ -54,7 +54,7 @@ namespace ScoopBox
             ISandboxConfigurationBuilder sandboxConfigurationBuilder)
         {
             _options = options;
-            _scoopBoxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
+            _sandboxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
 
             InitializeDirectoryStructure();
@@ -63,7 +63,7 @@ namespace ScoopBox
         public async Task Run()
         {
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _scoopBoxProcess.StartAsync();
+            await _sandboxProcess.StartAsync();
         }
 
         public async Task Run(
@@ -78,7 +78,7 @@ namespace ScoopBox
             GenerateBeforeScripts(scripts);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _scoopBoxProcess.StartAsync();
+            await _sandboxProcess.StartAsync();
         }
 
         public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
@@ -86,7 +86,7 @@ namespace ScoopBox
             await GeneratePackageManagerScripts(packageManagers);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _scoopBoxProcess.StartAsync();
+            await _sandboxProcess.StartAsync();
         }
 
         public async Task Run(
@@ -107,7 +107,7 @@ namespace ScoopBox
             await GeneratePackageManagerScripts(packageManagers);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _scoopBoxProcess.StartAsync();
+            await _sandboxProcess.StartAsync();
         }
 
         public async Task Run(
@@ -157,7 +157,7 @@ namespace ScoopBox
             GenerateAfterScripts(scriptsAfter);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _scoopBoxProcess.StartAsync();
+            await _sandboxProcess.StartAsync();
         }
 
         private void InitializeDirectoryStructure()
