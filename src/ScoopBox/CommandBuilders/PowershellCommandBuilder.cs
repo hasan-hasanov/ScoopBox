@@ -60,6 +60,7 @@ namespace ScoopBox.CommandBuilders
                 string afterArguments = string.Join(" ", argumentsAfterScript);
 
                 sbPowershellCommandBuilder
+                    .Append(" ")
                     .Append(afterArguments);
             }
 
