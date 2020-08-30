@@ -3,6 +3,7 @@ using ScoopBox.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -14,6 +15,7 @@ namespace ScoopBox.SandboxConfigurations
     {
         private readonly Configuration _configuration;
         private readonly IOptions _options;
+        private readonly IFileSystem _fileSystem;
 
         private readonly XmlSerializer _configurationSerializer;
         private readonly XmlSerializerNamespaces _emptyNamespaces;
@@ -22,9 +24,15 @@ namespace ScoopBox.SandboxConfigurations
         public IList<string> Commands { get; }
 
         public SandboxConfigurationBuilder(IOptions options)
+            : this(options, new FileSystem())
+        {
+        }
+
+        public SandboxConfigurationBuilder(IOptions options, IFileSystem fileSystem)
         {
             _configuration = new Configuration();
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
 
             _configurationSerializer = new XmlSerializer(typeof(Configuration));
             _emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
@@ -39,11 +47,26 @@ namespace ScoopBox.SandboxConfigurations
 
         public void AddCommand(string command)
         {
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
             Commands.Add(command);
         }
 
         public void AddCommands(IEnumerable<string> commands)
         {
+            if (commands == null)
+            {
+                throw new ArgumentNullException(nameof(commands));
+            }
+
+            if (!commands.Any())
+            {
+                throw new ArgumentException($"Parameter {nameof(commands)} is empty!");
+            }
+
             foreach (var command in commands)
             {
                 Commands.Add(command);
@@ -99,7 +122,6 @@ namespace ScoopBox.SandboxConfigurations
 
             _configuration.MappedFolders.MappedFolder.AddRange(_options.UserMappedDirectories);
 
-            // TODO: Consider using mapped folder here too.
             _configuration.MappedFolders.MappedFolder.Add(new MappedFolder()
             {
                 HostFolder = _options.RootFilesDirectoryLocation,
@@ -122,7 +144,7 @@ namespace ScoopBox.SandboxConfigurations
         public async Task CreatePartialConfigurationFile()
         {
             string content = SerializeXMLToString();
-            using (StreamWriter writer = File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
+            using (StreamWriter writer = _fileSystem.File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
             {
                 await writer.WriteAsync(content);
             }
