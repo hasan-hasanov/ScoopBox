@@ -7,30 +7,39 @@ namespace ScoopBox.SandboxProcesses.ProcessAdapters
     {
         private readonly Process _process;
 
-        public ProcessAdapter()
+        public ProcessAdapter(string processName)
         {
-            _process = new Process();
+            _process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = processName,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = false,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    UseShellExecute = false,
+                }
+            };
         }
 
-        public bool Start(string processName)
+        public bool Start()
         {
-            _process.StartInfo = new ProcessStartInfo()
-            {
-                FileName = processName,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                CreateNoWindow = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-            };
-
             return _process.Start();
         }
 
-        public async Task StandartInputWriteLine(string content)
+        public async Task StandardInputWriteLineAsync(string content)
         {
             await _process.StandardInput.WriteLineAsync(content);
+        }
+
+        public async Task StandardInputFlushAsync()
+        {
             await _process.StandardInput.FlushAsync();
+        }
+
+        public void StandardInputClose()
+        {
             _process.StandardInput.Close();
         }
 

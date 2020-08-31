@@ -4,9 +4,12 @@ namespace ScoopBox.SandboxProcesses.ProcessAdapters
 {
     public interface IProcessAdapter
     {
-        bool Start(string processName);
+        bool Start();
+        Task StandardInputWriteLineAsync(string content);
 
-        Task StandartInputWriteLine(string content);
+        Task StandardInputFlushAsync();
+
+        void StandardInputClose();
 
         void WaitForExit();
     }

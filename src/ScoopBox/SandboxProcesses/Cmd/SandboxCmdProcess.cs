@@ -7,6 +7,8 @@ namespace ScoopBox.SandboxProcesses.Cmd
 {
     public class SandboxCmdProcess : ISandboxProcess
     {
+        private const string CMD_EXE = "cmd.exe";
+
         private readonly string _configurationFileLocation;
         private readonly IProcessAdapter _processAdapter;
 
@@ -18,7 +20,7 @@ namespace ScoopBox.SandboxProcesses.Cmd
         }
 
         public SandboxCmdProcess(string rootFilesDirectoryLocation, string sandboxConfigurationFileName)
-            : this(rootFilesDirectoryLocation, sandboxConfigurationFileName, new ProcessAdapter())
+            : this(rootFilesDirectoryLocation, sandboxConfigurationFileName, new ProcessAdapter(CMD_EXE))
         {
         }
 
@@ -43,12 +45,12 @@ namespace ScoopBox.SandboxProcesses.Cmd
             _processAdapter = processAdapter;
         }
 
-        public string ProcessName => "cmd.exe";
-
         public async Task StartAsync()
         {
-            _processAdapter.Start(ProcessName);
-            await _processAdapter.StandartInputWriteLine($"\"{_configurationFileLocation}\"");
+            _processAdapter.Start();
+            await _processAdapter.StandardInputWriteLineAsync($"\"{_configurationFileLocation}\"");
+            await _processAdapter.StandardInputFlushAsync();
+            _processAdapter.StandardInputClose();
             _processAdapter.WaitForExit();
         }
     }

@@ -17,31 +17,61 @@ namespace ScoopBox.Test.SandboxProcesses.Cmd.SandboxCmdProcessTests
             string configurationName = "sandbox.wsb";
 
             Mock<IProcessAdapter> mockProcessAdapter = new Mock<IProcessAdapter>();
-            mockProcessAdapter.Setup(p => p.Start(It.IsAny<string>())).Returns(true);
+            mockProcessAdapter.Setup(p => p.Start()).Returns(true);
 
             SandboxCmdProcess sandboxCmdProcess = new SandboxCmdProcess(rootFileDirectoryLocation, configurationName, mockProcessAdapter.Object);
             await sandboxCmdProcess.StartAsync();
 
-            mockProcessAdapter.Verify(p => p.Start(It.IsAny<string>()), Times.Once);
+            mockProcessAdapter.Verify(p => p.Start(), Times.Once);
         }
 
         [Fact]
-        public async Task ShouldCallStandartInputWriteLineMethodSucessfully()
+        public async Task ShouldCallStandardInputWriteLineAsyncSucessfully()
         {
             string rootFileDirectoryLocation = "C:/temp/";
             string configurationName = "sandbox.wsb";
 
             Mock<IProcessAdapter> mockProcessAdapter = new Mock<IProcessAdapter>();
-            mockProcessAdapter.Setup(p => p.StandartInputWriteLine(It.IsAny<string>()));
+            mockProcessAdapter.Setup(p => p.StandardInputWriteLineAsync(It.IsAny<string>()));
 
             SandboxCmdProcess sandboxCmdProcess = new SandboxCmdProcess(rootFileDirectoryLocation, configurationName, mockProcessAdapter.Object);
             await sandboxCmdProcess.StartAsync();
 
-            mockProcessAdapter.Verify(p => p.StandartInputWriteLine(It.IsAny<string>()), Times.Once);
+            mockProcessAdapter.Verify(p => p.StandardInputWriteLineAsync(It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
-        public async Task ShouldCallWaitForExitMethodSucessfully()
+        public async Task ShouldCallStandardInputFlushAsyncSucessfully()
+        {
+            string rootFileDirectoryLocation = "C:/temp/";
+            string configurationName = "sandbox.wsb";
+
+            Mock<IProcessAdapter> mockProcessAdapter = new Mock<IProcessAdapter>();
+            mockProcessAdapter.Setup(p => p.StandardInputFlushAsync());
+
+            SandboxCmdProcess sandboxCmdProcess = new SandboxCmdProcess(rootFileDirectoryLocation, configurationName, mockProcessAdapter.Object);
+            await sandboxCmdProcess.StartAsync();
+
+            mockProcessAdapter.Verify(p => p.StandardInputFlushAsync(), Times.Once);
+        }
+
+        [Fact]
+        public async Task ShouldCallStandardInputCloseSucessfully()
+        {
+            string rootFileDirectoryLocation = "C:/temp/";
+            string configurationName = "sandbox.wsb";
+
+            Mock<IProcessAdapter> mockProcessAdapter = new Mock<IProcessAdapter>();
+            mockProcessAdapter.Setup(p => p.StandardInputClose());
+
+            SandboxCmdProcess sandboxCmdProcess = new SandboxCmdProcess(rootFileDirectoryLocation, configurationName, mockProcessAdapter.Object);
+            await sandboxCmdProcess.StartAsync();
+
+            mockProcessAdapter.Verify(p => p.StandardInputClose(), Times.Once);
+        }
+
+        [Fact]
+        public async Task ShouldCallWaitForExitSucessfully()
         {
             string rootFileDirectoryLocation = "C:/temp/";
             string configurationName = "sandbox.wsb";
@@ -65,7 +95,7 @@ namespace ScoopBox.Test.SandboxProcesses.Cmd.SandboxCmdProcessTests
             string actual = string.Empty;
 
             Mock<IProcessAdapter> mockProcessAdapter = new Mock<IProcessAdapter>();
-            mockProcessAdapter.Setup(p => p.StandartInputWriteLine(It.IsAny<string>()))
+            mockProcessAdapter.Setup(p => p.StandardInputWriteLineAsync(It.IsAny<string>()))
                 .Callback<string>(input => actual = input)
                 .Returns(Task.CompletedTask);
 
