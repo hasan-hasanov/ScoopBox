@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using ScoopBox.SandboxProcesses.ProcessAdapters;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -7,7 +7,8 @@ namespace ScoopBox.SandboxProcesses.Cmd
 {
     public class SandboxCmdProcess : ISandboxProcess
     {
-        private readonly string configurationFileLocation;
+        private readonly string _configurationFileLocation;
+        private readonly IProcessAdapter _processAdapter;
 
         public SandboxCmdProcess()
             : this(
@@ -17,6 +18,11 @@ namespace ScoopBox.SandboxProcesses.Cmd
         }
 
         public SandboxCmdProcess(string rootFilesDirectoryLocation, string sandboxConfigurationFileName)
+            : this(rootFilesDirectoryLocation, sandboxConfigurationFileName, new ProcessAdapter())
+        {
+        }
+
+        public SandboxCmdProcess(string rootFilesDirectoryLocation, string sandboxConfigurationFileName, IProcessAdapter processAdapter)
         {
             if (string.IsNullOrWhiteSpace(rootFilesDirectoryLocation))
             {
@@ -28,30 +34,22 @@ namespace ScoopBox.SandboxProcesses.Cmd
                 throw new ArgumentNullException(nameof(sandboxConfigurationFileName));
             }
 
-            configurationFileLocation = Path.Combine(rootFilesDirectoryLocation, sandboxConfigurationFileName);
+            if (processAdapter == null)
+            {
+                throw new ArgumentNullException(nameof(processAdapter));
+            }
+
+            _configurationFileLocation = Path.Combine(rootFilesDirectoryLocation, sandboxConfigurationFileName);
+            _processAdapter = processAdapter;
         }
+
+        public string ProcessName => "cmd.exe";
 
         public async Task StartAsync()
         {
-            Process cmd = new Process()
-            {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = "cmd.exe",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = false,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    UseShellExecute = false,
-                }
-            };
-
-            cmd.Start();
-
-            await cmd.StandardInput.WriteLineAsync($"\"{configurationFileLocation}\"");
-            await cmd.StandardInput.FlushAsync();
-            cmd.StandardInput.Close();
-            cmd.WaitForExit();
+            _processAdapter.Start(ProcessName);
+            await _processAdapter.StandartInputWriteLine($"\"{_configurationFileLocation}\"");
+            _processAdapter.WaitForExit();
         }
     }
 }

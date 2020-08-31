@@ -1,4 +1,5 @@
 ﻿using ScoopBox.SandboxProcesses.Cmd;
+using ScoopBox.SandboxProcesses.ProcessAdapters;
 using System;
 using Xunit;
 
@@ -29,6 +30,16 @@ namespace ScoopBox.Test.SandboxProcesses.Cmd.SandboxCmdProcessTests
             string sandboxConfigurationFileName = null;
 
             Assert.Throws<ArgumentNullException>(() => new SandboxCmdProcess(rootFilesDirectoryLocation, sandboxConfigurationFileName));
+        }
+
+        [Fact]
+        public void ShouldThrowArgumentNullExceptionWithoutIProcessAdapter()
+        {
+            string rootFilesDirectoryLocation = "C:/temp";
+            string sandboxConfigurationFileName = "sandbox.wsb";
+            IProcessAdapter processAdapter = null;
+
+            Assert.Throws<ArgumentNullException>(() => new SandboxCmdProcess(rootFilesDirectoryLocation, sandboxConfigurationFileName, processAdapter));
         }
     }
 }
