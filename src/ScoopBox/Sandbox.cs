@@ -6,6 +6,7 @@ using ScoopBox.SandboxProcesses.Cmd;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 
 namespace ScoopBox
@@ -15,6 +16,7 @@ namespace ScoopBox
         private readonly IOptions _options;
         private readonly ISandboxProcess _sandboxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
+        private readonly IFileSystem _fileSystem;
 
         public Sandbox()
             : this(
@@ -52,10 +54,20 @@ namespace ScoopBox
             IOptions options,
             ISandboxProcess sandboxProcess,
             ISandboxConfigurationBuilder sandboxConfigurationBuilder)
+            : this(options, sandboxProcess, sandboxConfigurationBuilder, new FileSystem())
+        {
+        }
+
+        public Sandbox(
+            IOptions options,
+            ISandboxProcess sandboxProcess,
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
+            IFileSystem fileSystem)
         {
             _options = options;
             _sandboxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
+            _fileSystem = fileSystem ?? throw new ArgumentException(nameof(fileSystem));
 
             InitializeDirectoryStructure();
         }
@@ -163,32 +175,31 @@ namespace ScoopBox
         private void InitializeDirectoryStructure()
         {
             // TODO: Think if this really should stay that way!!!
-            Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
-            DirectoryInfo di = new DirectoryInfo(_options.RootFilesDirectoryLocation);
+            _fileSystem.Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
 
-            foreach (FileInfo file in di.EnumerateFiles())
+            foreach (IFileInfo file in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateFiles())
             {
                 file.Delete();
             }
 
-            foreach (DirectoryInfo dir in di.EnumerateDirectories())
+            foreach (IDirectoryInfo dir in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateDirectories())
             {
                 dir.Delete(true);
             }
 
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "BeforeScripts")}");
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "AfterScripts")}");
-            Directory.CreateDirectory($"{Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
+            _fileSystem.Directory.CreateDirectory($"{_fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, "BeforeScripts")}");
+            _fileSystem.Directory.CreateDirectory($"{_fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, "AfterScripts")}");
+            _fileSystem.Directory.CreateDirectory($"{_fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
         }
 
         private void GenerateBeforeScripts(IDictionary<FileStream, ICommandBuilder> scripts)
         {
             foreach (var script in scripts)
             {
-                string fullLocalScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
-                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+                string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
 
-                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+                _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
 
                 _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
             }
@@ -199,7 +210,7 @@ namespace ScoopBox
             foreach (var packageManager in packageManagers)
             {
                 string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
-                string fullSandboxScriptName = Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+                string fullSandboxScriptName = _fileSystem.Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
 
                 _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
             }
@@ -209,10 +220,10 @@ namespace ScoopBox
         {
             foreach (var script in scriptsAfter)
             {
-                string fullLocalScriptPath = Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootFilesDirectoryLocation), Path.GetFileName(script.Key.Name));
-                string fullSandboxScriptPath = Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootSandboxFilesDirectoryLocation), Path.GetFileName(fullLocalScriptPath));
+                string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
+                string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
 
-                File.Copy(Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+                _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
 
                 _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
             }
