@@ -72,22 +72,38 @@ namespace ScoopBox
             InitializeDirectoryStructure();
         }
 
-        public async Task Run()
+        public Task Run(string literalScript, ICommandBuilder commandBuilder)
         {
+            return Run(new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScript, commandBuilder) });
+        }
+
+        public Task Run(FileStream script, ICommandBuilder commandBuilder)
+        {
+            return Run(new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(script, commandBuilder) });
+        }
+
+        public async Task Run(List<Tuple<string, ICommandBuilder>> literalScripts)
+        {
+            foreach ((string script, ICommandBuilder commandBuilder) in literalScripts)
+            {
+                IEnumerable<string> commands = await commandBuilder.Build(script);
+                _sandboxConfigurationBuilder.AddCommands(commands);
+            }
+
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();
         }
 
-        public async Task Run(
-            FileStream script,
-            ICommandBuilder commandBuilder)
+        public async Task Run(List<Tuple<FileStream, ICommandBuilder>> scripts)
         {
-            await Run(new Dictionary<FileStream, ICommandBuilder>() { { script, commandBuilder } });
-        }
-
-        public async Task Run(IDictionary<FileStream, ICommandBuilder> scripts)
-        {
-            GenerateBeforeScripts(scripts);
+            foreach ((FileStream file, ICommandBuilder commandBuilder) in scripts)
+            {
+                IEnumerable<string> commands = await commandBuilder.Build(
+                    file,
+                    PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation),
+                    PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation));
+                _sandboxConfigurationBuilder.AddCommands(commands);
+            }
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();
@@ -95,81 +111,83 @@ namespace ScoopBox
 
         public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            await GeneratePackageManagerScripts(packageManagers);
+            foreach (var packageManager in packageManagers)
+            {
+                IEnumerable<string> commands = await packageManager.Value.Build(
+                    packageManager.Key,
+                    PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation),
+                    PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation));
+                _sandboxConfigurationBuilder.AddCommands(commands);
+            }
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();
         }
 
-        public async Task Run(
-            FileStream scriptBefore,
-            ICommandBuilder commandBuilder,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        public Task Run(string literalScriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            await Run(
-                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilder } },
-                packageManagers);
+            return Run(new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptBefore, commandBuilderBefore) }, packageManagers);
         }
 
-        public async Task Run(
-            IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        public Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            GenerateBeforeScripts(scriptsBefore);
-            await GeneratePackageManagerScripts(packageManagers);
-
-            await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _sandboxProcess.StartAsync();
+            return Run(new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) }, packageManagers);
         }
 
-        public async Task Run(
-            FileStream scriptBefore,
-            ICommandBuilder commandBuilderBefore,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
-            FileStream scriptAfter,
-            ICommandBuilder commandBuilderAfter)
+        public Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            await Run(
-                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
+            throw new NotImplementedException();
+        }
+
+        public Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, string literalScriptAfter, ICommandBuilder commandBuilderAfter)
+        {
+            return Run(packageManagers, new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptAfter, commandBuilderAfter) });
+        }
+
+        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter)
+        {
+            return Run(packageManagers, new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
+        }
+
+        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Run(string literalScriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, string literalScriptAfter, ICommandBuilder commandBuilderAfter)
+        {
+            return Run(
+                new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptBefore, commandBuilderBefore) },
                 packageManagers,
-                new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
+                new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptAfter, commandBuilderAfter) });
         }
 
-        public async Task Run(
-            IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
-            FileStream scriptAfter,
-            ICommandBuilder commandBuilderAfter)
+        public Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter)
         {
-            await Run(
-                scriptsBefore,
+            return Run(
+                new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) },
                 packageManagers,
-                new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
+                new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
         }
 
-        public async Task Run(
-            FileStream scriptBefore,
-            ICommandBuilder commandBuilderBefore,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
-            IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        public Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter)
         {
-            await Run(
-                new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
-                packageManagers,
-                scriptsAfter);
+            throw new NotImplementedException();
         }
 
-        public async Task Run(
-            IDictionary<FileStream, ICommandBuilder> scriptsBefore,
-            IDictionary<IPackageManager, ICommandBuilder> packageManagers,
-            IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        public Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter)
         {
-            GenerateBeforeScripts(scriptsBefore);
-            await GeneratePackageManagerScripts(packageManagers);
-            GenerateAfterScripts(scriptsAfter);
-
-            await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _sandboxProcess.StartAsync();
+            throw new NotImplementedException();
         }
 
         private void InitializeDirectoryStructure()
@@ -192,41 +210,141 @@ namespace ScoopBox
             _fileSystem.Directory.CreateDirectory($"{_fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, "PackageManagerScripts")}");
         }
 
-        private void GenerateBeforeScripts(IDictionary<FileStream, ICommandBuilder> scripts)
-        {
-            foreach (var script in scripts)
-            {
-                string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
-                string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
+        //public async Task Run()
+        //{
+        //    await _sandboxConfigurationBuilder.CreateConfigurationFile();
+        //    await _sandboxProcess.StartAsync();
+        //}
 
-                _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+        //public async Task Run(
+        //    FileStream script,
+        //    ICommandBuilder commandBuilder)
+        //{
+        //    await Run(new Dictionary<FileStream, ICommandBuilder>() { { script, commandBuilder } });
+        //}
 
-                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
-            }
-        }
+        //public async Task Run(IDictionary<FileStream, ICommandBuilder> scripts)
+        //{
+        //    GenerateBeforeScripts(scripts);
 
-        private async Task GeneratePackageManagerScripts(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
-        {
-            foreach (var packageManager in packageManagers)
-            {
-                string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
-                string fullSandboxScriptName = _fileSystem.Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+        //    await _sandboxConfigurationBuilder.CreateConfigurationFile();
+        //    await _sandboxProcess.StartAsync();
+        //}
 
-                _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
-            }
-        }
+        //public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        //{
+        //    await GeneratePackageManagerScripts(packageManagers);
 
-        private void GenerateAfterScripts(IDictionary<FileStream, ICommandBuilder> scriptsAfter)
-        {
-            foreach (var script in scriptsAfter)
-            {
-                string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
-                string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
+        //    await _sandboxConfigurationBuilder.CreateConfigurationFile();
+        //    await _sandboxProcess.StartAsync();
+        //}
 
-                _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+        //public async Task Run(
+        //    FileStream scriptBefore,
+        //    ICommandBuilder commandBuilder,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        //{
+        //    await Run(
+        //        new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilder } },
+        //        packageManagers);
+        //}
 
-                _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
-            }
-        }
+        //public async Task Run(
+        //    IDictionary<FileStream, ICommandBuilder> scriptsBefore,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        //{
+        //    GenerateBeforeScripts(scriptsBefore);
+        //    await GeneratePackageManagerScripts(packageManagers);
+
+        //    await _sandboxConfigurationBuilder.CreateConfigurationFile();
+        //    await _sandboxProcess.StartAsync();
+        //}
+
+        //public async Task Run(
+        //    FileStream scriptBefore,
+        //    ICommandBuilder commandBuilderBefore,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers,
+        //    FileStream scriptAfter,
+        //    ICommandBuilder commandBuilderAfter)
+        //{
+        //    await Run(
+        //        new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
+        //        packageManagers,
+        //        new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
+        //}
+
+        //public async Task Run(
+        //    IDictionary<FileStream, ICommandBuilder> scriptsBefore,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers,
+        //    FileStream scriptAfter,
+        //    ICommandBuilder commandBuilderAfter)
+        //{
+        //    await Run(
+        //        scriptsBefore,
+        //        packageManagers,
+        //        new Dictionary<FileStream, ICommandBuilder>() { { scriptAfter, commandBuilderAfter } });
+        //}
+
+        //public async Task Run(
+        //    FileStream scriptBefore,
+        //    ICommandBuilder commandBuilderBefore,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers,
+        //    IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        //{
+        //    await Run(
+        //        new Dictionary<FileStream, ICommandBuilder>() { { scriptBefore, commandBuilderBefore } },
+        //        packageManagers,
+        //        scriptsAfter);
+        //}
+
+        //public async Task Run(
+        //    IDictionary<FileStream, ICommandBuilder> scriptsBefore,
+        //    IDictionary<IPackageManager, ICommandBuilder> packageManagers,
+        //    IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        //{
+        //    GenerateBeforeScripts(scriptsBefore);
+        //    await GeneratePackageManagerScripts(packageManagers);
+        //    GenerateAfterScripts(scriptsAfter);
+
+        //    await _sandboxConfigurationBuilder.CreateConfigurationFile();
+        //    await _sandboxProcess.StartAsync();
+        //}
+
+        //private void GenerateBeforeScripts(IDictionary<FileStream, ICommandBuilder> scripts)
+        //{
+        //    foreach (var script in scripts)
+        //    {
+        //        string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
+        //        string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetBeforeScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
+
+        //        _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+        //        _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
+        //    }
+        //}
+
+        //private async Task GeneratePackageManagerScripts(IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        //{
+        //    foreach (var packageManager in packageManagers)
+        //    {
+        //        string scriptName = await packageManager.Key.GenerateScriptFile(PathResolvers.GetPackageManagerScriptsPath(_options.RootFilesDirectoryLocation));
+        //        string fullSandboxScriptName = _fileSystem.Path.Combine(PathResolvers.GetPackageManagerScriptsPath(_options.RootSandboxFilesDirectoryLocation), scriptName);
+
+        //        _sandboxConfigurationBuilder.AddCommands(packageManager.Value.Build(fullSandboxScriptName));
+        //    }
+        //}
+
+        //private void GenerateAfterScripts(IDictionary<FileStream, ICommandBuilder> scriptsAfter)
+        //{
+        //    foreach (var script in scriptsAfter)
+        //    {
+        //        string fullLocalScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootFilesDirectoryLocation), _fileSystem.Path.GetFileName(script.Key.Name));
+        //        string fullSandboxScriptPath = _fileSystem.Path.Combine(PathResolvers.GetAfterScriptsPath(_options.RootSandboxFilesDirectoryLocation), _fileSystem.Path.GetFileName(fullLocalScriptPath));
+
+        //        _fileSystem.File.Copy(_fileSystem.Path.GetFullPath(script.Key.Name), fullLocalScriptPath, true);
+
+        //        _sandboxConfigurationBuilder.AddCommands(script.Value.Build(fullSandboxScriptPath));
+        //    }
+        //}
     }
 }

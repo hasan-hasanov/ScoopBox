@@ -10,10 +10,11 @@ namespace ScoopBox.PackageManager.Scoop
     public class ScoopPackageManager : IPackageManager
     {
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
-        private readonly IEnumerable<string> _applications;
         private readonly IFileSystem _fileSystem;
 
         public string PackageManagerScriptName { get; }
+
+        public IEnumerable<string> Applications { get; }
 
         public ScoopPackageManager(IEnumerable<string> applications)
             : this($"{nameof(ScoopPackageManager)}.ps1", applications)
@@ -28,7 +29,7 @@ namespace ScoopBox.PackageManager.Scoop
         public ScoopPackageManager(string scriptName, IEnumerable<string> applications, IFileSystem fileSystem)
         {
             PackageManagerScriptName = scriptName ?? throw new ArgumentNullException(nameof(scriptName));
-            _applications = applications ?? throw new ArgumentNullException(nameof(applications));
+            Applications = applications ?? throw new ArgumentNullException(nameof(applications));
 
             _sbScoopPackageManagerBuilder = new StringBuilder();
             _fileSystem = fileSystem;
@@ -42,13 +43,13 @@ namespace ScoopBox.PackageManager.Scoop
             BuildApplicationInstaller();
 
             string content = _sbScoopPackageManagerBuilder.ToString();
-
-            using (StreamWriter writer = _fileSystem.File.CreateText(Path.Combine(location, PackageManagerScriptName)))
+            string fullScriptPath = Path.Combine(location, PackageManagerScriptName);
+            using (StreamWriter writer = _fileSystem.File.CreateText(fullScriptPath))
             {
                 await writer.WriteAsync(content);
             }
 
-            return PackageManagerScriptName;
+            return fullScriptPath;
         }
 
         private void BuildDownloader()
@@ -71,7 +72,7 @@ namespace ScoopBox.PackageManager.Scoop
             _sbScoopPackageManagerBuilder
                 .Append("scoop install")
                 .Append(" ")
-                .AppendLine(string.Join(" ", _applications));
+                .AppendLine(string.Join(" ", Applications));
         }
     }
 }
