@@ -2,6 +2,7 @@
 using ScoopBox.CommandBuilders;
 using ScoopBox.PackageManager;
 using ScoopBox.PackageManager.Scoop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,11 +19,17 @@ namespace Playground
             //    { new ScoopPackageManager(new List<string>() { "git", "curl" }), new PowershellCommandBuilder() }
             //});
 
-            //ISandbox sandbox2 = new Sandbox();
-            //await sandbox2.Run(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test.ps1"), new PowershellCommandBuilder());
+            ISandbox sandbox2 = new Sandbox();
+            await sandbox2.Run(new List<Tuple<FileStream, ICommandBuilder>>()
+            {
+                Tuple.Create<FileStream, ICommandBuilder>(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test2.ps1"), new PowershellCommandBuilder()),
+                Tuple.Create<FileStream, ICommandBuilder>(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test.ps1"), new PowershellCommandBuilder())
+            });
 
-            ISandbox sandbox3 = new Sandbox();
-            await sandbox3.Run(@"Start-Process 'C:\windows\system32\notepad.exe'", new PowershellCommandBuilder());
+
+
+            //ISandbox sandbox3 = new Sandbox();
+            //await sandbox3.Run(@"New-Item 'C:\Users\WDAGUtilityAccount\Desktop\TestText.txt'", new PowershellCommandBuilder());
         }
     }
 }
