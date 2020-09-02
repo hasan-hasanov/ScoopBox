@@ -77,9 +77,9 @@ namespace ScoopBox
             return Run(new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScript, commandBuilder) });
         }
 
-        public Task Run(FileStream script, ICommandBuilder commandBuilder)
+        public Task Run(FileSystemInfo script, ICommandBuilder commandBuilder)
         {
-            return Run(new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(script, commandBuilder) });
+            return Run(new List<Tuple<FileSystemInfo, ICommandBuilder>>() { Tuple.Create(script, commandBuilder) });
         }
 
         public async Task Run(List<Tuple<string, ICommandBuilder>> literalScripts)
@@ -90,7 +90,7 @@ namespace ScoopBox
             await _sandboxProcess.StartAsync();
         }
 
-        public async Task Run(List<Tuple<FileStream, ICommandBuilder>> scripts)
+        public async Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scripts)
         {
             await BeforeScriptsGeneration(scripts);
 
@@ -111,9 +111,9 @@ namespace ScoopBox
             return Run(new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptBefore, commandBuilderBefore) }, packageManagers);
         }
 
-        public Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        public Task Run(FileSystemInfo scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
-            return Run(new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) }, packageManagers);
+            return Run(new List<Tuple<FileSystemInfo, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) }, packageManagers);
         }
 
         public Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
@@ -121,7 +121,7 @@ namespace ScoopBox
             throw new NotImplementedException();
         }
 
-        public async Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
+        public async Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers)
         {
             await BeforeScriptsGeneration(scriptsBefore);
             await PackageManagerScriptsGeneration(packageManagers);
@@ -135,9 +135,9 @@ namespace ScoopBox
             return Run(packageManagers, new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptAfter, commandBuilderAfter) });
         }
 
-        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter)
+        public Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileSystemInfo scriptAfter, ICommandBuilder commandBuilderAfter)
         {
-            return Run(packageManagers, new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
+            return Run(packageManagers, new List<Tuple<FileSystemInfo, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
         }
 
         public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter)
@@ -149,7 +149,7 @@ namespace ScoopBox
             await _sandboxProcess.StartAsync();
         }
 
-        public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter)
+        public async Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsAfter)
         {
             await PackageManagerScriptsGeneration(packageManagers);
             await AfterScriptsGeneration(scriptsAfter);
@@ -166,12 +166,12 @@ namespace ScoopBox
                 new List<Tuple<string, ICommandBuilder>>() { Tuple.Create(literalScriptAfter, commandBuilderAfter) });
         }
 
-        public Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter)
+        public Task Run(FileSystemInfo scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileSystemInfo scriptAfter, ICommandBuilder commandBuilderAfter)
         {
             return Run(
-                new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) },
+                new List<Tuple<FileSystemInfo, ICommandBuilder>>() { Tuple.Create(scriptBefore, commandBuilderBefore) },
                 packageManagers,
-                new List<Tuple<FileStream, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
+                new List<Tuple<FileSystemInfo, ICommandBuilder>>() { Tuple.Create(scriptAfter, commandBuilderAfter) });
         }
 
         public async Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter)
@@ -184,7 +184,7 @@ namespace ScoopBox
             await _sandboxProcess.StartAsync();
         }
 
-        public async Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter)
+        public async Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsAfter)
         {
             await BeforeScriptsGeneration(scriptsBefore);
             await PackageManagerScriptsGeneration(packageManagers);
@@ -223,9 +223,9 @@ namespace ScoopBox
             }
         }
 
-        private async Task BeforeScriptsGeneration(List<Tuple<FileStream, ICommandBuilder>> scripts)
+        private async Task BeforeScriptsGeneration(List<Tuple<FileSystemInfo, ICommandBuilder>> scripts)
         {
-            foreach ((FileStream file, ICommandBuilder commandBuilder) in scripts)
+            foreach ((FileSystemInfo file, ICommandBuilder commandBuilder) in scripts)
             {
                 IEnumerable<string> commands = await commandBuilder.Build(
                     file,
@@ -235,9 +235,9 @@ namespace ScoopBox
             }
         }
 
-        private async Task AfterScriptsGeneration(List<Tuple<FileStream, ICommandBuilder>> scripts)
+        private async Task AfterScriptsGeneration(List<Tuple<FileSystemInfo, ICommandBuilder>> scripts)
         {
-            foreach ((FileStream file, ICommandBuilder commandBuilder) in scripts)
+            foreach ((FileSystemInfo file, ICommandBuilder commandBuilder) in scripts)
             {
                 IEnumerable<string> commands = await commandBuilder.Build(
                     file,

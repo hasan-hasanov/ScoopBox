@@ -20,10 +20,10 @@ namespace Playground
             //});
 
             ISandbox sandbox2 = new Sandbox();
-            await sandbox2.Run(new List<Tuple<FileStream, ICommandBuilder>>()
+            await sandbox2.Run(new List<Tuple<FileSystemInfo, ICommandBuilder>>()
             {
-                Tuple.Create<FileStream, ICommandBuilder>(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test2.ps1"), new PowershellCommandBuilder()),
-                Tuple.Create<FileStream, ICommandBuilder>(File.OpenRead(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test.ps1"), new PowershellCommandBuilder())
+                Tuple.Create<FileSystemInfo, ICommandBuilder>(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test2.ps1"), new PowershellCommandBuilder()),
+                Tuple.Create<FileSystemInfo, ICommandBuilder>(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\test.ps1"), new PowershellCommandBuilder())
             });
 
 

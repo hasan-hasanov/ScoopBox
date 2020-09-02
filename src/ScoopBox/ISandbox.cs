@@ -11,36 +11,36 @@ namespace ScoopBox
     {
         Task Run(string literalScript, ICommandBuilder commandBuilder);
 
-        Task Run(FileStream script, ICommandBuilder commandBuilder);
+        Task Run(FileSystemInfo script, ICommandBuilder commandBuilder);
 
         Task Run(List<Tuple<string, ICommandBuilder>> literalScripts);
 
-        Task Run(List<Tuple<FileStream, ICommandBuilder>> scripts);
+        Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scripts);
 
         Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers);
 
         Task Run(string literalScriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
 
-        Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
+        Task Run(FileSystemInfo scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
 
         Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
 
-        Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
+        Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers);
 
         Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, string literalScriptAfter, ICommandBuilder commandBuilderAfter);
 
-        Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter);
+        Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileSystemInfo scriptAfter, ICommandBuilder commandBuilderAfter);
 
         Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter);
 
-        Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter);
+        Task Run(IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsAfter);
 
         Task Run(string literalScriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, string literalScriptAfter, ICommandBuilder commandBuilderAfter);
 
-        Task Run(FileStream scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileStream scriptAfter, ICommandBuilder commandBuilderAfter);
+        Task Run(FileSystemInfo scriptBefore, ICommandBuilder commandBuilderBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, FileSystemInfo scriptAfter, ICommandBuilder commandBuilderAfter);
 
         Task Run(List<Tuple<string, ICommandBuilder>> literalScriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<string, ICommandBuilder>> literalScriptsAfter);
 
-        Task Run(List<Tuple<FileStream, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileStream, ICommandBuilder>> scriptsAfter);
+        Task Run(List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsBefore, IDictionary<IPackageManager, ICommandBuilder> packageManagers, List<Tuple<FileSystemInfo, ICommandBuilder>> scriptsAfter);
     }
 }

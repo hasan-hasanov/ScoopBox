@@ -7,7 +7,7 @@ namespace ScoopBox.CommandBuilders
 {
     public interface ICommandBuilder
     {
-        Task<IEnumerable<string>> Build(FileStream file, string rootScriptFilesLocation, string rootSandboxScriptFilesLocation);
+        Task<IEnumerable<string>> Build(FileSystemInfo file, string rootScriptFilesLocation, string rootSandboxScriptFilesLocation);
 
         Task<IEnumerable<string>> Build(IPackageManager packageManager, string rootScriptFilesLocation, string rootSandboxScriptFilesLocation);
 

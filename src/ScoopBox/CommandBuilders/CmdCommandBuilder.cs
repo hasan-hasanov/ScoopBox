@@ -36,7 +36,7 @@ namespace ScoopBox.CommandBuilders
             _fileSystem = fileSystem;
         }
 
-        public Task<IEnumerable<string>> Build(FileStream file, string rootScriptFilesLocation, string rootSandboxScriptFilesLocation)
+        public Task<IEnumerable<string>> Build(FileSystemInfo file, string rootScriptFilesLocation, string rootSandboxScriptFilesLocation)
         {
             if (file == null)
             {
@@ -53,9 +53,9 @@ namespace ScoopBox.CommandBuilders
                 throw new ArgumentNullException(nameof(rootSandboxScriptFilesLocation));
             }
 
-            string rootScriptFileFullName = Path.Combine(rootScriptFilesLocation, Path.GetFileName(file.Name));
-            string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, Path.GetFileName(file.Name));
-            _fileSystem.File.Copy(file.Name, rootScriptFileFullName);
+            string rootScriptFileFullName = Path.Combine(rootScriptFilesLocation, file.Name);
+            string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, file.Name);
+            _fileSystem.File.Copy(file.FullName, rootScriptFileFullName);
 
             StringBuilder sbCmdCommandBuilder = new StringBuilder();
             sbCmdCommandBuilder
