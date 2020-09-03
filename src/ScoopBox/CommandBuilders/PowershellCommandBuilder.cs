@@ -57,30 +57,18 @@ namespace ScoopBox.CommandBuilders
             string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, file.Name);
             _fileSystem.File.Copy(file.FullName, rootScriptFileFullName);
 
-            StringBuilder sbPowershellCommandBuilder = new StringBuilder();
-            sbPowershellCommandBuilder
-                .Append("powershell.exe");
+            StringBuilder sbPowershellCommandBuilder = new StringBuilder().Append("powershell.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
-            sbPowershellCommandBuilder
-                .Append(" ")
-                .Append(sandboxScriptFileFullName);
+            sbPowershellCommandBuilder.Append(" ").Append(sandboxScriptFileFullName);
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             string executionPolicyCommand = $"powershell.exe -ExecutionPolicy Bypass -File {sandboxScriptFileFullName}";
@@ -109,30 +97,18 @@ namespace ScoopBox.CommandBuilders
             string rootScriptFileFullName = await packageManager.GenerateScriptFile(rootScriptFilesLocation);
             string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, Path.GetFileName(rootScriptFileFullName));
 
-            StringBuilder sbPowershellCommandBuilder = new StringBuilder();
-            sbPowershellCommandBuilder
-                .Append("powershell.exe");
+            StringBuilder sbPowershellCommandBuilder = new StringBuilder().Append("powershell.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
-            sbPowershellCommandBuilder
-                .Append(" ")
-                .Append(sandboxScriptFileFullName);
+            sbPowershellCommandBuilder.Append(" ").Append(sandboxScriptFileFullName);
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             string executionPolicyCommand = $"powershell.exe -ExecutionPolicy Bypass -File {sandboxScriptFileFullName}";
@@ -143,33 +119,21 @@ namespace ScoopBox.CommandBuilders
 
         public Task<IEnumerable<string>> Build(string literalScript)
         {
-            StringBuilder sbPowershellCommandBuilder = new StringBuilder();
-            sbPowershellCommandBuilder
-                .Append("powershell.exe");
+            StringBuilder sbPowershellCommandBuilder = new StringBuilder().Append("powershell.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
             if (!string.IsNullOrWhiteSpace(literalScript))
             {
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(literalScript);
+                sbPowershellCommandBuilder.Append(" ").Append(literalScript);
             }
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbPowershellCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbPowershellCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             return Task.FromResult<IEnumerable<string>>(new List<string>() { sbPowershellCommandBuilder.ToString() });

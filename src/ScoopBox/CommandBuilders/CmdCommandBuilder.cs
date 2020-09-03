@@ -57,30 +57,18 @@ namespace ScoopBox.CommandBuilders
             string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, file.Name);
             _fileSystem.File.Copy(file.FullName, rootScriptFileFullName);
 
-            StringBuilder sbCmdCommandBuilder = new StringBuilder();
-            sbCmdCommandBuilder
-                .Append("cmd.exe");
+            StringBuilder sbCmdCommandBuilder = new StringBuilder().Append("cmd.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
-            sbCmdCommandBuilder
-                .Append(" ")
-                .Append(sandboxScriptFileFullName);
+            sbCmdCommandBuilder.Append(" ").Append(sandboxScriptFileFullName);
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             return Task.FromResult<IEnumerable<string>>(new List<string>() { sbCmdCommandBuilder.ToString() });
@@ -106,30 +94,18 @@ namespace ScoopBox.CommandBuilders
             string rootScriptFileFullName = await packageManager.GenerateScriptFile(rootScriptFilesLocation);
             string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, Path.GetFileName(rootScriptFileFullName));
 
-            StringBuilder sbCmdCommandBuilder = new StringBuilder();
-            sbCmdCommandBuilder
-                .Append("cmd.exe");
+            StringBuilder sbCmdCommandBuilder = new StringBuilder().Append("cmd.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
-            sbCmdCommandBuilder
-                .Append(" ")
-                .Append(sandboxScriptFileFullName);
+            sbCmdCommandBuilder.Append(" ").Append(sandboxScriptFileFullName);
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             return new List<string>() { sbCmdCommandBuilder.ToString() };
@@ -137,33 +113,21 @@ namespace ScoopBox.CommandBuilders
 
         public Task<IEnumerable<string>> Build(string literalScript)
         {
-            StringBuilder sbCmdCommandBuilder = new StringBuilder();
-            sbCmdCommandBuilder
-                .Append("cmd.exe");
+            StringBuilder sbCmdCommandBuilder = new StringBuilder().Append("cmd.exe");
 
             if (_argsBefore?.Length > 0)
             {
-                string beforeArguments = string.Join(" ", _argsBefore);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(beforeArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsBefore));
             }
 
             if (!string.IsNullOrWhiteSpace(literalScript))
             {
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(literalScript);
+                sbCmdCommandBuilder.Append(" ").Append(literalScript);
             }
 
             if (_argsAfter?.Length > 0)
             {
-                string afterArguments = string.Join(" ", _argsAfter);
-
-                sbCmdCommandBuilder
-                    .Append(" ")
-                    .Append(afterArguments);
+                sbCmdCommandBuilder.Append(" ").Append(string.Join(" ", _argsAfter));
             }
 
             return Task.FromResult<IEnumerable<string>>(new List<string>() { sbCmdCommandBuilder.ToString() });
