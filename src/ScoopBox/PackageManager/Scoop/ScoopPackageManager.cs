@@ -69,10 +69,7 @@ namespace ScoopBox.PackageManager.Scoop
 
         private void BuildApplicationInstaller()
         {
-            _sbScoopPackageManagerBuilder
-                .Append("scoop install")
-                .Append(" ")
-                .AppendLine(string.Join(" ", Applications));
+            _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
         }
     }
 }
