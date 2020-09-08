@@ -1,4 +1,5 @@
-﻿using ScoopBox.CommandTranslators.Powershell;
+﻿using ScoopBox.CommandTranslators;
+using ScoopBox.CommandTranslators.Powershell;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
 using ScoopBox.SandboxProcesses.Cmd;
@@ -89,6 +90,11 @@ namespace ScoopBox
             return Run(new List<string>() { literalScript });
         }
 
+        public Task Run(FileSystemInfo script, ICommandTranslator commandTranslator)
+        {
+            return Run(new List<Tuple<FileSystemInfo, ICommandTranslator>>() { Tuple.Create(script, commandTranslator) });
+        }
+
         public async Task Run(List<string> literalScripts)
         {
             string content = string.Join(Environment.NewLine, literalScripts);
@@ -96,9 +102,35 @@ namespace ScoopBox
 
             // TODO: Put this into a factory later!
             var translator = new PowershellTranslator();
-            var commands = translator.Translate(file, _options.RootSandboxFilesDirectoryLocation);
+            var command = translator.Translate(file, _options.RootSandboxFilesDirectoryLocation);
 
-            _sandboxConfigurationBuilder.AddCommands(commands);
+            _sandboxConfigurationBuilder.AddCommand(command);
+
+            await _sandboxConfigurationBuilder.CreateConfigurationFile();
+            await _sandboxProcess.StartAsync();
+        }
+
+        public async Task Run(List<Tuple<FileSystemInfo, ICommandTranslator>> scripts)
+        {
+            List<string> commands = new List<string>();
+            foreach ((FileSystemInfo file, ICommandTranslator commandTranslator) in scripts)
+            {
+                string sandboxScriptPath = Path.Combine(_options.RootFilesDirectoryLocation, file.Name);
+
+                _fileSystem.File.Copy(file.FullName, sandboxScriptPath, true);
+                var sandboxFile = new FileInfo(sandboxScriptPath);
+
+                commands.Add(commandTranslator.Translate(sandboxFile, _options.RootSandboxFilesDirectoryLocation));
+            }
+
+            string content = string.Join(Environment.NewLine, commands);
+            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
+
+            // TODO: Put this into a factory later!
+            var translator = new PowershellTranslator();
+            var baseCommands = translator.Translate(baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
+
+            _sandboxConfigurationBuilder.AddCommand(baseCommands);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();

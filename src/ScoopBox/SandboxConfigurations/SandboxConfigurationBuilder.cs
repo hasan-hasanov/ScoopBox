@@ -55,24 +55,6 @@ namespace ScoopBox.SandboxConfigurations
             Commands.Add(command);
         }
 
-        public virtual void AddCommands(IEnumerable<string> commands)
-        {
-            if (commands == null)
-            {
-                throw new ArgumentNullException(nameof(commands));
-            }
-
-            if (!commands.Any())
-            {
-                throw new ArgumentException($"Parameter {nameof(commands)} is empty!");
-            }
-
-            foreach (var command in commands)
-            {
-                Commands.Add(command);
-            }
-        }
-
         public virtual void BuildVGpu()
         {
             _configuration.VGpu = Enum.GetName(typeof(VGpuOptions), _options.VGpu);

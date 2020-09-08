@@ -18,18 +18,18 @@ namespace ScoopBox.CommandTranslators
             _command = command;
         }
 
-        public IEnumerable<string> Translate(FileSystemInfo file, string rootSandboxScriptFilesLocation)
+        public string Translate(FileSystemInfo file, string rootSandboxScriptFilesLocation)
         {
             string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, file.Name);
 
             try
             {
                 string fullCommand = string.Format(_command, sandboxScriptFileFullName);
-                return new List<string>() { fullCommand };
+                return fullCommand;
             }
             catch (Exception)
             {
-                return new List<string>() { _command };
+                return _command;
             }
         }
     }

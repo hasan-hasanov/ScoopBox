@@ -9,8 +9,6 @@ namespace ScoopBox.SandboxConfigurations
 
         void AddCommand(string command);
 
-        void AddCommands(IEnumerable<string> commands);
-
         void BuildVGpu();
 
         void BuildNetworking();
