@@ -20,6 +20,10 @@ namespace ScoopBox
         private readonly IScriptGenerator _scriptGenerator;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
         private readonly IFileSystem _fileSystem;
+        private readonly Dictionary<Type, Func<FileSystemInfo, string, string>> _translatorsFactory = new Dictionary<Type, Func<FileSystemInfo, string, string>>()
+        {
+            { typeof(PowershellScriptGenerator), (file, path) => new PowershellTranslator().Translate(file, path) }
+        };
 
         public Sandbox()
             : this(
@@ -100,10 +104,8 @@ namespace ScoopBox
             string content = string.Join(Environment.NewLine, literalScripts);
             FileSystemInfo file = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
 
-            // TODO: Put this into a factory later!
-            var translator = new PowershellTranslator();
-            var command = translator.Translate(file, _options.RootSandboxFilesDirectoryLocation);
-
+            // TODO: introduce a proper factory later!
+            var command = _translatorsFactory[_scriptGenerator.GetType()](file, _options.RootSandboxFilesDirectoryLocation);
             _sandboxConfigurationBuilder.AddCommand(command);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
@@ -126,9 +128,8 @@ namespace ScoopBox
             string content = string.Join(Environment.NewLine, commands);
             FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
 
-            // TODO: Put this into a factory later!
-            var translator = new PowershellTranslator();
-            var baseCommands = translator.Translate(baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
+            // TODO: introduce a proper factory later!
+            var baseCommands = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
 
             _sandboxConfigurationBuilder.AddCommand(baseCommands);
 
