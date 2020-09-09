@@ -15,15 +15,12 @@ namespace ScoopBox
 {
     public class Sandbox : ISandbox
     {
+        private readonly Dictionary<Type, Func<FileSystemInfo, string, string>> _translatorsFactory;
         private readonly IOptions _options;
         private readonly ISandboxProcess _sandboxProcess;
         private readonly IScriptGenerator _scriptGenerator;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
         private readonly IFileSystem _fileSystem;
-        private readonly Dictionary<Type, Func<FileSystemInfo, string, string>> _translatorsFactory = new Dictionary<Type, Func<FileSystemInfo, string, string>>()
-        {
-            { typeof(PowershellScriptGenerator), (file, path) => new PowershellTranslator().Translate(file, path) }
-        };
 
         public Sandbox()
             : this(
@@ -86,6 +83,11 @@ namespace ScoopBox
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
             _fileSystem = fileSystem ?? throw new ArgumentException(nameof(fileSystem));
 
+            _translatorsFactory = new Dictionary<Type, Func<FileSystemInfo, string, string>>()
+            {
+                { typeof(PowershellScriptGenerator), (file, path) => new PowershellTranslator().Translate(file, path) }
+            };
+
             InitializeDirectoryStructure();
         }
 
@@ -104,7 +106,6 @@ namespace ScoopBox
             string content = string.Join(Environment.NewLine, literalScripts);
             FileSystemInfo file = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
 
-            // TODO: introduce a proper factory later!
             var command = _translatorsFactory[_scriptGenerator.GetType()](file, _options.RootSandboxFilesDirectoryLocation);
             _sandboxConfigurationBuilder.AddCommand(command);
 
@@ -128,7 +129,6 @@ namespace ScoopBox
             string content = string.Join(Environment.NewLine, commands);
             FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
 
-            // TODO: introduce a proper factory later!
             var baseCommands = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
 
             _sandboxConfigurationBuilder.AddCommand(baseCommands);
