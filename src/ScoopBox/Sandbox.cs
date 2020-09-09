@@ -103,11 +103,11 @@ namespace ScoopBox
 
         public async Task Run(List<string> literalScripts)
         {
-            string content = string.Join(Environment.NewLine, literalScripts);
-            FileSystemInfo file = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
+            string unifiedScripts = string.Join(Environment.NewLine, literalScripts);
+            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, unifiedScripts);
 
-            var command = _translatorsFactory[_scriptGenerator.GetType()](file, _options.RootSandboxFilesDirectoryLocation);
-            _sandboxConfigurationBuilder.AddCommand(command);
+            string runBaseScriptcommand = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
+            _sandboxConfigurationBuilder.AddCommand(runBaseScriptcommand);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();
@@ -115,23 +115,22 @@ namespace ScoopBox
 
         public async Task Run(List<Tuple<FileSystemInfo, ICommandTranslator>> scripts)
         {
-            List<string> commands = new List<string>();
+            List<string> runUserScriptsCommands = new List<string>();
             foreach ((FileSystemInfo file, ICommandTranslator commandTranslator) in scripts)
             {
                 string sandboxScriptPath = Path.Combine(_options.RootFilesDirectoryLocation, file.Name);
 
                 _fileSystem.File.Copy(file.FullName, sandboxScriptPath, true);
-                var sandboxFile = new FileInfo(sandboxScriptPath);
+                FileInfo sandboxFile = new FileInfo(sandboxScriptPath);
 
-                commands.Add(commandTranslator.Translate(sandboxFile, _options.RootSandboxFilesDirectoryLocation));
+                runUserScriptsCommands.Add(commandTranslator.Translate(sandboxFile, _options.RootSandboxFilesDirectoryLocation));
             }
 
-            string content = string.Join(Environment.NewLine, commands);
-            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, content);
+            string unifiedScripts = string.Join(Environment.NewLine, runUserScriptsCommands);
+            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, unifiedScripts);
 
-            var baseCommands = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
-
-            _sandboxConfigurationBuilder.AddCommand(baseCommands);
+            string runBaseScriptcommand = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
+            _sandboxConfigurationBuilder.AddCommand(runBaseScriptcommand);
 
             await _sandboxConfigurationBuilder.CreateConfigurationFile();
             await _sandboxProcess.StartAsync();
