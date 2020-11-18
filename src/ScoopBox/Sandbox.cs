@@ -1,154 +1,61 @@
-﻿using ScoopBox.CommandTranslators;
-using ScoopBox.CommandTranslators.Powershell;
+﻿using ScoopBox.PackageManager;
 using ScoopBox.SandboxConfigurations;
 using ScoopBox.SandboxProcesses;
-using ScoopBox.SandboxProcesses.Cmd;
-using ScoopBox.ScriptBuilders.Powershell;
-using ScoopBox.ScriptGenerator;
+using ScoopBox.Scripts;
+using ScoopBox.Translators;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
 using System.Threading.Tasks;
 
 namespace ScoopBox
 {
     public class Sandbox : ISandbox
     {
-        private readonly Dictionary<Type, Func<FileSystemInfo, string, string>> _translatorsFactory;
         private readonly IOptions _options;
-        private readonly ISandboxProcess _sandboxProcess;
-        private readonly IScriptGenerator _scriptGenerator;
+        private readonly ISandboxProcess _process;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
-        private readonly IFileSystem _fileSystem;
 
         public Sandbox()
-            : this(
-                  new Options(),
-                  new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()))
+            : this(new Options(), new CmdProcess(), new SandboxConfigurationBuilder(new Options()))
         {
+
         }
 
-        public Sandbox(IOptions options)
-            : this(
-                  options,
-                  new SandboxCmdProcess(options.RootFilesDirectoryLocation, options.SandboxConfigurationFileName),
-                  new SandboxConfigurationBuilder(options))
-        {
-        }
-
-        public Sandbox(ISandboxProcess scoopBoxProcess)
-            : this(
-                  new Options(),
-                  new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()))
-        {
-        }
-
-        public Sandbox(ISandboxConfigurationBuilder sandboxConfigurationBuilder)
-            : this(
-                  new Options(),
-                  new SandboxCmdProcess(),
-                  sandboxConfigurationBuilder)
-        {
-        }
-
-        public Sandbox(
-            IOptions options,
-            ISandboxProcess sandboxProcess,
-            IScriptGenerator scriptGenerator)
-            : this(options, sandboxProcess, scriptGenerator, new SandboxConfigurationBuilder(options), new FileSystem())
-        {
-        }
-
-        public Sandbox(
-            IOptions options,
-            ISandboxProcess sandboxProcess,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
-            : this(options, sandboxProcess, new PowershellScriptGenerator(), sandboxConfigurationBuilder, new FileSystem())
-        {
-        }
-
-        public Sandbox(
-            IOptions options,
-            ISandboxProcess sandboxProcess,
-            IScriptGenerator scriptGenerator,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
-            IFileSystem fileSystem)
+        public Sandbox(IOptions options, ISandboxProcess process, ISandboxConfigurationBuilder sandboxConfigurationBuilder)
         {
             _options = options;
-            _sandboxProcess = sandboxProcess ?? throw new ArgumentNullException(nameof(sandboxProcess));
-            _scriptGenerator = scriptGenerator ?? throw new ArgumentNullException(nameof(scriptGenerator));
-            _sandboxConfigurationBuilder = sandboxConfigurationBuilder ?? throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
-            _fileSystem = fileSystem ?? throw new ArgumentException(nameof(fileSystem));
-
-            _translatorsFactory = new Dictionary<Type, Func<FileSystemInfo, string, string>>()
-            {
-                { typeof(PowershellScriptGenerator), (file, path) => new PowershellTranslator().Translate(file, path) }
-            };
-
-            InitializeDirectoryStructure();
+            _process = process;
+            _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
         }
 
         public Task Run(string literalScript)
         {
-            return Run(new List<string>() { literalScript });
+            throw new System.NotImplementedException();
         }
 
-        public Task Run(FileSystemInfo script, ICommandTranslator commandTranslator)
+        public Task Run(List<string> literalScripts)
         {
-            return Run(new List<Tuple<FileSystemInfo, ICommandTranslator>>() { Tuple.Create(script, commandTranslator) });
+            throw new System.NotImplementedException();
         }
 
-        public async Task Run(List<string> literalScripts)
+        public async Task Run(IPackageManager packageManager)
         {
-            string unifiedScripts = string.Join(Environment.NewLine, literalScripts);
-            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, unifiedScripts);
-
-            string runBaseScriptcommand = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
-            _sandboxConfigurationBuilder.AddCommand(runBaseScriptcommand);
-
-            await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _sandboxProcess.StartAsync();
+            await Run(packageManager, null);
         }
 
-        public async Task Run(List<Tuple<FileSystemInfo, ICommandTranslator>> scripts)
+        public async Task Run(IScript script, IPowershellTranslator translator)
         {
-            List<string> runUserScriptsCommands = new List<string>();
-            foreach ((FileSystemInfo file, ICommandTranslator commandTranslator) in scripts)
+            await Run(new List<Tuple<IScript, IPowershellTranslator>>()
             {
-                string sandboxScriptPath = Path.Combine(_options.RootFilesDirectoryLocation, file.Name);
-
-                _fileSystem.File.Copy(file.FullName, sandboxScriptPath, true);
-                FileInfo sandboxFile = new FileInfo(sandboxScriptPath);
-
-                runUserScriptsCommands.Add(commandTranslator.Translate(sandboxFile, _options.RootSandboxFilesDirectoryLocation));
-            }
-
-            string unifiedScripts = string.Join(Environment.NewLine, runUserScriptsCommands);
-            FileSystemInfo baseScriptFile = await _scriptGenerator.Generate(_options.RootFilesDirectoryLocation, unifiedScripts);
-
-            string runBaseScriptcommand = _translatorsFactory[_scriptGenerator.GetType()](baseScriptFile, _options.RootSandboxFilesDirectoryLocation);
-            _sandboxConfigurationBuilder.AddCommand(runBaseScriptcommand);
-
-            await _sandboxConfigurationBuilder.CreateConfigurationFile();
-            await _sandboxProcess.StartAsync();
+                Tuple.Create(script, translator)
+            });
         }
 
-        private void InitializeDirectoryStructure()
+        public async Task Run(List<Tuple<IScript, IPowershellTranslator>> scripts)
         {
-            // TODO: Think if this really should stay that way!!!
-            _fileSystem.Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
-
-            foreach (IFileInfo file in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateFiles())
+            foreach ((IScript script, IPowershellTranslator translator) in scripts)
             {
-                file.Delete();
-            }
 
-            foreach (IDirectoryInfo dir in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateDirectories())
-            {
-                dir.Delete(true);
             }
         }
     }
