@@ -16,14 +16,14 @@ namespace ScoopBox
     public class Sandbox : ISandbox
     {
         private readonly IOptions _options;
-        private readonly ISandboxProcess _process;
+        private readonly ISandboxProcess _sandboxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
         private readonly IFileSystem _fileSystem;
 
         public Sandbox()
             : this(
                   new Options(),
-                  new CmdProcess(),
+                  new SandboxCmdProcess(),
                   new SandboxConfigurationBuilder(new Options()))
         {
         }
@@ -42,12 +42,12 @@ namespace ScoopBox
 
         private Sandbox(
             IOptions options,
-            ISandboxProcess process,
+            ISandboxProcess sandboxProcess,
             ISandboxConfigurationBuilder sandboxConfigurationBuilder,
             IFileSystem fileSystem)
         {
             _options = options;
-            _process = process;
+            _sandboxProcess = sandboxProcess;
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
             _fileSystem = fileSystem;
 
@@ -96,6 +96,8 @@ namespace ScoopBox
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
+
+            await _sandboxProcess.StartAsync();
         }
 
         private void InitializeDirectoryStructure()
