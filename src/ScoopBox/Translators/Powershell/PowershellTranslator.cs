@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ScoopBox.CommandTranslators.Powershell
+namespace ScoopBox.Translators.Powershell
 {
-    public class PowershellTranslator : ICommandTranslator
+    public class PowershellTranslator : IPowershellTranslator
     {
         private readonly string[] _argumentsAfter;
 

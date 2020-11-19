@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ScoopBox.Scripts;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -7,69 +7,49 @@ using System.Threading.Tasks;
 
 namespace ScoopBox.PackageManager.Scoop
 {
-    public class ScoopPackageManager : IPackageManager
+    public class ScoopPackageManager : IPackageManager, IScript
     {
-        private readonly StringBuilder _sbScoopPackageManagerBuilder;
+        private string _packageManagerScriptName;
         private readonly IFileSystem _fileSystem;
+        private readonly StringBuilder _sbScoopPackageManagerBuilder;
 
-        public string PackageManagerScriptName { get; }
+        public ScoopPackageManager(IEnumerable<string> applications)
+            : this(applications, $"{nameof(ScoopPackageManager)}.ps1")
+        {
+        }
+
+        public ScoopPackageManager(IEnumerable<string> applications, string scriptName)
+            : this(applications, scriptName, new FileSystem())
+        {
+        }
+
+        private ScoopPackageManager(IEnumerable<string> applications, string scriptName, IFileSystem fileSystem)
+        {
+            _packageManagerScriptName = scriptName;
+            _fileSystem = fileSystem;
+
+            Applications = applications;
+            _sbScoopPackageManagerBuilder = new StringBuilder();
+        }
+
+        public FileSystemInfo ScriptFile { get; set; }
 
         public IEnumerable<string> Applications { get; }
 
-        public ScoopPackageManager(IEnumerable<string> applications)
-            : this($"{nameof(ScoopPackageManager)}.ps1", applications)
-        {
-        }
-
-        public ScoopPackageManager(string scriptName, IEnumerable<string> applications)
-            : this(scriptName, applications, new FileSystem())
-        {
-        }
-
-        public ScoopPackageManager(string scriptName, IEnumerable<string> applications, IFileSystem fileSystem)
-        {
-            PackageManagerScriptName = scriptName ?? throw new ArgumentNullException(nameof(scriptName));
-            Applications = applications ?? throw new ArgumentNullException(nameof(applications));
-
-            _sbScoopPackageManagerBuilder = new StringBuilder();
-            _fileSystem = fileSystem;
-        }
-
-        public async Task<string> GenerateScriptFile(string location)
-        {
-            BuildDownloader();
-            BuildGitInstaller();
-            BuildExtrasBucketAdder();
-            BuildApplicationInstaller();
-
-            string content = _sbScoopPackageManagerBuilder.ToString();
-            string fullScriptPath = Path.Combine(location, PackageManagerScriptName);
-            using (StreamWriter writer = _fileSystem.File.CreateText(fullScriptPath))
-            {
-                await writer.WriteAsync(content);
-            }
-
-            return fullScriptPath;
-        }
-
-        private void BuildDownloader()
+        public async Task CopyAndMaterialize(IOptions options)
         {
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
-        }
-
-        private void BuildGitInstaller()
-        {
             _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
-        }
-
-        private void BuildExtrasBucketAdder()
-        {
             _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add extras");
-        }
-
-        private void BuildApplicationInstaller()
-        {
             _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
+
+            string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
+            using (StreamWriter writer = _fileSystem.File.CreateText(fullScriptPath))
+            {
+                await writer.WriteAsync(_sbScoopPackageManagerBuilder.ToString());
+            }
+
+            ScriptFile = new FileInfo(fullScriptPath);
         }
     }
 }

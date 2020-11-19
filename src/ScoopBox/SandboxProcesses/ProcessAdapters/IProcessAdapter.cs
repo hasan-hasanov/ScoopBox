@@ -5,6 +5,7 @@ namespace ScoopBox.SandboxProcesses.ProcessAdapters
     public interface IProcessAdapter
     {
         bool Start();
+
         Task StandardInputWriteLineAsync(string content);
 
         Task StandardInputFlushAsync();

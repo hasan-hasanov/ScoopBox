@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace ScoopBox.SandboxProcesses.Cmd
+namespace ScoopBox.SandboxProcesses
 {
     public class SandboxCmdProcess : ISandboxProcess
     {
