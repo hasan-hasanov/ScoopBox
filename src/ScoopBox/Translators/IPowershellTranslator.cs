@@ -1,6 +1,9 @@
-﻿namespace ScoopBox.Translators
+﻿using System.IO;
+
+namespace ScoopBox.Translators
 {
-    public class IPowershellTranslator
+    public interface IPowershellTranslator
     {
+        string Translate(FileSystemInfo file, string rootSandboxScriptFilesLocation);
     }
 }
