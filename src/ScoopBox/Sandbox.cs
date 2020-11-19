@@ -59,9 +59,15 @@ namespace ScoopBox
             return Run(new List<string>() { literalScript });
         }
 
-        public Task Run(List<string> literalScripts)
+        public async Task Run(List<string> literalScripts)
         {
-            throw new System.NotImplementedException();
+            BasePowershellScript baseScript = new BasePowershellScript(_options, literalScripts);
+            await baseScript.GenerateScript();
+
+            string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
+            await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
+
+            await _sandboxProcess.StartAsync();
         }
 
         public Task Run(IPackageManager packageManager)
@@ -102,7 +108,6 @@ namespace ScoopBox
 
         private void InitializeDirectoryStructure()
         {
-            // TODO: Think if this really should stay that way!!!
             _fileSystem.Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
 
             foreach (IFileInfo file in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateFiles())
