@@ -7,6 +7,6 @@ namespace ScoopBox.Scripts
     {
         FileSystemInfo ScriptFile { get; set; }
 
-        Task GenerateScript();
+        Task CopyAndMaterialize(IOptions options);
     }
 }

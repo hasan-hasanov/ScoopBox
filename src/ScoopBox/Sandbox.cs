@@ -7,7 +7,6 @@ using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 
@@ -62,7 +61,7 @@ namespace ScoopBox
         public async Task Run(List<string> literalScripts)
         {
             BasePowershellScript baseScript = new BasePowershellScript(_options, literalScripts);
-            await baseScript.GenerateScript();
+            await baseScript.CopyAndMaterialize(_options);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
@@ -88,17 +87,12 @@ namespace ScoopBox
             List<string> translatedScripts = new List<string>();
             foreach ((IScript script, IPowershellTranslator translator) in scripts)
             {
-                if (Path.GetDirectoryName(script.ScriptFile.FullName) != _options.RootFilesDirectoryLocation)
-                {
-                    string sandboxScriptPath = Path.Combine(_options.RootFilesDirectoryLocation, script.ScriptFile.Name);
-                    _fileSystem.File.Copy(script.ScriptFile.FullName, sandboxScriptPath, true);
-                    script.ScriptFile = new FileInfo(sandboxScriptPath);
-                    translatedScripts.Add(translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
-                }
+                await script.CopyAndMaterialize(_options);
+                translatedScripts.Add(translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
             }
 
             BasePowershellScript baseScript = new BasePowershellScript(_options, translatedScripts);
-            await baseScript.GenerateScript();
+            await baseScript.CopyAndMaterialize(_options);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);

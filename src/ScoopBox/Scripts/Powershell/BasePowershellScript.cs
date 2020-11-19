@@ -29,16 +29,19 @@ namespace ScoopBox.Scripts.Powershell
 
         public FileSystemInfo ScriptFile { get; set; }
 
-        public virtual Task GenerateScript()
+        public async Task CopyAndMaterialize(IOptions options)
         {
             string filePath = _fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, "BaseScript.ps1");
 
             _fileSystem.File.Delete(filePath);
-            _fileSystem.File.WriteAllText(filePath, string.Join(Environment.NewLine, _commands));
+
+            using (FileStream sourceFileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true))
+            using (StreamWriter streamWriter = new StreamWriter(sourceFileStream))
+            {
+                await streamWriter.WriteLineAsync(string.Join(Environment.NewLine, _commands));
+            }
 
             ScriptFile = new FileInfo(filePath);
-
-            return Task.CompletedTask;
         }
     }
 }

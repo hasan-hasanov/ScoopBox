@@ -1,4 +1,5 @@
 ﻿using ScoopBox;
+using ScoopBox.PackageManager.Scoop;
 using ScoopBox.Scripts;
 using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
@@ -16,6 +17,7 @@ namespace Playground
             ISandbox sandbox = new Sandbox();
             await sandbox.Run(new List<Tuple<IScript, IPowershellTranslator>>()
             {
+                Tuple.Create<IScript, IPowershellTranslator>(new ScoopPackageManager(new List<string>(){ "curl" }), new PowershellTranslator()),
                 Tuple.Create<IScript, IPowershellTranslator>(new Script(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\notepad.ps1")), new PowershellTranslator()),
                 Tuple.Create<IScript, IPowershellTranslator>(new Script(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\facebook.ps1")), new PowershellTranslator()),
                 Tuple.Create<IScript, IPowershellTranslator>(new Script(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\explorer.ps1")), new PowershellTranslator())

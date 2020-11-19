@@ -36,16 +36,14 @@ namespace ScoopBox.PackageManager.Scoop
 
         public IEnumerable<string> Applications { get; }
 
-        internal string Location { get; set; }
-
-        public async Task GenerateScript()
+        public async Task CopyAndMaterialize(IOptions options)
         {
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
             _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
             _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add extras");
             _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
 
-            string fullScriptPath = Path.Combine(Location, _packageManagerScriptName);
+            string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
             using (StreamWriter writer = _fileSystem.File.CreateText(fullScriptPath))
             {
                 await writer.WriteAsync(_sbScoopPackageManagerBuilder.ToString());
