@@ -56,7 +56,7 @@ namespace ScoopBox
 
         public Task Run(string literalScript)
         {
-            throw new System.NotImplementedException();
+            return Run(new List<string>() { literalScript });
         }
 
         public Task Run(List<string> literalScripts)
@@ -64,14 +64,14 @@ namespace ScoopBox
             throw new System.NotImplementedException();
         }
 
-        public async Task Run(IPackageManager packageManager)
+        public Task Run(IPackageManager packageManager)
         {
-            await Run(packageManager, new PowershellTranslator());
+            return Run(packageManager, new PowershellTranslator());
         }
 
-        public async Task Run(IScript script, IPowershellTranslator translator)
+        public Task Run(IScript script, IPowershellTranslator translator)
         {
-            await Run(new List<Tuple<IScript, IPowershellTranslator>>()
+            return Run(new List<Tuple<IScript, IPowershellTranslator>>()
             {
                 Tuple.Create(script, translator)
             });
