@@ -50,7 +50,7 @@ namespace ScoopBox.Scripts.Powershell
 
         public FileSystemInfo ScriptFile { get; set; }
 
-        public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
             string filePath = Path.Combine(_options.RootFilesDirectoryLocation, _baseScriptFileName);
             _deleteFile(filePath);

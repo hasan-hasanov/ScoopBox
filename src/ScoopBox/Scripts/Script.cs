@@ -13,7 +13,7 @@ namespace ScoopBox.Scripts
 
         public FileSystemInfo ScriptFile { get; set; }
 
-        public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
             string sandboxScriptPath = Path.Combine(options.RootFilesDirectoryLocation, Path.GetFileName(ScriptFile.Name));
 

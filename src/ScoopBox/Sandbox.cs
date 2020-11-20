@@ -66,7 +66,7 @@ namespace ScoopBox
         public async Task Run(List<string> literalScripts, CancellationToken cancellationToken = default)
         {
             BasePowershellScript baseScript = new BasePowershellScript(_options, literalScripts);
-            await baseScript.CopyAndMaterialize(_options, cancellationToken);
+            await baseScript.CopyOrMaterialize(_options, cancellationToken);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator, cancellationToken);
@@ -92,12 +92,12 @@ namespace ScoopBox
             List<string> translatedScripts = new List<string>();
             foreach ((IScript script, IPowershellTranslator translator) in scripts)
             {
-                await script.CopyAndMaterialize(_options);
+                await script.CopyOrMaterialize(_options);
                 translatedScripts.Add(translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
             }
 
             BasePowershellScript baseScript = new BasePowershellScript(_options, translatedScripts);
-            await baseScript.CopyAndMaterialize(_options);
+            await baseScript.CopyOrMaterialize(_options);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);

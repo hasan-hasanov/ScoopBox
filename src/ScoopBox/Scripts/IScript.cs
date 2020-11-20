@@ -8,6 +8,6 @@ namespace ScoopBox.Scripts
     {
         FileSystemInfo ScriptFile { get; set; }
 
-        Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default);
+        Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default);
     }
 }

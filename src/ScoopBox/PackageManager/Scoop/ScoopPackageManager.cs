@@ -43,7 +43,7 @@ namespace ScoopBox.PackageManager.Scoop
 
         public IEnumerable<string> Applications { get; }
 
-        public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
             _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
