@@ -1,12 +1,12 @@
 ﻿using ScoopBox.PackageManager;
 using ScoopBox.SandboxConfigurations;
-using ScoopBox.SandboxProcesses;
 using ScoopBox.Scripts;
 using ScoopBox.Scripts.Powershell;
 using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,44 +16,59 @@ namespace ScoopBox
     public class Sandbox : ISandbox
     {
         private readonly IOptions _options;
-        private readonly ISandboxProcess _sandboxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
 
         private readonly Action<string> _createDirectory;
         private readonly Func<string, IEnumerable<FileInfo>> _enumerateFiles;
         private readonly Func<string, IEnumerable<DirectoryInfo>> _enumerateDirectories;
+        private readonly Func<string, Task> _startProcess;
 
         public Sandbox()
             : this(
                   new Options(),
-                  new SandboxCmdProcess(),
-                  new SandboxConfigurationBuilder(new Options()))
+                  new SandboxConfigurationBuilder(new Options()),
+                  path => Directory.CreateDirectory(path),
+                  path => new DirectoryInfo(path).EnumerateFiles(),
+                  path => new DirectoryInfo(path).EnumerateDirectories(),
+                  async path =>
+                  {
+                      var process = new Process()
+                      {
+                          StartInfo = new ProcessStartInfo()
+                          {
+                              FileName = "cmd.exe",
+                              RedirectStandardInput = true,
+                              RedirectStandardOutput = true,
+                              CreateNoWindow = false,
+                              WindowStyle = ProcessWindowStyle.Hidden,
+                              UseShellExecute = false,
+                          }
+                      };
+
+                      process.Start();
+                      await process.StandardInput.WriteLineAsync($"\"{path}\"");
+                      await process.StandardInput.FlushAsync();
+                      process.StandardInput.Close();
+                      process.WaitForExit();
+                  })
         {
         }
 
-        private Sandbox(
+        internal Sandbox(
             IOptions options,
-            ISandboxProcess sandboxProcess,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
+            Action<string> createDirectory,
+            Func<string, IEnumerable<FileInfo>> enumerateFiles,
+            Func<string, IEnumerable<DirectoryInfo>> enumerateDirectories,
+            Func<string, Task> startProcess)
         {
             _options = options;
-            _sandboxProcess = sandboxProcess;
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
 
-            _createDirectory = rootFilesDirectoryLocation =>
-            {
-                Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
-            };
-
-            _enumerateFiles = rootFilesDirectoryLocation =>
-            {
-                return new DirectoryInfo(rootFilesDirectoryLocation).EnumerateFiles();
-            };
-
-            _enumerateDirectories = rootFilesDirectoryLocation =>
-            {
-                return new DirectoryInfo(rootFilesDirectoryLocation).EnumerateDirectories();
-            };
+            _createDirectory = createDirectory;
+            _enumerateFiles = enumerateFiles;
+            _enumerateDirectories = enumerateDirectories;
+            _startProcess = startProcess;
 
             InitializeDirectoryStructure();
         }
@@ -71,7 +86,7 @@ namespace ScoopBox
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator, cancellationToken);
 
-            await _sandboxProcess.StartAsync();
+            await _startProcess(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName));
         }
 
         public Task Run(IPackageManager packageManager, CancellationToken cancellationToken = default)
@@ -102,7 +117,7 @@ namespace ScoopBox
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
 
-            await _sandboxProcess.StartAsync();
+            await _startProcess(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName));
         }
 
         private void InitializeDirectoryStructure()
