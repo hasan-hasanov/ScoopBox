@@ -7,9 +7,37 @@ namespace ScoopBox.Scripts
 {
     public class Script : IScript
     {
+        private readonly Func<string, string, CancellationToken, Task> _copyFileToDestination;
+
         public Script(FileSystemInfo scriptFile)
+            : this(
+                 scriptFile,
+                 async (source, destination, token) =>
+                 {
+                     using FileStream sourceStream = File.Open(source, FileMode.Open);
+                     using FileStream destinationStream = File.Create(destination);
+                     await sourceStream.CopyToAsync(destinationStream, token);
+                 })
         {
+        }
+
+        internal Script(
+            FileSystemInfo scriptFile,
+            Func<string, string, CancellationToken, Task> copyFileToDestination)
+        {
+            if (scriptFile == null)
+            {
+                throw new ArgumentNullException(nameof(scriptFile));
+            }
+
+            if (copyFileToDestination == null)
+            {
+                throw new ArgumentNullException(nameof(copyFileToDestination));
+            }
+
             ScriptFile = scriptFile;
+
+            _copyFileToDestination = copyFileToDestination;
         }
 
         public FileSystemInfo ScriptFile { get; set; }
@@ -22,12 +50,7 @@ namespace ScoopBox.Scripts
             }
 
             string sandboxScriptPath = Path.Combine(options.RootFilesDirectoryLocation, Path.GetFileName(ScriptFile.Name));
-
-            using (FileStream sourceStream = File.Open(ScriptFile.FullName, FileMode.Open))
-            using (FileStream destinationStream = File.Create(sandboxScriptPath))
-            {
-                await sourceStream.CopyToAsync(destinationStream, cancellationToken);
-            }
+            await _copyFileToDestination(ScriptFile.FullName, sandboxScriptPath, cancellationToken);
 
             ScriptFile = new FileInfo(sandboxScriptPath);
         }
