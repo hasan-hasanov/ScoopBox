@@ -1,4 +1,6 @@
-﻿using ScoopBox.Scripts.PackageManagers.Scoop;
+﻿using ScoopBox.Scripts.PackageManagers;
+using ScoopBox.Scripts.PackageManagers.Scoop;
+using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +17,7 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
         {
             IEnumerable<string> applications = new List<string>() { "git", "curl", "fiddler" };
 
-            ScoopPackageManager scoopPackageManager = new ScoopPackageManager(applications);
+            IPackageManagerScript scoopPackageManager = new ScoopPackageManagerScript(applications, new PowershellTranslator());
 
             string expected = JsonSerializer.Serialize(applications);
             string actual = JsonSerializer.Serialize(scoopPackageManager.Applications);
@@ -26,21 +28,22 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
         [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutApplications()
         {
-            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManager(null));
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(null, new PowershellTranslator()));
         }
 
         [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutScriptName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManager(new List<string>() { "git", "curl", "fiddler" }, null));
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(new List<string>() { "git", "curl", "fiddler" }, null));
         }
 
         [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutSbScoopPackageManagerBuilder()
         {
-            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManager(
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(
                 new List<string>() { "git", "curl", "fiddler" },
-                $"{nameof(ScoopPackageManager)}.ps1",
+                new PowershellTranslator(),
+                $"{nameof(ScoopPackageManagerScript)}.ps1",
                 null,
                 (path, content, token) => Task.CompletedTask));
         }
@@ -48,9 +51,10 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
         [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutWriteAllBytesAsync()
         {
-            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManager(
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(
                 new List<string>() { "git", "curl", "fiddler" },
-                $"{nameof(ScoopPackageManager)}.ps1",
+                new PowershellTranslator(),
+                $"{nameof(ScoopPackageManagerScript)}.ps1",
                 new StringBuilder(),
                 null));
         }

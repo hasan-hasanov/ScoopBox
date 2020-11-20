@@ -4,16 +4,16 @@ using ScoopBox.Translators.Powershell;
 using System.Collections.Generic;
 using Xunit;
 
-namespace ScoopBox.Test.PackageManager.IPackageManagerTests
+namespace ScoopBox.Test.Scripts.PackageManager.IPackageManagerTests
 {
     public class IsAssignablePropertyTests
     {
         [Fact]
         public void IsOptionsAssignableToIOptions()
         {
-            IPackageManager packageManager = new ScoopPackageManager(new List<string>() { "git" }, new PowershellTranslator());
+            IPackageManagerScript packageManager = new ScoopPackageManagerScript(new List<string>() { "git" }, new PowershellTranslator());
 
-            Assert.IsAssignableFrom<IPackageManager>(packageManager);
+            Assert.IsAssignableFrom<IPackageManagerScript>(packageManager);
         }
     }
 }

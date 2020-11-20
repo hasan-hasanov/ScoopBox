@@ -1,4 +1,5 @@
 ﻿using ScoopBox.Scripts.PackageManagers.Scoop;
+using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,18 +24,21 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
                 return Task.CompletedTask;
             };
 
-            ScoopPackageManager scoopPackageManager = new ScoopPackageManager(
+            ScoopPackageManagerScript scoopPackageManager = new ScoopPackageManagerScript(
                 applications,
+                new PowershellTranslator(),
                 "testScript.ps1",
                 sbScoopPackageManagerBuilder,
                 writeAllBytesAsync);
 
             await scoopPackageManager.CopyOrMaterialize(options, CancellationToken.None);
 
-            string expected = @"Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+            string expected = @"Write-Host Start executing scoop package manager
+Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
 scoop install git
 scoop bucket add extras
 scoop install git curl
+Write-Host Finished executing scoop package manager
 ";
             string actual = sbScoopPackageManagerBuilder.ToString();
 
@@ -56,8 +60,9 @@ scoop install git curl
                 return Task.CompletedTask;
             };
 
-            ScoopPackageManager scoopPackageManager = new ScoopPackageManager(
+            ScoopPackageManagerScript scoopPackageManager = new ScoopPackageManagerScript(
                 applications,
+                new PowershellTranslator(),
                 scriptName,
                 sbScoopPackageManagerBuilder,
                 writeAllBytesAsync);
