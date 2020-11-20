@@ -1,8 +1,6 @@
 ﻿using ScoopBox.SandboxConfigurations;
 using ScoopBox.Scripts;
-using ScoopBox.Scripts.PackageManagers;
 using ScoopBox.Scripts.UnMaterialized;
-using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
@@ -117,50 +115,25 @@ namespace ScoopBox
             InitializeDirectoryStructure();
         }
 
-        public Task Run(string literalScript, CancellationToken cancellationToken = default)
+        public Task Run(IScript script, CancellationToken cancellationToken = default)
         {
-            return Run(new List<string>() { literalScript }, cancellationToken);
+            return Run(new List<IScript>() { script }, cancellationToken);
         }
 
-        public async Task Run(List<string> literalScripts, CancellationToken cancellationToken = default)
-        {
-            LiteralScript baseScript = new LiteralScript(literalScripts, "MainScript.ps1");
-            await baseScript.CopyOrMaterialize(_options, cancellationToken);
-
-            string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
-            await _sandboxConfigurationBuilder.Build(baseScriptTranslator, cancellationToken);
-
-            await _startProcess(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName));
-        }
-
-        public Task Run(IPackageManager packageManager, CancellationToken cancellationToken = default)
-        {
-            return Run(packageManager, new PowershellTranslator(), cancellationToken);
-        }
-
-        public Task Run(IScript script, IPowershellTranslator translator, CancellationToken cancellationToken = default)
-        {
-            return Run(new List<Tuple<IScript, IPowershellTranslator>>()
-            {
-                Tuple.Create(script, translator)
-            }, cancellationToken);
-        }
-
-        public async Task Run(List<Tuple<IScript, IPowershellTranslator>> scripts, CancellationToken cancellationToken = default)
+        public async Task Run(List<IScript> scripts, CancellationToken cancellationToken = default)
         {
             List<string> translatedScripts = new List<string>();
-            foreach ((IScript script, IPowershellTranslator translator) in scripts)
+            foreach (IScript script in scripts)
             {
                 await script.CopyOrMaterialize(_options);
-                translatedScripts.Add(translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
+                translatedScripts.Add(script.Translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
             }
 
-            LiteralScript baseScript = new LiteralScript(translatedScripts, "MainScript.ps1");
+            LiteralScript baseScript = new LiteralScript(translatedScripts, new PowershellTranslator(), "MainScript.ps1");
             await baseScript.CopyOrMaterialize(_options);
+            string baseScriptTranslator = baseScript.Translator.Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
 
-            string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
-
             await _startProcess(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName));
         }
 

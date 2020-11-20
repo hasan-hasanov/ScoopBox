@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScoopBox.Translators;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,9 +10,10 @@ namespace ScoopBox.Scripts.Materialized
     {
         private readonly Func<string, string, CancellationToken, Task> _copyFileToDestination;
 
-        public ExternalScript(FileSystemInfo scriptFile)
+        public ExternalScript(FileSystemInfo scriptFile, IPowershellTranslator translator)
             : this(
                  scriptFile,
+                 translator,
                  async (source, destination, token) =>
                  {
                      using FileStream sourceStream = File.Open(source, FileMode.Open);
@@ -23,6 +25,7 @@ namespace ScoopBox.Scripts.Materialized
 
         internal ExternalScript(
             FileSystemInfo scriptFile,
+            IPowershellTranslator translator,
             Func<string, string, CancellationToken, Task> copyFileToDestination)
         {
             if (scriptFile == null)
@@ -36,11 +39,14 @@ namespace ScoopBox.Scripts.Materialized
             }
 
             ScriptFile = scriptFile;
+            Translator = translator;
 
             _copyFileToDestination = copyFileToDestination;
         }
 
         public FileSystemInfo ScriptFile { get; set; }
+
+        public IPowershellTranslator Translator { get; }
 
         public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {

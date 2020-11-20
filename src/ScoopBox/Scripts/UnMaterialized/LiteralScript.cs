@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScoopBox.Translators;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,16 +17,18 @@ namespace ScoopBox.Scripts.UnMaterialized
         private readonly Action<string> _deleteFile;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
-        public LiteralScript(IList<string> commands)
+        public LiteralScript(IList<string> commands, IPowershellTranslator translator)
             : this(
                   commands,
+                  translator,
                   $"{DateTime.Now.Ticks}.ps1")
         {
         }
 
-        public LiteralScript(IList<string> commands, string baseScriptFileName)
+        public LiteralScript(IList<string> commands, IPowershellTranslator translator, string baseScriptFileName)
             : this(
                   commands,
+                  translator,
                   baseScriptFileName,
                   path => File.Delete(path),
                   async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
@@ -34,6 +37,7 @@ namespace ScoopBox.Scripts.UnMaterialized
 
         internal LiteralScript(
             IList<string> commands,
+            IPowershellTranslator translator,
             string baseScriptFileName,
             Action<string> deleteFile,
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
@@ -41,6 +45,11 @@ namespace ScoopBox.Scripts.UnMaterialized
             if (commands == null || !commands.Any())
             {
                 throw new ArgumentNullException(nameof(commands));
+            }
+
+            if (translator == null)
+            {
+                throw new ArgumentNullException(nameof(translator));
             }
 
             if (string.IsNullOrWhiteSpace(baseScriptFileName))
@@ -58,6 +67,8 @@ namespace ScoopBox.Scripts.UnMaterialized
                 throw new ArgumentNullException(nameof(writeAllBytesAsync));
             }
 
+            Translator = translator;
+
             _commands = commands;
             _baseScriptFileName = baseScriptFileName;
             _deleteFile = deleteFile;
@@ -65,6 +76,8 @@ namespace ScoopBox.Scripts.UnMaterialized
         }
 
         public FileSystemInfo ScriptFile { get; set; }
+
+        public IPowershellTranslator Translator { get; }
 
         public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
