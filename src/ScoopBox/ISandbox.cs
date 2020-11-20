@@ -1,5 +1,5 @@
-﻿using ScoopBox.PackageManager;
-using ScoopBox.Scripts;
+﻿using ScoopBox.Scripts;
+using ScoopBox.Scripts.PackageManagers;
 using ScoopBox.Translators;
 using System;
 using System.Collections.Generic;

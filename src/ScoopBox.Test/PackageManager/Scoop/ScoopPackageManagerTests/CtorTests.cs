@@ -1,4 +1,4 @@
-﻿using ScoopBox.PackageManager.Scoop;
+﻿using ScoopBox.Scripts.PackageManagers.Scoop;
 using System;
 using System.Collections.Generic;
 using System.Text;

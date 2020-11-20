@@ -1,5 +1,4 @@
-﻿using ScoopBox.Scripts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
-namespace ScoopBox.PackageManager.Scoop
+namespace ScoopBox.Scripts.PackageManagers.Scoop
 {
     public class ScoopPackageManager : IPackageManager, IScript
     {

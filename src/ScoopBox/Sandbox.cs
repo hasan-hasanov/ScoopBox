@@ -1,7 +1,7 @@
-﻿using ScoopBox.PackageManager;
-using ScoopBox.SandboxConfigurations;
+﻿using ScoopBox.SandboxConfigurations;
 using ScoopBox.Scripts;
-using ScoopBox.Scripts.Powershell;
+using ScoopBox.Scripts.PackageManagers;
+using ScoopBox.Scripts.UnMaterialized;
 using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
@@ -124,7 +124,7 @@ namespace ScoopBox
 
         public async Task Run(List<string> literalScripts, CancellationToken cancellationToken = default)
         {
-            BasePowershellScript baseScript = new BasePowershellScript(_options, literalScripts);
+            LiteralScript baseScript = new LiteralScript(literalScripts, "MainScript.ps1");
             await baseScript.CopyOrMaterialize(_options, cancellationToken);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
@@ -155,7 +155,7 @@ namespace ScoopBox
                 translatedScripts.Add(translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
             }
 
-            BasePowershellScript baseScript = new BasePowershellScript(_options, translatedScripts);
+            LiteralScript baseScript = new LiteralScript(translatedScripts, "MainScript.ps1");
             await baseScript.CopyOrMaterialize(_options);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);

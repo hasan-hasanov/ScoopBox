@@ -1,7 +1,6 @@
-﻿using ScoopBox.Scripts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ScoopBox.PackageManager
+namespace ScoopBox.Scripts.PackageManagers
 {
     public interface IPackageManager : IScript
     {

@@ -1,5 +1,5 @@
-﻿using ScoopBox.PackageManager;
-using ScoopBox.PackageManager.Scoop;
+﻿using ScoopBox.Scripts.PackageManagers;
+using ScoopBox.Scripts.PackageManagers.Scoop;
 using System.Collections.Generic;
 using Xunit;
 

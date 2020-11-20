@@ -3,13 +3,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Scripts
+namespace ScoopBox.Scripts.Materialized
 {
-    public class Script : IScript
+    public class ExternalScript : IScript
     {
         private readonly Func<string, string, CancellationToken, Task> _copyFileToDestination;
 
-        public Script(FileSystemInfo scriptFile)
+        public ExternalScript(FileSystemInfo scriptFile)
             : this(
                  scriptFile,
                  async (source, destination, token) =>
@@ -21,7 +21,7 @@ namespace ScoopBox.Scripts
         {
         }
 
-        internal Script(
+        internal ExternalScript(
             FileSystemInfo scriptFile,
             Func<string, string, CancellationToken, Task> copyFileToDestination)
         {

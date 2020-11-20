@@ -6,28 +6,25 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Scripts.Powershell
+namespace ScoopBox.Scripts.UnMaterialized
 {
-    public class BasePowershellScript : IScript
+    public class LiteralScript : IScript
     {
         private string _baseScriptFileName;
-        private readonly IOptions _options;
         private readonly IList<string> _commands;
 
         private readonly Action<string> _deleteFile;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
-        public BasePowershellScript(IOptions options, IList<string> commands)
+        public LiteralScript(IList<string> commands)
             : this(
-                  options,
                   commands,
-                  "BaseScript.ps1")
+                  $"{DateTime.Now.Ticks}.ps1")
         {
         }
 
-        public BasePowershellScript(IOptions options, IList<string> commands, string baseScriptFileName)
+        public LiteralScript(IList<string> commands, string baseScriptFileName)
             : this(
-                  options,
                   commands,
                   baseScriptFileName,
                   path => File.Delete(path),
@@ -35,18 +32,12 @@ namespace ScoopBox.Scripts.Powershell
         {
         }
 
-        internal BasePowershellScript(
-            IOptions options,
+        internal LiteralScript(
             IList<string> commands,
             string baseScriptFileName,
             Action<string> deleteFile,
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
             if (commands == null || !commands.Any())
             {
                 throw new ArgumentNullException(nameof(commands));
@@ -64,10 +55,9 @@ namespace ScoopBox.Scripts.Powershell
 
             if (writeAllBytesAsync == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                throw new ArgumentNullException(nameof(writeAllBytesAsync));
             }
 
-            _options = options;
             _commands = commands;
             _baseScriptFileName = baseScriptFileName;
             _deleteFile = deleteFile;
@@ -78,7 +68,7 @@ namespace ScoopBox.Scripts.Powershell
 
         public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
-            string filePath = Path.Combine(_options.RootFilesDirectoryLocation, _baseScriptFileName);
+            string filePath = Path.Combine(options.RootFilesDirectoryLocation, _baseScriptFileName);
             _deleteFile(filePath);
 
             byte[] fileContent = new UTF8Encoding().GetBytes(string.Join(Environment.NewLine, _commands));
