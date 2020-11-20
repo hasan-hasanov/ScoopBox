@@ -33,6 +33,11 @@ namespace ScoopBox.Scripts.Materialized
                 throw new ArgumentNullException(nameof(scriptFile));
             }
 
+            if (translator == null)
+            {
+                throw new ArgumentNullException(nameof(translator));
+            }
+
             if (copyFileToDestination == null)
             {
                 throw new ArgumentNullException(nameof(copyFileToDestination));
