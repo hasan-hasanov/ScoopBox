@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoopBox", "ScoopBox\ScoopB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playground", "Playground\Playground.csproj", "{52AF102C-7C52-4314-BDD7-CD486973BC58}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScoopBox.Test", "ScoopBox.Test\ScoopBox.Test.csproj", "{27745ED1-E31E-4249-865C-7507C97366DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52AF102C-7C52-4314-BDD7-CD486973BC58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27745ED1-E31E-4249-865C-7507C97366DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27745ED1-E31E-4249-865C-7507C97366DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27745ED1-E31E-4249-865C-7507C97366DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27745ED1-E31E-4249-865C-7507C97366DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
