@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScoopBox.Scripts
@@ -21,14 +22,14 @@ namespace ScoopBox.Scripts
 
         public FileSystemInfo ScriptFile { get; set; }
 
-        public async Task CopyAndMaterialize(IOptions options)
+        public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
             string sandboxScriptPath = Path.Combine(options.RootFilesDirectoryLocation, Path.GetFileName(ScriptFile.Name));
 
             using (FileStream sourceStream = File.Open(ScriptFile.FullName, FileMode.Open))
             using (FileStream destinationStream = File.Create(sandboxScriptPath))
             {
-                await sourceStream.CopyToAsync(destinationStream);
+                await sourceStream.CopyToAsync(destinationStream, cancellationToken);
             }
 
             ScriptFile = new FileInfo(sandboxScriptPath);

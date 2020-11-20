@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScoopBox.PackageManager.Scoop
@@ -36,7 +37,7 @@ namespace ScoopBox.PackageManager.Scoop
 
         public IEnumerable<string> Applications { get; }
 
-        public async Task CopyAndMaterialize(IOptions options)
+        public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
             _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
@@ -44,10 +45,9 @@ namespace ScoopBox.PackageManager.Scoop
             _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
 
             string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
-            using (StreamWriter writer = _fileSystem.File.CreateText(fullScriptPath))
-            {
-                await writer.WriteAsync(_sbScoopPackageManagerBuilder.ToString());
-            }
+            byte[] content = new UTF8Encoding().GetBytes(_sbScoopPackageManagerBuilder.ToString());
+
+            await File.WriteAllBytesAsync(fullScriptPath, content, cancellationToken);
 
             ScriptFile = new FileInfo(fullScriptPath);
         }

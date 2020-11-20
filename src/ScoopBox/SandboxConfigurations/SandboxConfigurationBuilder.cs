@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -41,7 +43,7 @@ namespace ScoopBox.SandboxConfigurations
             };
         }
 
-        public virtual async Task Build(string logonCommand)
+        public virtual async Task Build(string logonCommand, CancellationToken cancellationToken = default)
         {
             _configuration.VGpu = Enum.GetName(typeof(VGpuOptions), _options.VGpu);
             _configuration.Networking = Enum.GetName(typeof(NetworkingOptions), _options.Networking);
@@ -69,17 +71,20 @@ namespace ScoopBox.SandboxConfigurations
                 Command = new List<string>() { logonCommand }
             };
 
-            await GenerateFile();
+            await GenerateFile(cancellationToken);
         }
 
-        private async Task GenerateFile()
+        private async Task GenerateFile(CancellationToken cancellationToken)
         {
             using (StringWriter configStringWriter = new StringWriter())
             using (XmlWriter configXmlWriter = XmlWriter.Create(configStringWriter, _configurationSettings))
-            using (StreamWriter writer = _fileSystem.File.CreateText(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName)))
             {
                 _configurationSerializer.Serialize(configXmlWriter, _configuration, _emptyNamespaces);
-                await writer.WriteAsync(configStringWriter.ToString());
+
+                byte[] content = new UTF8Encoding().GetBytes(configStringWriter.ToString());
+                string path = Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName);
+
+                await File.WriteAllBytesAsync(path, content, cancellationToken);
             }
         }
     }

@@ -8,6 +8,7 @@ using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScoopBox
@@ -53,36 +54,36 @@ namespace ScoopBox
             InitializeDirectoryStructure();
         }
 
-        public Task Run(string literalScript)
+        public Task Run(string literalScript, CancellationToken cancellationToken = default)
         {
-            return Run(new List<string>() { literalScript });
+            return Run(new List<string>() { literalScript }, cancellationToken);
         }
 
-        public async Task Run(List<string> literalScripts)
+        public async Task Run(List<string> literalScripts, CancellationToken cancellationToken = default)
         {
             BasePowershellScript baseScript = new BasePowershellScript(_options, literalScripts);
-            await baseScript.CopyAndMaterialize(_options);
+            await baseScript.CopyAndMaterialize(_options, cancellationToken);
 
             string baseScriptTranslator = new PowershellTranslator().Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
-            await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
+            await _sandboxConfigurationBuilder.Build(baseScriptTranslator, cancellationToken);
 
             await _sandboxProcess.StartAsync();
         }
 
-        public Task Run(IPackageManager packageManager)
+        public Task Run(IPackageManager packageManager, CancellationToken cancellationToken = default)
         {
-            return Run(packageManager, new PowershellTranslator());
+            return Run(packageManager, new PowershellTranslator(), cancellationToken);
         }
 
-        public Task Run(IScript script, IPowershellTranslator translator)
+        public Task Run(IScript script, IPowershellTranslator translator, CancellationToken cancellationToken = default)
         {
             return Run(new List<Tuple<IScript, IPowershellTranslator>>()
             {
                 Tuple.Create(script, translator)
-            });
+            }, cancellationToken);
         }
 
-        public async Task Run(List<Tuple<IScript, IPowershellTranslator>> scripts)
+        public async Task Run(List<Tuple<IScript, IPowershellTranslator>> scripts, CancellationToken cancellationToken = default)
         {
             List<string> translatedScripts = new List<string>();
             foreach ((IScript script, IPowershellTranslator translator) in scripts)
