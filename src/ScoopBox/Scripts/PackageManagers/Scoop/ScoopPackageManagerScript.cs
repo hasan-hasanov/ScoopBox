@@ -84,7 +84,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
 
         public IPowershellTranslator Translator { get; }
 
-        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task Process(IOptions options, CancellationToken cancellationToken = default)
         {
             _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Start executing scoop package manager");
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");

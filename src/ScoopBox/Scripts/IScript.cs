@@ -11,6 +11,6 @@ namespace ScoopBox.Scripts
 
         IPowershellTranslator Translator { get; }
 
-        Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default);
+        Task Process(IOptions options, CancellationToken cancellationToken = default);
     }
 }

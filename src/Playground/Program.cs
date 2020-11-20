@@ -20,7 +20,7 @@ namespace Playground
                 new LiteralScript(new List<string>() { @"Start-Process 'C:\windows\system32\notepad.exe'" }, new PowershellTranslator()),
                 new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\facebook.ps1"), new PowershellTranslator()),
                 new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\explorer.ps1"), new PowershellTranslator()),
-                new ScoopPackageManagerScript(new List<string>(){ "curl" }, new PowershellTranslator()),
+                new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }, new PowershellTranslator()),
             });
         }
     }

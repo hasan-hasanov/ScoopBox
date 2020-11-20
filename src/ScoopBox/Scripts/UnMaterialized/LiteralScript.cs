@@ -79,7 +79,7 @@ namespace ScoopBox.Scripts.UnMaterialized
 
         public IPowershellTranslator Translator { get; }
 
-        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task Process(IOptions options, CancellationToken cancellationToken = default)
         {
             string filePath = Path.Combine(options.RootFilesDirectoryLocation, _baseScriptFileName);
             _deleteFile(filePath);

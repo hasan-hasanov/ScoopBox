@@ -125,12 +125,12 @@ namespace ScoopBox
             List<string> translatedScripts = new List<string>();
             foreach (IScript script in scripts)
             {
-                await script.CopyOrMaterialize(_options);
+                await script.Process(_options);
                 translatedScripts.Add(script.Translator.Translate(script.ScriptFile, _options));
             }
 
             LiteralScript baseScript = new LiteralScript(translatedScripts, new PowershellTranslator(), "MainScript.ps1");
-            await baseScript.CopyOrMaterialize(_options);
+            await baseScript.Process(_options);
             string baseScriptTranslator = baseScript.Translator.Translate(baseScript.ScriptFile, _options);
 
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);

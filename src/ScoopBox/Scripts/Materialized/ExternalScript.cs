@@ -48,7 +48,7 @@ namespace ScoopBox.Scripts.Materialized
 
         public IPowershellTranslator Translator { get; }
 
-        public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
+        public async Task Process(IOptions options, CancellationToken cancellationToken = default)
         {
             if (options == null)
             {

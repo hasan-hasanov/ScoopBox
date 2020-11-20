@@ -10,7 +10,7 @@ using Xunit;
 
 namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
 {
-    public class CopyOrMaterializeMethodTests
+    public class ProcessMethodTests
     {
         [Fact]
         public async Task ShouldGenerateCorrectPackageManagerScriptContent()
@@ -31,7 +31,7 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
                 sbScoopPackageManagerBuilder,
                 writeAllBytesAsync);
 
-            await scoopPackageManager.CopyOrMaterialize(options, CancellationToken.None);
+            await scoopPackageManager.Process(options, CancellationToken.None);
 
             string expected = @"Write-Host Start executing scoop package manager
 Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
@@ -67,7 +67,7 @@ Write-Host Finished executing scoop package manager
                 sbScoopPackageManagerBuilder,
                 writeAllBytesAsync);
 
-            await scoopPackageManager.CopyOrMaterialize(options, CancellationToken.None);
+            await scoopPackageManager.Process(options, CancellationToken.None);
 
             string expected = Path.Combine(options.RootFilesDirectoryLocation, scriptName);
 
