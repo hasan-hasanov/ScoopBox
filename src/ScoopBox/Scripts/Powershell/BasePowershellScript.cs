@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,6 +42,31 @@ namespace ScoopBox.Scripts.Powershell
             Action<string> deleteFile,
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (commands == null || !commands.Any())
+            {
+                throw new ArgumentNullException(nameof(commands));
+            }
+
+            if (string.IsNullOrWhiteSpace(baseScriptFileName))
+            {
+                throw new ArgumentNullException(nameof(baseScriptFileName));
+            }
+
+            if (deleteFile == null)
+            {
+                throw new ArgumentNullException(nameof(deleteFile));
+            }
+
+            if (writeAllBytesAsync == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             _options = options;
             _commands = commands;
             _baseScriptFileName = baseScriptFileName;

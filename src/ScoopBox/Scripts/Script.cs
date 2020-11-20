@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +16,11 @@ namespace ScoopBox.Scripts
 
         public async Task CopyOrMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             string sandboxScriptPath = Path.Combine(options.RootFilesDirectoryLocation, Path.GetFileName(ScriptFile.Name));
 
             using (FileStream sourceStream = File.Open(ScriptFile.FullName, FileMode.Open))

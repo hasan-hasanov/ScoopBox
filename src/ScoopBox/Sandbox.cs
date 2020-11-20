@@ -62,6 +62,36 @@ namespace ScoopBox
             Func<string, IEnumerable<DirectoryInfo>> enumerateDirectories,
             Func<string, Task> startProcess)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (sandboxConfigurationBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(sandboxConfigurationBuilder));
+            }
+
+            if (createDirectory == null)
+            {
+                throw new ArgumentNullException(nameof(createDirectory));
+            }
+
+            if (enumerateFiles == null)
+            {
+                throw new ArgumentNullException(nameof(enumerateFiles));
+            }
+
+            if (enumerateDirectories == null)
+            {
+                throw new ArgumentNullException(nameof(enumerateDirectories));
+            }
+
+            if (startProcess == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
             _options = options;
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
 

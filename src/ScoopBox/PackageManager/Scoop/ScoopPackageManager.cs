@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,28 +16,54 @@ namespace ScoopBox.PackageManager.Scoop
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
         public ScoopPackageManager(IEnumerable<string> applications)
-            : this(applications, $"{nameof(ScoopPackageManager)}.ps1")
+            : this(
+                  applications,
+                  $"{nameof(ScoopPackageManager)}.ps1")
         {
         }
 
-        public ScoopPackageManager(IEnumerable<string> applications, string scriptName)
+        public ScoopPackageManager(
+            IEnumerable<string> applications,
+            string scriptName)
             : this(
                   applications,
                   scriptName,
+                  new StringBuilder(),
                   async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
         }
 
         internal ScoopPackageManager(
             IEnumerable<string> applications,
-            string scriptName,
+            string packageManagerScriptName,
+            StringBuilder sbScoopPackageManagerBuilder,
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
-            _packageManagerScriptName = scriptName;
-            _sbScoopPackageManagerBuilder = new StringBuilder();
-            _writeAllBytesAsync = writeAllBytesAsync;
+            if (applications == null || !applications.Any())
+            {
+                throw new ArgumentNullException(nameof(applications));
+            }
+
+            if (string.IsNullOrWhiteSpace(packageManagerScriptName))
+            {
+                throw new ArgumentNullException(nameof(packageManagerScriptName));
+            }
+
+            if (sbScoopPackageManagerBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(sbScoopPackageManagerBuilder));
+            }
+
+            if (writeAllBytesAsync == null)
+            {
+                throw new ArgumentNullException(nameof(writeAllBytesAsync));
+            }
 
             Applications = applications;
+
+            _packageManagerScriptName = packageManagerScriptName;
+            _sbScoopPackageManagerBuilder = sbScoopPackageManagerBuilder;
+            _writeAllBytesAsync = writeAllBytesAsync;
         }
 
         public FileSystemInfo ScriptFile { get; set; }

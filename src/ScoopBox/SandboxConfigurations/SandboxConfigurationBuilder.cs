@@ -13,8 +13,8 @@ namespace ScoopBox.SandboxConfigurations
 {
     public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
     {
-        private readonly Configuration _configuration;
         private readonly IOptions _options;
+        private readonly Configuration _configuration;
 
         private readonly XmlSerializer _configurationSerializer;
         private readonly XmlSerializerNamespaces _emptyNamespaces;
@@ -25,25 +25,58 @@ namespace ScoopBox.SandboxConfigurations
         public SandboxConfigurationBuilder(IOptions options)
             : this(
                  options,
+                 new Configuration(),
+                 new XmlSerializer(typeof(Configuration)),
+                 new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }),
+                 new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true },
                  async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
         }
 
         internal SandboxConfigurationBuilder(
             IOptions options,
+            Configuration configuration,
+            XmlSerializer configurationSerializer,
+            XmlSerializerNamespaces emptyNamespaces,
+            XmlWriterSettings configurationSettings,
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
-            _configuration = new Configuration();
-
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-
-            _configurationSerializer = new XmlSerializer(typeof(Configuration));
-            _emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
-            _configurationSettings = new XmlWriterSettings
+            if (options == null)
             {
-                Indent = true,
-                OmitXmlDeclaration = true
-            };
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            if (configurationSerializer == null)
+            {
+                throw new ArgumentNullException(nameof(configurationSerializer));
+            }
+
+            if (emptyNamespaces == null)
+            {
+                throw new ArgumentNullException(nameof(emptyNamespaces));
+            }
+
+            if (configurationSettings == null)
+            {
+                throw new ArgumentNullException(nameof(configurationSettings));
+            }
+
+            if (writeAllBytesAsync == null)
+            {
+                throw new ArgumentNullException(nameof(writeAllBytesAsync));
+            }
+
+            _options = options;
+            _configuration = configuration;
+
+            _configurationSerializer = configurationSerializer;
+            _emptyNamespaces = emptyNamespaces;
+            _configurationSettings = configurationSettings;
 
             _writeAllBytesAsync = writeAllBytesAsync;
         }
