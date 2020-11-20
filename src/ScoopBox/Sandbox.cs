@@ -24,9 +24,23 @@ namespace ScoopBox
         private readonly Func<string, Task> _startProcess;
 
         public Sandbox()
+            : this(new Options())
+        {
+        }
+
+        public Sandbox(IOptions options)
             : this(
-                  new Options(),
-                  new SandboxConfigurationBuilder(new Options()),
+                  options,
+                  new SandboxConfigurationBuilder(new Options()))
+        {
+        }
+
+        public Sandbox(
+            IOptions options,
+            SandboxConfigurationBuilder sandboxConfigurationBuilder)
+            : this(
+                  options,
+                  sandboxConfigurationBuilder,
                   path => Directory.CreateDirectory(path),
                   path => new DirectoryInfo(path).EnumerateFiles(),
                   path => new DirectoryInfo(path).EnumerateDirectories(),
