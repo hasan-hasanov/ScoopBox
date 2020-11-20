@@ -3,12 +3,14 @@ using ScoopBox.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
+[assembly: InternalsVisibleTo("ScoopBox.Test")]
 namespace ScoopBox.SandboxConfigurations
 {
     public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
