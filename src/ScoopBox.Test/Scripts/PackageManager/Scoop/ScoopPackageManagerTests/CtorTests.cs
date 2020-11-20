@@ -1,5 +1,6 @@
 ﻿using ScoopBox.Scripts.PackageManagers;
 using ScoopBox.Scripts.PackageManagers.Scoop;
+using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,29 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
         }
 
         [Fact]
+        public void ShouldInitializeTranslator()
+        {
+            IEnumerable<string> applications = new List<string>() { "git", "curl", "fiddler" };
+            IPowershellTranslator powershellTranslator = new PowershellTranslator();
+
+            IPackageManagerScript scoopPackageManager = new ScoopPackageManagerScript(applications, powershellTranslator);
+
+            var expected = powershellTranslator;
+            var actual = scoopPackageManager.Translator;
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutApplications()
         {
             Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(null, new PowershellTranslator()));
+        }
+
+        [Fact]
+        public void ShouldThrowArgumentNullExceptionWithoutTranslator()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(new List<string>() { "git", "curl", "fiddler" }, null));
         }
 
         [Fact]
