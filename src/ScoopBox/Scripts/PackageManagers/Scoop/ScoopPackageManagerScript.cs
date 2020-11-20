@@ -11,21 +11,21 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
 namespace ScoopBox.Scripts.PackageManagers.Scoop
 {
-    public class ScoopPackageManager : IPackageManager, IScript
+    public class ScoopPackageManagerScript : IPackageManagerScript, IScript
     {
         private string _packageManagerScriptName;
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
-        public ScoopPackageManager(IEnumerable<string> applications, IPowershellTranslator translator)
+        public ScoopPackageManagerScript(IEnumerable<string> applications, IPowershellTranslator translator)
             : this(
                   applications,
                   translator,
-                  $"{nameof(ScoopPackageManager)}.ps1")
+                  $"{nameof(ScoopPackageManagerScript)}.ps1")
         {
         }
 
-        public ScoopPackageManager(
+        public ScoopPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
             string scriptName)
@@ -38,7 +38,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
-        internal ScoopPackageManager(
+        internal ScoopPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
             string packageManagerScriptName,

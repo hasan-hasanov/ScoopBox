@@ -2,7 +2,7 @@
 
 namespace ScoopBox.Scripts.PackageManagers
 {
-    public interface IPackageManager : IScript
+    public interface IPackageManagerScript : IScript
     {
         IEnumerable<string> Applications { get; }
     }
