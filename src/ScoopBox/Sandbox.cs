@@ -7,7 +7,7 @@ using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
-using System.IO.Abstractions;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +18,10 @@ namespace ScoopBox
         private readonly IOptions _options;
         private readonly ISandboxProcess _sandboxProcess;
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
-        private readonly IFileSystem _fileSystem;
+
+        private readonly Action<string> _createDirectory;
+        private readonly Func<string, IEnumerable<FileInfo>> _enumerateFiles;
+        private readonly Func<string, IEnumerable<DirectoryInfo>> _enumerateDirectories;
 
         public Sandbox()
             : this(
@@ -30,26 +33,27 @@ namespace ScoopBox
 
         private Sandbox(
             IOptions options,
-            ISandboxProcess process,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
-            : this(
-                  options,
-                  process,
-                  sandboxConfigurationBuilder,
-                  new FileSystem())
-        {
-        }
-
-        private Sandbox(
-            IOptions options,
             ISandboxProcess sandboxProcess,
-            ISandboxConfigurationBuilder sandboxConfigurationBuilder,
-            IFileSystem fileSystem)
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
         {
             _options = options;
             _sandboxProcess = sandboxProcess;
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
-            _fileSystem = fileSystem;
+
+            _createDirectory = rootFilesDirectoryLocation =>
+            {
+                Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
+            };
+
+            _enumerateFiles = rootFilesDirectoryLocation =>
+            {
+                return new DirectoryInfo(rootFilesDirectoryLocation).EnumerateFiles();
+            };
+
+            _enumerateDirectories = rootFilesDirectoryLocation =>
+            {
+                return new DirectoryInfo(rootFilesDirectoryLocation).EnumerateDirectories();
+            };
 
             InitializeDirectoryStructure();
         }
@@ -103,14 +107,14 @@ namespace ScoopBox
 
         private void InitializeDirectoryStructure()
         {
-            _fileSystem.Directory.CreateDirectory(_options.RootFilesDirectoryLocation);
+            _createDirectory(_options.RootFilesDirectoryLocation);
 
-            foreach (IFileInfo file in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateFiles())
+            foreach (FileInfo file in _enumerateFiles(_options.RootFilesDirectoryLocation))
             {
                 file.Delete();
             }
 
-            foreach (IDirectoryInfo dir in _fileSystem.DirectoryInfo.FromDirectoryName(_options.RootFilesDirectoryLocation).EnumerateDirectories())
+            foreach (DirectoryInfo dir in _enumerateDirectories(_options.RootFilesDirectoryLocation))
             {
                 dir.Delete(true);
             }

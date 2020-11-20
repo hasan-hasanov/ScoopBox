@@ -1,7 +1,7 @@
 ﻿using ScoopBox.Scripts;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +11,8 @@ namespace ScoopBox.PackageManager.Scoop
     public class ScoopPackageManager : IPackageManager, IScript
     {
         private string _packageManagerScriptName;
-        private readonly IFileSystem _fileSystem;
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
+        private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
         public ScoopPackageManager(IEnumerable<string> applications)
             : this(applications, $"{nameof(ScoopPackageManager)}.ps1")
@@ -20,17 +20,23 @@ namespace ScoopBox.PackageManager.Scoop
         }
 
         public ScoopPackageManager(IEnumerable<string> applications, string scriptName)
-            : this(applications, scriptName, new FileSystem())
+            : this(
+                  applications,
+                  scriptName,
+                  async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
         }
 
-        private ScoopPackageManager(IEnumerable<string> applications, string scriptName, IFileSystem fileSystem)
+        internal ScoopPackageManager(
+            IEnumerable<string> applications,
+            string scriptName,
+            Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
             _packageManagerScriptName = scriptName;
-            _fileSystem = fileSystem;
+            _sbScoopPackageManagerBuilder = new StringBuilder();
+            _writeAllBytesAsync = writeAllBytesAsync;
 
             Applications = applications;
-            _sbScoopPackageManagerBuilder = new StringBuilder();
         }
 
         public FileSystemInfo ScriptFile { get; set; }
@@ -47,7 +53,7 @@ namespace ScoopBox.PackageManager.Scoop
             string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
             byte[] content = new UTF8Encoding().GetBytes(_sbScoopPackageManagerBuilder.ToString());
 
-            await File.WriteAllBytesAsync(fullScriptPath, content, cancellationToken);
+            await _writeAllBytesAsync(fullScriptPath, content, cancellationToken);
 
             ScriptFile = new FileInfo(fullScriptPath);
         }

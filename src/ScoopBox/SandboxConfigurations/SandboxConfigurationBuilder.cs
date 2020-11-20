@@ -3,7 +3,6 @@ using ScoopBox.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,23 +15,27 @@ namespace ScoopBox.SandboxConfigurations
     {
         private readonly Configuration _configuration;
         private readonly IOptions _options;
-        private readonly IFileSystem _fileSystem;
 
         private readonly XmlSerializer _configurationSerializer;
         private readonly XmlSerializerNamespaces _emptyNamespaces;
         private readonly XmlWriterSettings _configurationSettings;
 
+        private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
+
         public SandboxConfigurationBuilder(IOptions options)
-            : this(options, new FileSystem())
+            : this(
+                 options,
+                 async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
         }
 
-        private SandboxConfigurationBuilder(IOptions options, IFileSystem fileSystem)
+        internal SandboxConfigurationBuilder(
+            IOptions options,
+            Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
             _configuration = new Configuration();
 
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
 
             _configurationSerializer = new XmlSerializer(typeof(Configuration));
             _emptyNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
@@ -41,6 +44,8 @@ namespace ScoopBox.SandboxConfigurations
                 Indent = true,
                 OmitXmlDeclaration = true
             };
+
+            _writeAllBytesAsync = writeAllBytesAsync;
         }
 
         public virtual async Task Build(string logonCommand, CancellationToken cancellationToken = default)
@@ -84,7 +89,7 @@ namespace ScoopBox.SandboxConfigurations
                 byte[] content = new UTF8Encoding().GetBytes(configStringWriter.ToString());
                 string path = Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName);
 
-                await File.WriteAllBytesAsync(path, content, cancellationToken);
+                await _writeAllBytesAsync(path, content, cancellationToken);
             }
         }
     }

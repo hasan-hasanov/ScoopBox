@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.IO.Abstractions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,17 +6,9 @@ namespace ScoopBox.Scripts
 {
     public class Script : IScript
     {
-        private readonly IFileSystem _fileSystem;
-
         public Script(FileSystemInfo scriptFile)
-            : this(scriptFile, new FileSystem())
         {
-        }
-
-        private Script(FileSystemInfo fileStream, IFileSystem fileSystem)
-        {
-            _fileSystem = fileSystem;
-            ScriptFile = fileStream;
+            ScriptFile = scriptFile;
         }
 
         public FileSystemInfo ScriptFile { get; set; }

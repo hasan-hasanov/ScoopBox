@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,14 +12,15 @@ namespace ScoopBox.Scripts.Powershell
         private string _baseScriptFileName;
         private readonly IOptions _options;
         private readonly IList<string> _commands;
-        private readonly IFileSystem _fileSystem;
+
+        private readonly Action<string> _deleteFile;
+        private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
         public BasePowershellScript(IOptions options, IList<string> commands)
             : this(
                   options,
                   commands,
-                  "BaseScript.ps1",
-                  new FileSystem())
+                  "BaseScript.ps1")
         {
         }
 
@@ -29,27 +29,34 @@ namespace ScoopBox.Scripts.Powershell
                   options,
                   commands,
                   baseScriptFileName,
-                  new FileSystem())
+                  path => File.Delete(path),
+                  async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
         }
 
-        private BasePowershellScript(IOptions options, IList<string> commands, string baseScriptFileName, IFileSystem fileSystem)
+        internal BasePowershellScript(
+            IOptions options,
+            IList<string> commands,
+            string baseScriptFileName,
+            Action<string> deleteFile,
+            Func<string, byte[], CancellationToken, Task> writeAllBytesAsync)
         {
             _options = options;
             _commands = commands;
             _baseScriptFileName = baseScriptFileName;
-            _fileSystem = fileSystem;
+            _deleteFile = deleteFile;
+            _writeAllBytesAsync = writeAllBytesAsync;
         }
 
         public FileSystemInfo ScriptFile { get; set; }
 
         public async Task CopyAndMaterialize(IOptions options, CancellationToken cancellationToken = default)
         {
-            string filePath = _fileSystem.Path.Combine(_options.RootFilesDirectoryLocation, _baseScriptFileName);
-            _fileSystem.File.Delete(filePath);
+            string filePath = Path.Combine(_options.RootFilesDirectoryLocation, _baseScriptFileName);
+            _deleteFile(filePath);
 
             byte[] fileContent = new UTF8Encoding().GetBytes(string.Join(Environment.NewLine, _commands));
-            await File.WriteAllBytesAsync(filePath, fileContent, cancellationToken);
+            await _writeAllBytesAsync(filePath, fileContent, cancellationToken);
 
             ScriptFile = new FileInfo(filePath);
         }
