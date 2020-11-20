@@ -6,6 +6,8 @@ namespace ScoopBox
 {
     public interface IOptions
     {
+        string SandboxDesktopLocation { get; }
+
         string SandboxConfigurationFileName { get; }
 
         string RootFilesDirectoryLocation { get; }

@@ -7,6 +7,8 @@ namespace ScoopBox
 {
     public class Options : IOptions
     {
+        public string SandboxDesktopLocation => @"C:\Users\WDAGUtilityAccount\Desktop\";
+
         public string SandboxConfigurationFileName { get; set; } = "sandbox.wsb";
 
         public string RootSandboxFilesDirectoryLocation { get; set; } = @"C:\Users\WDAGUtilityAccount\Desktop\Sandbox\";

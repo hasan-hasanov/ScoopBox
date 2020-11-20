@@ -126,12 +126,12 @@ namespace ScoopBox
             foreach (IScript script in scripts)
             {
                 await script.CopyOrMaterialize(_options);
-                translatedScripts.Add(script.Translator.Translate(script.ScriptFile, _options.RootSandboxFilesDirectoryLocation));
+                translatedScripts.Add(script.Translator.Translate(script.ScriptFile, _options));
             }
 
             LiteralScript baseScript = new LiteralScript(translatedScripts, new PowershellTranslator(), "MainScript.ps1");
             await baseScript.CopyOrMaterialize(_options);
-            string baseScriptTranslator = baseScript.Translator.Translate(baseScript.ScriptFile, _options.RootSandboxFilesDirectoryLocation);
+            string baseScriptTranslator = baseScript.Translator.Translate(baseScript.ScriptFile, _options);
 
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
             await _startProcess(Path.Combine(_options.RootFilesDirectoryLocation, _options.SandboxConfigurationFileName));

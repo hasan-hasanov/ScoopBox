@@ -9,7 +9,7 @@ namespace ScoopBox.Translators.Powershell
         private readonly string[] _argumentsAfter;
 
         public PowershellTranslator()
-            : this(new string[] { @"3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""" })
+            : this(null)
         {
         }
 
@@ -18,20 +18,22 @@ namespace ScoopBox.Translators.Powershell
             _argumentsAfter = argumentsAfter;
         }
 
-        public string Translate(FileSystemInfo file, string rootSandboxScriptFilesLocation)
+        public string Translate(FileSystemInfo file, IOptions options)
         {
             if (file == null)
             {
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (string.IsNullOrWhiteSpace(rootSandboxScriptFilesLocation))
+            if (options == null)
             {
-                throw new ArgumentNullException(nameof(rootSandboxScriptFilesLocation));
+                throw new ArgumentNullException(nameof(options));
             }
 
-            string sandboxScriptFileFullName = Path.Combine(rootSandboxScriptFilesLocation, file.Name);
-            StringBuilder sbPowershellCommandBuilder = new StringBuilder().Append($"powershell.exe -ExecutionPolicy Bypass -File { sandboxScriptFileFullName }");
+            string sandboxScriptFileFullName = Path.Combine(options.RootSandboxFilesDirectoryLocation, file.Name);
+
+            StringBuilder sbPowershellCommandBuilder = new StringBuilder()
+                .AppendLine($@"powershell.exe -ExecutionPolicy Bypass -File { sandboxScriptFileFullName } 3>&1 2>&1 > ""{Path.Combine(options.SandboxDesktopLocation, "Log.txt")}""");
 
             if (_argumentsAfter?.Length > 0)
             {
