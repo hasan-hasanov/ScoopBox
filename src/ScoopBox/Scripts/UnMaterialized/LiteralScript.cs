@@ -25,11 +25,11 @@ namespace ScoopBox.Scripts.UnMaterialized
         {
         }
 
-        public LiteralScript(IList<string> commands, IPowershellTranslator translator, string baseScriptFileName)
+        public LiteralScript(IList<string> commands, IPowershellTranslator translator, string scriptFileName)
             : this(
                   commands,
                   translator,
-                  baseScriptFileName,
+                  scriptFileName,
                   path => File.Delete(path),
                   async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
         {
