@@ -31,11 +31,11 @@ namespace ScoopBox.Test.Translators.PowershellTranslatorTests
             IOptions options = new Options();
             MockFileSystemInfo mockFileInfo = new MockFileSystemInfo(fileName);
 
-            PowershellTranslator powershellTranslator = new PowershellTranslator();
+            PowershellTranslator powershellTranslator = new PowershellTranslator(null, () => 1000);
             string result = powershellTranslator.Translate(mockFileInfo, options);
 
             string actual = result;
-            string expected = @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockFile.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""";
+            string expected = @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockFile.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log_1000.txt""";
 
             Assert.Equal(expected, actual);
         }
@@ -47,11 +47,11 @@ namespace ScoopBox.Test.Translators.PowershellTranslatorTests
             IOptions options = new Options();
             MockFileSystemInfo mockFileInfo = new MockFileSystemInfo(fileName);
 
-            PowershellTranslator powershellTranslator = new PowershellTranslator(new string[] { "test" });
+            PowershellTranslator powershellTranslator = new PowershellTranslator(new string[] { "test" }, () => 1000);
             string result = powershellTranslator.Translate(mockFileInfo, options);
 
             string actual = result;
-            string expected = @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockFile.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt"" test";
+            string expected = @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockFile.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log_1000.txt"" test";
 
             Assert.Equal(expected, actual);
         }

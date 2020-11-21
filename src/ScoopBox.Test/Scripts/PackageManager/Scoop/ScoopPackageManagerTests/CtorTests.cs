@@ -14,6 +14,19 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
     public class CtorTests
     {
         [Fact]
+        public void ShouldInitializeWithoutTranslator()
+        {
+            IEnumerable<string> applications = new List<string>() { "git", "curl", "fiddler" };
+
+            IPackageManagerScript scoopPackageManager = new ScoopPackageManagerScript(applications);
+
+            string expected = JsonSerializer.Serialize(applications);
+            string actual = JsonSerializer.Serialize(scoopPackageManager.Applications);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void ShouldInitializeApplications()
         {
             IEnumerable<string> applications = new List<string>() { "git", "curl", "fiddler" };

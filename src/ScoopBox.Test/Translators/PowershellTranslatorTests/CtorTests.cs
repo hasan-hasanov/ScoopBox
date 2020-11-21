@@ -1,4 +1,5 @@
 ﻿using ScoopBox.Translators.Powershell;
+using System;
 using Xunit;
 
 namespace ScoopBox.Test.Translators.PowershellTranslatorTests
@@ -21,6 +22,12 @@ namespace ScoopBox.Test.Translators.PowershellTranslatorTests
 
             // This is checking that the class is initialized properly and does not throw exception.
             Assert.True(true);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionWithoutGetTicks()
+        {
+            Assert.Throws<ArgumentNullException>(() => new PowershellTranslator(new string[] { "-p", "test" }, null));
         }
     }
 }
