@@ -1,5 +1,9 @@
 ﻿using ScoopBox.SandboxConfigurations;
+using ScoopBox.Scripts.UnMaterialized;
+using ScoopBox.Translators;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,8 +20,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> deleteFiles = path => { };
             Action<string> deleteDirectories = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess);
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory);
 
             Assert.True(true);
         }
@@ -30,8 +41,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> deleteFiles = path => { };
             Action<string> deleteDirectories = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(null, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(null, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
         }
 
         [Fact]
@@ -42,8 +60,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> deleteFiles = path => { };
             Action<string> deleteDirectories = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, null, createDirectory, deleteFiles, deleteDirectories, startProcess));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, null, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
         }
 
         [Fact]
@@ -54,8 +79,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> deleteFiles = path => { };
             Action<string> deleteDirectories = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, null, deleteFiles, deleteDirectories, startProcess));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, null, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
         }
 
         [Fact]
@@ -66,8 +98,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> createDirectory = path => { };
             Action<string> deleteDirectories = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, null, deleteDirectories, startProcess));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, null, deleteDirectories, startProcess, literalScriptFactory));
         }
 
         [Fact]
@@ -78,8 +117,15 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> createDirectory = path => { };
             Action<string> deleteFiles = path => { };
             Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, null, startProcess));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, null, startProcess, literalScriptFactory));
         }
 
         [Fact]
@@ -90,8 +136,28 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> createDirectory = path => { };
             Action<string> deleteFiles = path => { };
             Action<string> deleteDirectories = path => { };
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
+            {
+                Action<string> deleteFile = path => { };
+                Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, null));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+            };
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, null, literalScriptFactory));
+        }
+
+        [Fact]
+        public void ShouldThrowArgumentNullExceptionWithoutLiteralScriptFactory()
+        {
+            IOptions options = new Options();
+            ISandboxConfigurationBuilder configurationBuilder = new SandboxConfigurationBuilder(options);
+            Action<string> createDirectory = path => { };
+            Action<string> deleteFiles = path => { };
+            Action<string> deleteDirectories = path => { };
+            Func<string, Task> startProcess = path => Task.CompletedTask;
+
+            Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, null));
         }
     }
 }

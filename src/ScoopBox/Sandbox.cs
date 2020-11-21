@@ -1,6 +1,7 @@
 ﻿using ScoopBox.SandboxConfigurations;
 using ScoopBox.Scripts;
 using ScoopBox.Scripts.UnMaterialized;
+using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace ScoopBox
         private readonly Action<string> _deleteFiles;
         private readonly Action<string> _deleteDirectories;
         private readonly Func<string, Task> _startProcess;
+        private readonly Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> _literalScriptFactory;
 
         public Sandbox()
             : this(new Options())
@@ -74,6 +76,12 @@ namespace ScoopBox
                       await process.StandardInput.FlushAsync();
                       process.StandardInput.Close();
                       process.WaitForExit();
+                  },
+                  async (scripts, translator, name, options) =>
+                  {
+                      var literalScript = new LiteralScript(scripts, translator, name);
+                      await literalScript.Process(options);
+                      return literalScript;
                   })
         {
         }
@@ -84,7 +92,8 @@ namespace ScoopBox
             Action<string> createDirectory,
             Action<string> deleteFiles,
             Action<string> deleteDirectories,
-            Func<string, Task> startProcess)
+            Func<string, Task> startProcess,
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory)
         {
             if (options == null)
             {
@@ -116,6 +125,11 @@ namespace ScoopBox
                 throw new ArgumentNullException(nameof(options));
             }
 
+            if (literalScriptFactory == null)
+            {
+                throw new ArgumentNullException(nameof(literalScriptFactory));
+            }
+
             _options = options;
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
 
@@ -123,6 +137,7 @@ namespace ScoopBox
             _deleteFiles = deleteFiles;
             _deleteDirectories = deleteDirectories;
             _startProcess = startProcess;
+            _literalScriptFactory = literalScriptFactory;
 
             InitializeDirectoryStructure();
         }
@@ -141,8 +156,7 @@ namespace ScoopBox
                 translatedScripts.Add(script.Translator.Translate(script.ScriptFile, _options));
             }
 
-            LiteralScript baseScript = new LiteralScript(translatedScripts, new PowershellTranslator(), "MainScript.ps1");
-            await baseScript.Process(_options);
+            LiteralScript baseScript = await _literalScriptFactory(translatedScripts, new PowershellTranslator(), "MainScript.ps1", _options);
             string baseScriptTranslator = baseScript.Translator.Translate(baseScript.ScriptFile, _options);
 
             await _sandboxConfigurationBuilder.Build(baseScriptTranslator);
