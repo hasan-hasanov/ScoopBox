@@ -144,5 +144,45 @@ namespace ScoopBox.Test.SandboxTests
             configurationBuilder.Verify(c => c.Build(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
             Assert.Equal(1, timesCalled);
         }
+
+        [Fact]
+        public async Task ShouldBuildCorrectMainScriptContentWithSingleScript()
+        {
+            IList<string> actualScripts = new List<string>();
+
+            IOptions options = new Options();
+            ISandboxConfigurationBuilder configurationBuilder = new SandboxConfigurationBuilder(new Options());
+            Action<string> createDirectory = path => { };
+            Action<string> deleteFiles = path => { };
+            Action<string> deleteDirectories = path => { };
+            Func<string, Task> startProcess = path => Task.CompletedTask;
+            Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
+            Func<string, string, CancellationToken, Task> copyFiles = (source, destination, token) => Task.CompletedTask;
+            Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = async (scripts, translator, name, options) =>
+            {
+                actualScripts = scripts;
+                var literalScript = new LiteralScript(scripts, translator, name, deleteFiles, writeAllBytes);
+                await literalScript.Process(options);
+                return literalScript;
+            };
+
+            var sandbox = new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory);
+            await sandbox.Run(
+                // Raw script that will be executed
+                new LiteralScript(new List<string>() {
+                    @"Start-Process 'C:\windows\system32\notepad.exe'" },
+                    new PowershellTranslator(),
+                    "mockScriptName1.ps1",
+                    deleteFiles,
+                    writeAllBytes));
+
+            IList<string> expected = new List<string>()
+            {
+                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockScriptName1.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""",
+            };
+            IList<string> actual = actualScripts;
+
+            Assert.Equal(expected, actual);
+        }
     }
 }
