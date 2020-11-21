@@ -55,7 +55,7 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
         [Fact]
         public void ShouldThrowArgumentNullExceptionWithoutScriptName()
         {
-            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(new List<string>() { "git", "curl", "fiddler" }, null));
+            Assert.Throws<ArgumentNullException>(() => new ScoopPackageManagerScript(new List<string>() { "git", "curl", "fiddler" }, new PowershellTranslator(), null));
         }
 
         [Fact]

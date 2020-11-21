@@ -1,4 +1,5 @@
-﻿using ScoopBox.Entities;
+﻿using ScoopBox.Abstractions;
+using ScoopBox.Entities;
 using ScoopBox.Enums;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace ScoopBox.SandboxConfigurations
                  new XmlSerializer(typeof(Configuration)),
                  new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty }),
                  new XmlWriterSettings { Indent = true, OmitXmlDeclaration = true },
-                 async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
+                 FileSystemAbstractions.WriteAllBytesAsync)
         {
         }
 

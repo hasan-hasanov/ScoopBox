@@ -1,4 +1,5 @@
-﻿using ScoopBox.Translators;
+﻿using ScoopBox.Abstractions;
+using ScoopBox.Translators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,8 +31,8 @@ namespace ScoopBox.Scripts.UnMaterialized
                   commands,
                   translator,
                   scriptFileName,
-                  path => File.Delete(path),
-                  async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
+                  FileSystemAbstractions.DeleteFile,
+                  FileSystemAbstractions.WriteAllBytesAsync)
         {
         }
 

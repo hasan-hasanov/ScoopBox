@@ -33,7 +33,7 @@ namespace ScoopBox.Translators.Powershell
             string sandboxScriptFileFullName = Path.Combine(options.RootSandboxFilesDirectoryLocation, file.Name);
 
             StringBuilder sbPowershellCommandBuilder = new StringBuilder()
-                .AppendLine($@"powershell.exe -ExecutionPolicy Bypass -File { sandboxScriptFileFullName } 3>&1 2>&1 > ""{Path.Combine(options.SandboxDesktopLocation, "Log.txt")}""");
+                .Append($@"powershell.exe -ExecutionPolicy Bypass -File { sandboxScriptFileFullName } 3>&1 2>&1 > ""{Path.Combine(options.SandboxDesktopLocation, "Log.txt")}""");
 
             if (_argumentsAfter?.Length > 0)
             {

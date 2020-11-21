@@ -72,14 +72,10 @@ namespace ScoopBox.Test.SandboxTests
 
             IList<string> expected = new List<string>()
             {
-                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockScriptName1.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""
-",
-                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\OpenBrowserScript.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""
-",
-                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\OpenExplorerScript.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""
-",
-                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockScriptName2 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""
-",
+                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockScriptName1.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""",
+                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\OpenBrowserScript.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""",
+                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\OpenExplorerScript.ps1 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""",
+                @"powershell.exe -ExecutionPolicy Bypass -File C:\Users\WDAGUtilityAccount\Desktop\Sandbox\mockScriptName2 3>&1 2>&1 > ""C:\Users\WDAGUtilityAccount\Desktop\Log.txt""",
             };
             IList<string> actual = actualScripts;
 

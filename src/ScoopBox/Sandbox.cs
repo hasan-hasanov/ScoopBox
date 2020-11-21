@@ -1,11 +1,11 @@
-﻿using ScoopBox.SandboxConfigurations;
+﻿using ScoopBox.Abstractions;
+using ScoopBox.SandboxConfigurations;
 using ScoopBox.Scripts;
 using ScoopBox.Scripts.UnMaterialized;
 using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,48 +41,11 @@ namespace ScoopBox
             : this(
                   options,
                   sandboxConfigurationBuilder,
-                  path => Directory.CreateDirectory(path),
-                  path =>
-                  {
-                      foreach (var file in new DirectoryInfo(path).EnumerateFiles())
-                      {
-                          file.Delete();
-                      }
-                  },
-                  path =>
-                  {
-                      foreach (var directory in new DirectoryInfo(path).EnumerateDirectories())
-                      {
-                          directory.Delete(true);
-                      }
-                  },
-                  async path =>
-                  {
-                      var process = new Process()
-                      {
-                          StartInfo = new ProcessStartInfo()
-                          {
-                              FileName = "cmd.exe",
-                              RedirectStandardInput = true,
-                              RedirectStandardOutput = true,
-                              CreateNoWindow = false,
-                              WindowStyle = ProcessWindowStyle.Hidden,
-                              UseShellExecute = false,
-                          }
-                      };
-
-                      process.Start();
-                      await process.StandardInput.WriteLineAsync($"\"{path}\"");
-                      await process.StandardInput.FlushAsync();
-                      process.StandardInput.Close();
-                      process.WaitForExit();
-                  },
-                  async (scripts, translator, name, options) =>
-                  {
-                      var literalScript = new LiteralScript(scripts, translator, name);
-                      await literalScript.Process(options);
-                      return literalScript;
-                  })
+                  FileSystemAbstractions.CreateDirectory,
+                  FileSystemAbstractions.DeleteFilesInDirectory,
+                  FileSystemAbstractions.DeleteDirectoriesInDirectory,
+                  ProcessAbstractions.StartCmdWithInput,
+                  ScriptFactories.ProcessLiteralScriptFactory)
         {
         }
 

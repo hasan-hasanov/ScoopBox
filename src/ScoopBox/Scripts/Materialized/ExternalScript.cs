@@ -1,4 +1,5 @@
-﻿using ScoopBox.Translators;
+﻿using ScoopBox.Abstractions;
+using ScoopBox.Translators;
 using System;
 using System.IO;
 using System.Threading;
@@ -14,12 +15,7 @@ namespace ScoopBox.Scripts.Materialized
             : this(
                  scriptFile,
                  translator,
-                 async (source, destination, token) =>
-                 {
-                     using FileStream sourceStream = File.Open(source, FileMode.Open);
-                     using FileStream destinationStream = File.Create(destination);
-                     await sourceStream.CopyToAsync(destinationStream, token);
-                 })
+                 FileSystemAbstractions.CopyFileToDestination)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using ScoopBox.Translators;
+﻿using ScoopBox.Abstractions;
+using ScoopBox.Translators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +35,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
                   translator,
                   scriptName,
                   new StringBuilder(),
-                  async (path, content, token) => await File.WriteAllBytesAsync(path, content, token))
+                  FileSystemAbstractions.WriteAllBytesAsync)
         {
         }
 
