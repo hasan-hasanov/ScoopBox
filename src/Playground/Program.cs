@@ -1,9 +1,8 @@
 ﻿using ScoopBox;
 using ScoopBox.Scripts;
 using ScoopBox.Scripts.Materialized;
-using ScoopBox.Scripts.PackageManagers.Scoop;
-using ScoopBox.Scripts.UnMaterialized;
-using ScoopBox.Translators.Powershell;
+using ScoopBox.Translators.Bat;
+using ScoopBox.Translators.Cmd;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,10 +16,8 @@ namespace Playground
             ISandbox sandbox = new Sandbox();
             await sandbox.Run(new List<IScript>()
             {
-                new LiteralScript(new List<string>() { @"Start-Process 'C:\windows\system32\notepad.exe'" }, new PowershellTranslator()),
-                new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\facebook.ps1"), new PowershellTranslator()),
-                new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\explorer.ps1"), new PowershellTranslator()),
-                new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }, new PowershellTranslator()),
+                new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\notepad.cmd"), new CmdTranslator()),
+                new ExternalScript(new FileInfo(@"C:\Users\Hasan Hasanov\AppData\Local\Temp\Scripts\notepads.bat"), new BatTranslator()),
             });
         }
     }

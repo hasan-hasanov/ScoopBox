@@ -3,24 +3,24 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace ScoopBox.Translators.Powershell
+namespace ScoopBox.Translators.Bat
 {
-    public class PowershellTranslator : IPowershellTranslator
+    public class BatTranslator : IPowershellTranslator
     {
         private readonly string[] _argumentsAfter;
         private readonly Func<long> _getTicks;
 
-        public PowershellTranslator()
+        public BatTranslator()
             : this(null)
         {
         }
 
-        public PowershellTranslator(string[] argumentsAfter)
+        public BatTranslator(string[] argumentsAfter)
             : this(argumentsAfter, DateTimeAbstractions.GetTicks)
         {
         }
 
-        internal PowershellTranslator(string[] argumentsAfter, Func<long> getTicks)
+        internal BatTranslator(string[] argumentsAfter, Func<long> getTicks)
         {
             if (getTicks == null)
             {
@@ -46,7 +46,7 @@ namespace ScoopBox.Translators.Powershell
             string sandboxScriptFileFullName = Path.Combine(options.RootSandboxFilesDirectoryLocation, file.Name);
 
             StringBuilder sbPowershellCommandBuilder = new StringBuilder()
-                .Append($@"powershell.exe -ExecutionPolicy Bypass -File { sandboxScriptFileFullName }")
+                .Append($@"powershell.exe ""{ sandboxScriptFileFullName }""")
                 .Append(" ")
                 .Append($@"3>&1 2>&1 > ""{Path.Combine(options.SandboxDesktopLocation, $"Log_{_getTicks()}.txt")}""");
 

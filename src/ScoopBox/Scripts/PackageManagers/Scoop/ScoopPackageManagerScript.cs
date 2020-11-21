@@ -1,5 +1,6 @@
 ﻿using ScoopBox.Abstractions;
 using ScoopBox.Translators;
+using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,14 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         private string _packageManagerScriptName;
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
+
+        public ScoopPackageManagerScript(IEnumerable<string> applications)
+            : this(
+                  applications,
+                  new PowershellTranslator(),
+                  $"{nameof(ScoopPackageManagerScript)}.ps1")
+        {
+        }
 
         public ScoopPackageManagerScript(IEnumerable<string> applications, IPowershellTranslator translator)
             : this(
