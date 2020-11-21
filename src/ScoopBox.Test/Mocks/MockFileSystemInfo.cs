@@ -19,7 +19,6 @@ namespace ScoopBox.Test.Mocks
 
         public override void Delete()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

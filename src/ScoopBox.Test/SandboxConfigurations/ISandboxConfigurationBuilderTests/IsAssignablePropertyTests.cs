@@ -6,7 +6,7 @@ namespace ScoopBox.Test.SandboxConfigurations.ISandboxConfigurationBuilderTests
     public class IsAssignablePropertyTests
     {
         [Fact]
-        public void IsOptionsAssignableToIOptions()
+        public void IsISandboxConfigurationBuilderAssignableToSandboxConfigurationBuilder()
         {
             SandboxConfigurationBuilder sandboxConfigurationBuilder = new SandboxConfigurationBuilder(new Options());
 

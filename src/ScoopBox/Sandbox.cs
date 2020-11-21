@@ -17,8 +17,8 @@ namespace ScoopBox
         private readonly ISandboxConfigurationBuilder _sandboxConfigurationBuilder;
 
         private readonly Action<string> _createDirectory;
-        private readonly Func<string, IEnumerable<FileInfo>> _enumerateFiles;
-        private readonly Func<string, IEnumerable<DirectoryInfo>> _enumerateDirectories;
+        private readonly Action<string> _deleteFiles;
+        private readonly Action<string> _deleteDirectories;
         private readonly Func<string, Task> _startProcess;
 
         public Sandbox()
@@ -35,13 +35,25 @@ namespace ScoopBox
 
         public Sandbox(
             IOptions options,
-            SandboxConfigurationBuilder sandboxConfigurationBuilder)
+            ISandboxConfigurationBuilder sandboxConfigurationBuilder)
             : this(
                   options,
                   sandboxConfigurationBuilder,
                   path => Directory.CreateDirectory(path),
-                  path => new DirectoryInfo(path).EnumerateFiles(),
-                  path => new DirectoryInfo(path).EnumerateDirectories(),
+                  path =>
+                  {
+                      foreach (var file in new DirectoryInfo(path).EnumerateFiles())
+                      {
+                          file.Delete();
+                      }
+                  },
+                  path =>
+                  {
+                      foreach (var directory in new DirectoryInfo(path).EnumerateDirectories())
+                      {
+                          directory.Delete(true);
+                      }
+                  },
                   async path =>
                   {
                       var process = new Process()
@@ -70,8 +82,8 @@ namespace ScoopBox
             IOptions options,
             ISandboxConfigurationBuilder sandboxConfigurationBuilder,
             Action<string> createDirectory,
-            Func<string, IEnumerable<FileInfo>> enumerateFiles,
-            Func<string, IEnumerable<DirectoryInfo>> enumerateDirectories,
+            Action<string> deleteFiles,
+            Action<string> deleteDirectories,
             Func<string, Task> startProcess)
         {
             if (options == null)
@@ -89,14 +101,14 @@ namespace ScoopBox
                 throw new ArgumentNullException(nameof(createDirectory));
             }
 
-            if (enumerateFiles == null)
+            if (deleteFiles == null)
             {
-                throw new ArgumentNullException(nameof(enumerateFiles));
+                throw new ArgumentNullException(nameof(deleteFiles));
             }
 
-            if (enumerateDirectories == null)
+            if (deleteDirectories == null)
             {
-                throw new ArgumentNullException(nameof(enumerateDirectories));
+                throw new ArgumentNullException(nameof(deleteDirectories));
             }
 
             if (startProcess == null)
@@ -108,8 +120,8 @@ namespace ScoopBox
             _sandboxConfigurationBuilder = sandboxConfigurationBuilder;
 
             _createDirectory = createDirectory;
-            _enumerateFiles = enumerateFiles;
-            _enumerateDirectories = enumerateDirectories;
+            _deleteFiles = deleteFiles;
+            _deleteDirectories = deleteDirectories;
             _startProcess = startProcess;
 
             InitializeDirectoryStructure();
@@ -140,16 +152,8 @@ namespace ScoopBox
         private void InitializeDirectoryStructure()
         {
             _createDirectory(_options.RootFilesDirectoryLocation);
-
-            foreach (FileInfo file in _enumerateFiles(_options.RootFilesDirectoryLocation))
-            {
-                file.Delete();
-            }
-
-            foreach (DirectoryInfo dir in _enumerateDirectories(_options.RootFilesDirectoryLocation))
-            {
-                dir.Delete(true);
-            }
+            _deleteFiles(_options.RootFilesDirectoryLocation);
+            _deleteDirectories(_options.RootFilesDirectoryLocation);
         }
     }
 }

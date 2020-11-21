@@ -5,7 +5,7 @@ namespace ScoopBox.Test.ISandboxTests
     public class IsAssignablePropertyTests
     {
         [Fact]
-        public void ISandboxAssignableToSandbox()
+        public void IsISandboxAssignableToSandbox()
         {
             Sandbox sandbox = new Sandbox();
 
