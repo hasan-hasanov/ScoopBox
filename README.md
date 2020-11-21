@@ -6,7 +6,8 @@
   <br>
 </h1>
 
-<h4 align="center">ScoopBox is library that helps launch Windows Sandbox with preinstalled applications.</h4>
+<h4 align="center">ScoopBox is library that helps launch Windows Sandbox with preinstalled applications and/or with predefined scripts.</h4>
+<h4 align="center">:star: Stars on GitHub always helps!</h4>
 
 <p align="center">
   <a href="">
@@ -21,8 +22,6 @@
   <a href="#download">Download</a> •
   <a href="#credits">Contribute</a>
 </p>
-
-
 
 ## More About Windows Sandbox
 
@@ -39,8 +38,96 @@ Since the state clears every time ScoopBox helps you launch the Windows Sandbox 
 
 ## How ScoopBox Works
 
-**Examples**
+### Windows Sandbox Configuration File
+Windows Sandbox supports simple configuration files, which provide a minimal set of customization parameters for Sandbox. This feature can be used with Windows 10 build 18342 or later. Windows Sandbox configuration files are formatted as XML and are associated with Sandbox via the .wsb file extension.
 
-**Download**
+A configuration file enables the user to control the following aspects of Windows Sandbox:
 
-**Contribute**
+* **vGPU (virtualized GPU)**: Enable or disable the virtualized GPU. If vGPU is disabled, the sandbox will use Windows Advanced Rasterization Platform (WARP).
+* **Networking:** Enable or disable network access within the sandbox.
+* **Mapped folders:** Share folders from the host with read or write permissions. Note that exposing host directories may allow malicious software to affect the system or steal data.
+* **Logon command:** A command that's executed when Windows Sandbox starts.
+* **Audio input:** Shares the host's microphone input into the sandbox.
+* **Video input:** Shares the host's webcam input into the sandbox.
+* **Protected client:** Places increased security settings on the RDP session to the sandbox.
+* **Printer redirection:** Shares printers from the host into the sandbox.
+* **Clipboard redirection:** Shares the host clipboard with the sandbox so that text and files can be pasted back and forth.
+* **Memory in MB:** The amount of memory, in megabytes, to assign to the sandbox.
+
+### Simple Configuration File
+Here is how a simple configuration file looks.
+```xml 
+<Configuration>
+  <VGpu>Disable</VGpu>
+  <Networking>Disable</Networking>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>C:\Users\Public\Downloads</HostFolder>
+      <SandboxFolder>C:\Users\WDAGUtilityAccount\Downloads</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>explorer.exe C:\users\WDAGUtilityAccount\Downloads</Command>
+  </LogonCommand>
+</Configuration>
+```
+Add appropriate configuration attributes and save the file with the desired name, but make sure its filename extension is **.wsb**
+
+### ScoopBox
+ScoopBox takes advantage of **LogonCommand** and **Command** parts of the configuration. A user can write a script map it from the host machine to sandbox machine and it will execute on startup.
+That's what ScoopBox does. It automates building of the configuration file and generates a MainScript which inside contains commands to execute user's or pacakage manager's scripts using powershell. So a user basically can execute scripts and take advantage of build in package managers to install applications.
+
+## Examples
+
+### Start Windows Sandbox with preinstalled applications
+
+```csharp
+ISandbox sandbox = new Sandbox();
+await sandbox.Run(new ScoopPackageManagerScript(
+    new List<string>() { "curl", "fiddler", "vscode" }, new PowershellTranslator()));
+```
+
+### Start Windows Sandbox with user scripts
+
+```csharp
+ISandbox sandbox = new Sandbox();
+await sandbox.Run(new List<IScript>()
+{
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.ps1"), new PowershellTranslator()),
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartExplorer.ps1"), new PowershellTranslator()),
+});
+```
+### Start Windows Sandbox with combined scripts
+
+```csharp
+ISandbox sandbox = new Sandbox();
+await sandbox.Run(new List<IScript>()
+{
+    new LiteralScript(new List<string>() { @"Start-Process 'C:\windows\system32\notepad.exe'" }, new PowershellTranslator()),
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.ps1"), new PowershellTranslator()),
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartExplorer.ps1"), new PowershellTranslator()),
+    new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }, new PowershellTranslator()),
+});
+```
+
+**All scripts are ran in the order they are defined.**
+
+## Download
+
+### Coming soon on nuget!!!
+
+## Contribute
+
+### Did you find a bug?
+
+Ensure the bug was not already reported by searching on GitHub under Issues.
+If you're unable to find an open issue addressing the problem, open a new one. Be sure to include a title and clear description, as much relevant information as possible.
+
+### Did you write a patch that fixes a bug?
+
+Open a new GitHub pull request with the patch.
+Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
+
+## Did you fix whitespace, format code, or make a purely cosmetic patch?
+Open a new GitHub pull request with the patch.
