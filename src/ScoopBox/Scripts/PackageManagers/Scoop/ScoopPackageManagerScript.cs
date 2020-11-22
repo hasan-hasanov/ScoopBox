@@ -99,7 +99,15 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
             _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Start executing scoop package manager");
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
             _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
+
             _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add extras");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add nerd-fonts");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add nirsoft");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add java");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add jetbrains");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add nonportable");
+            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add php");
+
             _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
             _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Finished executing scoop package manager");
 

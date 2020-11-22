@@ -99,7 +99,7 @@ namespace ScoopBox.Scripts.PackageManagers.Chocolatey
             _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')");
             _sbScoopPackageManagerBuilder.AppendLine("choco feature enable -n allowGlobalConfirmation");
             _sbScoopPackageManagerBuilder.Append("choco install").Append(" ").AppendLine(string.Join(" ", Applications));
-            _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Finished executing scoop package manager");
+            _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Finished executing chocolatey package manager");
 
             string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
             byte[] content = new UTF8Encoding().GetBytes(_sbScoopPackageManagerBuilder.ToString());
