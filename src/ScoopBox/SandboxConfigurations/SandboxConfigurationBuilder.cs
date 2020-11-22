@@ -28,7 +28,9 @@ namespace ScoopBox.SandboxConfigurations
 
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
-        /// <summary>Initializes a new instance of the <see cref="SandboxConfigurationBuilder"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SandboxConfigurationBuilder"/> class.
+        /// </summary>
         /// <param name="options">
         /// Enables the user to control some aspects of Windows Sandbox.
         /// </param>

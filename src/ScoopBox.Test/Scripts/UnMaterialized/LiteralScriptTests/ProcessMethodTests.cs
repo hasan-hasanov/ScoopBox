@@ -11,40 +11,6 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
     public class ProcessMethodTests
     {
         [Fact]
-        public async Task ShouldDeleteCorrectFile()
-        {
-            string fileName = @"C:\MockFileName.ps1";
-            IList<string> commands = new List<string>()
-            {
-                @"Start-Process 'C:\windows\system32\notepad.exe'",
-                @"Start-Process .",
-            };
-
-            IOptions options = new Options();
-            IPowershellTranslator translator = new PowershellTranslator();
-            string deleteFilePath = string.Empty;
-
-            LiteralScript literalScript = new LiteralScript(
-                commands,
-                translator,
-                fileName,
-                path =>
-                {
-                    deleteFilePath = path;
-                },
-                (path, content, token) =>
-                {
-                    return Task.CompletedTask;
-                });
-            await literalScript.Process(options);
-
-            string expected = fileName;
-            string actual = deleteFilePath;
-
-            Assert.Equal(expected, actual);
-        }
-
-        [Fact]
         public async Task ShouldCopyFromCorrectSource()
         {
             string fileName = @"C:\MockFileName.ps1";
@@ -62,9 +28,6 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
                 commands,
                 translator,
                 fileName,
-                path =>
-                {
-                },
                 (path, content, token) =>
                 {
                     sourceFilePath = path;
@@ -97,9 +60,6 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
                 commands,
                 translator,
                 fileName,
-                path =>
-                {
-                },
                 (path, content, token) =>
                 {
                     strContent = uTF8Encoding.GetString(content);

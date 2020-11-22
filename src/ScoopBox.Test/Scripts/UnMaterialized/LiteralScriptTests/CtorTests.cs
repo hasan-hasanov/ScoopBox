@@ -19,14 +19,11 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
                 @"Start-Process 'C:\windows\system32\notepad.exe'",
                 @"Start-Process .",
             };
-            IPowershellTranslator translator = new PowershellTranslator();
+            LiteralScript literalScript = new LiteralScript(commands);
 
-            LiteralScript literalScript = new LiteralScript(commands, translator);
-
-            var expected = translator;
             var actual = literalScript.Translator;
 
-            Assert.Equal(expected, actual);
+            Assert.NotNull(actual);
         }
 
         [Fact]
@@ -34,10 +31,9 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
         {
             IPowershellTranslator translator = new PowershellTranslator();
             string scriptFileName = "MockFileName";
-            Action<string> deleteFile = file => { };
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync = (path, content, token) => { return Task.CompletedTask; };
 
-            Assert.Throws<ArgumentNullException>(() => new LiteralScript(null, translator, scriptFileName, deleteFile, writeAllBytesAsync));
+            Assert.Throws<ArgumentNullException>(() => new LiteralScript(null, translator, scriptFileName, writeAllBytesAsync));
         }
 
         [Fact]
@@ -49,10 +45,9 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
                 @"Start-Process .",
             };
             string scriptFileName = "MockFileName";
-            Action<string> deleteFile = file => { };
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync = (path, content, token) => { return Task.CompletedTask; };
 
-            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, null, scriptFileName, deleteFile, writeAllBytesAsync));
+            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, null, scriptFileName, writeAllBytesAsync));
         }
 
         [Fact]
@@ -64,25 +59,9 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
                 @"Start-Process .",
             };
             IPowershellTranslator translator = new PowershellTranslator();
-            Action<string> deleteFile = file => { };
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync = (path, content, token) => { return Task.CompletedTask; };
 
-            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, translator, null, deleteFile, writeAllBytesAsync));
-        }
-
-        [Fact]
-        public void ShouldThrowArgumentNullExceptionWithoutDeleteFile()
-        {
-            IList<string> commands = new List<string>()
-            {
-                @"Start-Process 'C:\windows\system32\notepad.exe'",
-                @"Start-Process .",
-            };
-            IPowershellTranslator translator = new PowershellTranslator();
-            string scriptFileName = "MockFileName";
-            Func<string, byte[], CancellationToken, Task> writeAllBytesAsync = (path, content, token) => { return Task.CompletedTask; };
-
-            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, translator, scriptFileName, null, writeAllBytesAsync));
+            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, translator, null, writeAllBytesAsync));
         }
 
         [Fact]
@@ -95,10 +74,9 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
             };
             IPowershellTranslator translator = new PowershellTranslator();
             string scriptFileName = "MockFileName";
-            Action<string> deleteFile = file => { };
             Func<string, byte[], CancellationToken, Task> writeAllBytesAsync = (path, content, token) => { return Task.CompletedTask; };
 
-            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, translator, scriptFileName, deleteFile, null));
+            Assert.Throws<ArgumentNullException>(() => new LiteralScript(commands, translator, scriptFileName, null));
         }
     }
 }

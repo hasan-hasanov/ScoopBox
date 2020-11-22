@@ -13,12 +13,22 @@ using System.Threading.Tasks;
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
 namespace ScoopBox.Scripts.PackageManagers.Scoop
 {
+    /// <summary>
+    /// Represents Scoop package manager.
+    /// This script is generated automatically based on user input.
+    /// </summary>
     public class ScoopPackageManagerScript : IPackageManagerScript
     {
         private string _packageManagerScriptName;
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScoopPackageManagerScript"/> class.
+        /// </summary>
+        /// <param name="applications">
+        /// Applications that will be installed using this package manager.
+        /// </param>
         public ScoopPackageManagerScript(IEnumerable<string> applications)
             : this(
                   applications,
@@ -27,6 +37,22 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScoopPackageManagerScript"/> class.
+        /// </summary>
+        /// <param name="applications">
+        /// Applications that will be installed using this package manager.
+        /// </param>
+        /// <param name="translator">
+        /// Translator that will used to generate command that will be run from powershell.
+        /// <para>
+        /// The default translate is <see cref="PowershellTranslator"/>.
+        /// </para>
+        /// <para>
+        /// This constructor is defined solely if the user has defined custom translator using <see cref="IPowershellTranslator"/>.
+        /// </para>
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null.</exception>
         public ScoopPackageManagerScript(IEnumerable<string> applications, IPowershellTranslator translator)
             : this(
                   applications,
@@ -35,6 +61,26 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScoopPackageManagerScript"/> class.
+        /// </summary>
+        /// <param name="applications">
+        /// Applications that will be installed using this package manager.
+        /// </param>
+        /// <param name="translator">
+        /// Translator that will used to generate command that will be run from powershell.
+        /// <para>
+        /// The default translate is <see cref="PowershellTranslator"/>.
+        /// </para>
+        /// <para>
+        /// This constructor is defined solely if the user has defined custom translator using <see cref="IPowershellTranslator"/>.
+        /// </para>
+        /// </param>
+        /// <param name="scriptName">
+        /// The name of the script that will be generated.
+        /// <para>The default is ScoopPackageManagerScript.ps1</para>
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null.</exception>
         public ScoopPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
@@ -48,6 +94,30 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChocolateyPackageManagerScript"/> class.
+        /// This constructor is solely for testing purposes and contains framework specific classes that cannot be tested.
+        /// </summary>
+        /// <param name="applications">
+        /// Applications that will be installed using this package manager.
+        /// </param>
+        /// <param name="translator">
+        /// Translator that will used to generate command that will be run from powershell.
+        /// <para>
+        /// The default translate is <see cref="PowershellTranslator"/>.
+        /// </para>
+        /// <para>
+        /// This constructor is defined solely if the user has defined custom translator using <see cref="IPowershellTranslator"/>.
+        /// </para>
+        /// </param>
+        /// <param name="scriptName">
+        /// The name of the script that will be generated.
+        /// <para>The default is ScoopPackageManagerScript.ps1</para>
+        /// </param>
+        /// <param name="writeAllBytesAsync">
+        /// Delegate that takes filePath, content and cancellation token as parameter and generate a new file asynchronously.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null.</exception>
         internal ScoopPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
@@ -88,12 +158,32 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
             _writeAllBytesAsync = writeAllBytesAsync;
         }
 
+        /// <summary>
+        /// Gets or sets the generated script file.
+        /// </summary>
         public FileSystemInfo ScriptFile { get; set; }
 
+        /// <summary>
+        /// Gets the applications that will be installed using this package manager.
+        /// </summary>
         public IEnumerable<string> Applications { get; }
 
+        /// <summary>
+        /// Gets the translator that will be used to generate powershell command.
+        /// </summary>
         public IPowershellTranslator Translator { get; }
 
+        /// <summary>
+        /// Generates a new script in <see cref="IOptions.RootFilesDirectoryLocation"/>.
+        /// Points <see cref="ScriptFile"/> to the newly generated script.
+        /// The script installs scoop package manager to Windows Sandbox and the <see cref="Applications"/>.
+        /// </summary>
+        /// <param name="options">
+        /// Enables the user to control some aspects of Windows Sandbox.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used to cancel the operation.
+        /// </param>
         public async Task Process(IOptions options, CancellationToken cancellationToken = default)
         {
             _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Start executing scoop package manager");

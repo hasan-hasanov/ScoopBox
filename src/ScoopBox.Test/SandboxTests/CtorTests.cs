@@ -22,10 +22,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory);
@@ -43,10 +42,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(null, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
@@ -62,10 +60,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(options, null, createDirectory, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
@@ -81,10 +78,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, null, deleteFiles, deleteDirectories, startProcess, literalScriptFactory));
@@ -100,10 +96,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, null, deleteDirectories, startProcess, literalScriptFactory));
@@ -119,10 +114,9 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, Task> startProcess = path => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, null, startProcess, literalScriptFactory));
@@ -138,10 +132,9 @@ namespace ScoopBox.Test.SandboxTests
             Action<string> deleteDirectories = path => { };
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = (scripts, translator, name, options) =>
             {
-                Action<string> deleteFile = path => { };
                 Func<string, byte[], CancellationToken, Task> writeAllBytes = (path, content, token) => Task.CompletedTask;
 
-                return Task.FromResult(new LiteralScript(scripts, translator, name, deleteFile, writeAllBytes));
+                return Task.FromResult(new LiteralScript(scripts, translator, name, writeAllBytes));
             };
 
             Assert.Throws<ArgumentNullException>(() => new Sandbox(options, configurationBuilder, createDirectory, deleteFiles, deleteDirectories, null, literalScriptFactory));

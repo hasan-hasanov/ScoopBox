@@ -23,6 +23,7 @@ namespace ScoopBox.Scripts.Materialized
         /// <param name="translator">
         /// Translator that generates the a command in order this script to be launched from powershell.
         /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null.</exception>
         public ExternalScript(FileSystemInfo scriptFile, IPowershellTranslator translator)
             : this(
                  scriptFile,

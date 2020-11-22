@@ -36,7 +36,7 @@ namespace ScoopBox.Test.SandboxTests
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = async (scripts, translator, name, options) =>
             {
                 actualScripts = scripts;
-                var literalScript = new LiteralScript(scripts, translator, name, deleteFiles, writeAllBytes);
+                var literalScript = new LiteralScript(scripts, translator, name, writeAllBytes);
                 await literalScript.Process(options);
                 return literalScript;
             };
@@ -49,7 +49,6 @@ namespace ScoopBox.Test.SandboxTests
                     @"Start-Process 'C:\windows\system32\notepad.exe'" },
                     new PowershellTranslator(null, () => 1000),
                     "mockScriptName1.ps1",
-                    deleteFiles,
                     writeAllBytes),
 
                 // Script that will open the browser
@@ -103,7 +102,7 @@ namespace ScoopBox.Test.SandboxTests
             Func<string, string, CancellationToken, Task> copyFiles = (source, destination, token) => Task.CompletedTask;
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = async (scripts, translator, name, options) =>
             {
-                var literalScript = new LiteralScript(scripts, translator, name, deleteFiles, writeAllBytes);
+                var literalScript = new LiteralScript(scripts, translator, name, writeAllBytes);
                 await literalScript.Process(options);
                 return literalScript;
             };
@@ -118,7 +117,6 @@ namespace ScoopBox.Test.SandboxTests
                     @"Start-Process 'C:\windows\system32\notepad.exe'" },
                     new PowershellTranslator(),
                     "mockScriptName1.ps1",
-                    deleteFiles,
                     writeAllBytes),
 
                 // Script that will open the browser
@@ -165,7 +163,7 @@ namespace ScoopBox.Test.SandboxTests
             Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> literalScriptFactory = async (scripts, translator, name, options) =>
             {
                 actualScripts = scripts;
-                var literalScript = new LiteralScript(scripts, translator, name, deleteFiles, writeAllBytes);
+                var literalScript = new LiteralScript(scripts, translator, name, writeAllBytes);
                 await literalScript.Process(options);
                 return literalScript;
             };
@@ -177,7 +175,6 @@ namespace ScoopBox.Test.SandboxTests
                     @"Start-Process 'C:\windows\system32\notepad.exe'" },
                     new PowershellTranslator(null, () => 1000),
                     "mockScriptName1.ps1",
-                    deleteFiles,
                     writeAllBytes));
 
             IList<string> expected = new List<string>()
