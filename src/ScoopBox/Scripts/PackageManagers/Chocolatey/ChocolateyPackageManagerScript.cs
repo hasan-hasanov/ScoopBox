@@ -1,25 +1,24 @@
 ﻿using ScoopBox.Abstractions;
+using ScoopBox.Scripts.PackageManagers.Scoop;
 using ScoopBox.Translators;
 using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("ScoopBox.Test")]
-namespace ScoopBox.Scripts.PackageManagers.Scoop
+namespace ScoopBox.Scripts.PackageManagers.Chocolatey
 {
-    public class ScoopPackageManagerScript : IPackageManagerScript
+    public class ChocolateyPackageManagerScript : IPackageManagerScript
     {
         private string _packageManagerScriptName;
         private readonly StringBuilder _sbScoopPackageManagerBuilder;
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
-        public ScoopPackageManagerScript(IEnumerable<string> applications)
+        public ChocolateyPackageManagerScript(IEnumerable<string> applications)
             : this(
                   applications,
                   new PowershellTranslator(),
@@ -27,7 +26,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
-        public ScoopPackageManagerScript(IEnumerable<string> applications, IPowershellTranslator translator)
+        public ChocolateyPackageManagerScript(IEnumerable<string> applications, IPowershellTranslator translator)
             : this(
                   applications,
                   translator,
@@ -35,7 +34,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
-        public ScoopPackageManagerScript(
+        public ChocolateyPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
             string scriptName)
@@ -48,7 +47,7 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
         {
         }
 
-        internal ScoopPackageManagerScript(
+        internal ChocolateyPackageManagerScript(
             IEnumerable<string> applications,
             IPowershellTranslator translator,
             string packageManagerScriptName,
@@ -96,11 +95,10 @@ namespace ScoopBox.Scripts.PackageManagers.Scoop
 
         public async Task Process(IOptions options, CancellationToken cancellationToken = default)
         {
-            _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Start executing scoop package manager");
-            _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')");
-            _sbScoopPackageManagerBuilder.AppendLine("scoop install git");
-            _sbScoopPackageManagerBuilder.AppendLine("scoop bucket add extras");
-            _sbScoopPackageManagerBuilder.Append("scoop install").Append(" ").AppendLine(string.Join(" ", Applications));
+            _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Start executing chocolatey package manager");
+            _sbScoopPackageManagerBuilder.AppendLine("Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')");
+            _sbScoopPackageManagerBuilder.AppendLine("choco feature enable -n allowGlobalConfirmation");
+            _sbScoopPackageManagerBuilder.Append("choco install").Append(" ").AppendLine(string.Join(" ", Applications));
             _sbScoopPackageManagerBuilder.AppendLine(@"Write-Host Finished executing scoop package manager");
 
             string fullScriptPath = Path.Combine(options.RootFilesDirectoryLocation, _packageManagerScriptName);
