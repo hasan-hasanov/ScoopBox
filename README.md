@@ -16,11 +16,11 @@
 </p>
 
 <p align="center">
-  <a href="#key-features">More About Windows Sandbox</a> •
-  <a href="#key-features">How ScoopBox Works</a> •
-  <a href="#how-to-use">Examples</a> •
+  <a href="#more-about-windows-sandbox">More About Windows Sandbox</a> •
+  <a href="#how-scoopbox-works">How ScoopBox Works</a> •
+  <a href="#examples">Examples</a> •
   <a href="#download">Download</a> •
-  <a href="#credits">Contribute</a>
+  <a href="#contribute">Contribute</a>
 </p>
 
 ## More About Windows Sandbox
