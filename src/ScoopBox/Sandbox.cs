@@ -27,13 +27,17 @@ namespace ScoopBox
         private readonly Func<string, Task> _startProcess;
         private readonly Func<IList<string>, IPowershellTranslator, string, IOptions, Task<LiteralScript>> _literalScriptFactory;
 
-        /// <summary>Initializes a new instance of the <see cref="Sandbox"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sandbox"/> class.
+        /// </summary>
         public Sandbox()
             : this(new Options())
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="Sandbox"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sandbox"/> class.
+        /// </summary>
         /// <param name="options">
         /// Enables the user to control some aspects of Windows Sandbox.
         /// </param>
@@ -44,7 +48,9 @@ namespace ScoopBox
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="Sandbox"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sandbox"/> class.
+        /// </summary>
         /// <param name="options">
         /// Enables the user to control some aspects of Windows Sandbox.
         /// </param>
