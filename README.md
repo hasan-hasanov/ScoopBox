@@ -26,7 +26,9 @@
 ## More About Windows Sandbox
 
 ### What Is Windows Sandbox
-Technically Windows Sandbox is a lightweight virtual machine created on demand which a user can safely run applications in isolation. This virtual machine is using the same OS image as in the host machine. Software installed inside the Windows Sandbox environment remains "sandboxed" and runs separately from the base machine.
+Technically [Windows Sandbox](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview "Windows Sandbox Documentation") is a lightweight virtual machine created on demand which a user can safely run applications in isolation. This virtual machine is using the same OS image as in the host machine. Software installed inside the Windows Sandbox environment remains "sandboxed" and runs separately from the base machine.
+
+Windows sandbox should be enabled before first use. [Check how here.](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview#installation "Windows Sandbox Installation")
 
 ### What are the drawbacks
 A sandbox is temporary. When it's closed, all the software and files and the state are deleted. You get a brand-new instance of the sandbox every time you open the application.
@@ -39,7 +41,7 @@ Since the state clears every time ScoopBox helps you launch the Windows Sandbox 
 ## How ScoopBox Works
 
 ### Windows Sandbox Configuration File
-Windows Sandbox supports simple configuration files, which provide a minimal set of customization parameters for Sandbox. This feature can be used with Windows 10 build 18342 or later. Windows Sandbox configuration files are formatted as XML and are associated with Sandbox via the .wsb file extension.
+Windows Sandbox supports simple [configuration files](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-configure-using-wsb-file "Windows Sandbox Configuration File Documentation"), which provide a minimal set of customization parameters for Sandbox. This feature can be used with Windows 10 build 18342 or later. Windows Sandbox configuration files are formatted as XML and are associated with Sandbox via the .wsb file extension.
 
 A configuration file enables the user to control the following aspects of Windows Sandbox:
 
