@@ -16,17 +16,19 @@
 </p>
 
 <p align="center">
-  <a href="#key-features">More About Windows Sandbox</a> •
-  <a href="#key-features">How ScoopBox Works</a> •
-  <a href="#how-to-use">Examples</a> •
+  <a href="#more-about-windows-sandbox">More About Windows Sandbox</a> •
+  <a href="#how-scoopbox-works">How ScoopBox Works</a> •
+  <a href="#examples">Examples</a> •
   <a href="#download">Download</a> •
-  <a href="#credits">Contribute</a>
+  <a href="#contribute">Contribute</a>
 </p>
 
 ## More About Windows Sandbox
 
 ### What Is Windows Sandbox
-Technically Windows Sandbox is a lightweight virtual machine created on demand which a user can safely run applications in isolation. This virtual machine is using the same OS image as in the host machine. Software installed inside the Windows Sandbox environment remains "sandboxed" and runs separately from the base machine.
+Technically [Windows Sandbox](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview "Windows Sandbox Documentation") is a lightweight virtual machine created on demand which a user can safely run applications in isolation. This virtual machine is using the same OS image as in the host machine. Software installed inside the Windows Sandbox environment remains "sandboxed" and runs separately from the base machine.
+
+Windows sandbox should be enabled before first use. [Check how here.](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-overview#installation "Windows Sandbox Installation")
 
 ### What are the drawbacks
 A sandbox is temporary. When it's closed, all the software and files and the state are deleted. You get a brand-new instance of the sandbox every time you open the application.
@@ -39,7 +41,7 @@ Since the state clears every time ScoopBox helps you launch the Windows Sandbox 
 ## How ScoopBox Works
 
 ### Windows Sandbox Configuration File
-Windows Sandbox supports simple configuration files, which provide a minimal set of customization parameters for Sandbox. This feature can be used with Windows 10 build 18342 or later. Windows Sandbox configuration files are formatted as XML and are associated with Sandbox via the .wsb file extension.
+Windows Sandbox supports simple [configuration files](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-sandbox/windows-sandbox-configure-using-wsb-file "Windows Sandbox Configuration File Documentation"), which provide a minimal set of customization parameters for Sandbox. This feature can be used with Windows 10 build 18342 or later. Windows Sandbox configuration files are formatted as XML and are associated with Sandbox via the .wsb file extension.
 
 A configuration file enables the user to control the following aspects of Windows Sandbox:
 
@@ -84,8 +86,7 @@ That's what ScoopBox does. It automates building of the configuration file and g
 
 ```csharp
 ISandbox sandbox = new Sandbox();
-await sandbox.Run(new ScoopPackageManagerScript(
-    new List<string>() { "curl", "fiddler", "vscode" }, new PowershellTranslator()));
+await sandbox.Run(new ScoopPackageManagerScript(new List<string>() { "curl", "fiddler", "vscode" }));
 ```
 
 ### Start Windows Sandbox with user scripts
@@ -104,14 +105,38 @@ await sandbox.Run(new List<IScript>()
 ISandbox sandbox = new Sandbox();
 await sandbox.Run(new List<IScript>()
 {
+    // Powershell script as string to open notepad
     new LiteralScript(new List<string>() { @"Start-Process 'C:\windows\system32\notepad.exe'" }, new PowershellTranslator()),
-    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.ps1"), new PowershellTranslator()),
-    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartExplorer.ps1"), new PowershellTranslator()),
-    new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }, new PowershellTranslator()),
+
+    // Cmd script to open a browser
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.cmd"), new CmdTranslator()),
+
+    // Bat script to open explorer
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\OpenExplorer.bat"), new BatTranslator()),
+
+    // Scoop package manager that installs curl and fiddler
+    new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }),
 });
 ```
-
 **All scripts are ran in the order they are defined.**
+
+### Modify sandbox configuration file
+
+```csharp
+IOptions options = new Options()
+{
+    AudioInput = AudioInputOptions.Enable,
+    PrinterRedirection = PrinterRedirectionOptions.Enable,
+    Networking = NetworkingOptions.Default,
+    VGpu = VGpuOptions.Enabled,
+    // ...
+};
+
+ISandbox sandbox = new Sandbox(options);
+```
+### Debugging sandbox
+
+Since there is no way of debugging windows sandbox scripts or get any feedback, ScoopBox generates log file for every script. If the user has provided 5 scripts he should see 5 log files in desktop. Sadly this is the only feedback that came to my mind. If you have a better suggestion open an issue and lets discuss it.
 
 ## Download
 
