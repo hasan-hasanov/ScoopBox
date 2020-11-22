@@ -37,6 +37,12 @@ namespace ScoopBox.Test.PackageManager.Scoop.ScoopPackageManagerTests
 Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
 scoop install git
 scoop bucket add extras
+scoop bucket add nerd-fonts
+scoop bucket add nirsoft
+scoop bucket add java
+scoop bucket add jetbrains
+scoop bucket add nonportable
+scoop bucket add php
 scoop install git curl
 Write-Host Finished executing scoop package manager
 ";
