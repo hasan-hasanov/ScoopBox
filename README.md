@@ -10,7 +10,7 @@
 <h4 align="center">:star: Stars on GitHub always helps!</h4>
 
 <p align="center">
-  <a href="">
+  <a href="https://www.nuget.org/packages/ScoopBox/">
     <img src="https://img.shields.io/badge/nuget-scoopbox-green" alt="nuget">
   </a>
 </p>
@@ -140,8 +140,19 @@ Since there is no way of debugging windows sandbox scripts or get any feedback, 
 
 ## Download
 
-### Coming soon on nuget!!!
+### Install using Package Manager
+```
+Install-Package ScoopBox -Version 1.0.0
+```
 
+### Install using .Net Cli
+```
+dotnet add package ScoopBox --version 1.0.0
+```
+### Add ScoopBox as Package Reference
+```
+<PackageReference Include="ScoopBox" Version="1.0.0" />
+```
 ## Contribute
 
 ### Did you find a bug?
