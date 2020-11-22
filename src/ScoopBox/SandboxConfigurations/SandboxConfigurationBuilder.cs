@@ -14,6 +14,9 @@ using System.Xml.Serialization;
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
 namespace ScoopBox.SandboxConfigurations
 {
+    /// <summary>
+    /// Provides an implementation of <see cref="ISandboxConfigurationBuilder"/> to build a configuration file
+    /// </summary>
     public class SandboxConfigurationBuilder : ISandboxConfigurationBuilder
     {
         private readonly IOptions _options;
@@ -25,6 +28,10 @@ namespace ScoopBox.SandboxConfigurations
 
         private readonly Func<string, byte[], CancellationToken, Task> _writeAllBytesAsync;
 
+        /// <summary>Initializes a new instance of the <see cref="SandboxConfigurationBuilder"/> class.</summary>
+        /// <param name="options">
+        /// Enables the user to control some aspects of Windows Sandbox.
+        /// </param>
         public SandboxConfigurationBuilder(IOptions options)
             : this(
                  options,
@@ -36,6 +43,29 @@ namespace ScoopBox.SandboxConfigurations
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SandboxConfigurationBuilder"/> class.
+        /// This constructor is solely for testing purposes and contains framework specific classes that cannot be tested.
+        /// </summary>
+        /// <param name="options">
+        /// Enables the user to control some aspects of Windows Sandbox.
+        /// </param>
+        /// <param name="configuration">
+        /// User provided configurations to generate sandbox configuration file.
+        /// </param>
+        /// <param name="configurationSerializer">
+        /// Default serializer for the xml document.
+        /// </param>
+        /// <param name="emptyNamespaces">
+        /// Removes namespaced defined by xml specification.
+        /// </param>
+        /// <param name="configurationSettings">
+        /// Specify indentation and omits xml declaration.
+        /// </param>
+        /// <param name="writeAllBytesAsync">
+        /// Delegate that takes path, content and cancellation token and writes to a file.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters are null.</exception>
         internal SandboxConfigurationBuilder(
             IOptions options,
             Configuration configuration,
@@ -84,6 +114,17 @@ namespace ScoopBox.SandboxConfigurations
             _writeAllBytesAsync = writeAllBytesAsync;
         }
 
+        /// <summary>
+        /// Builds windows conifguration file in location provided with <see cref="IOptions.RootFilesDirectoryLocation"/>.
+        /// </summary>
+        /// <param name="logonCommand">
+        /// The command that will be executed when the Windows Sandbox boots up.
+        /// By default this command is a powershell command that executes MainScript.ps1 file which inside contains all the user defined commands.
+        /// This is a current limitation of Windows Sandbox Configuration.
+        /// Although it takes a collection of elements, currently only one command can be executed in the sandbox.
+        /// </param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public virtual async Task Build(string logonCommand, CancellationToken cancellationToken = default)
         {
             _configuration.VGpu = Enum.GetName(typeof(VGpuOptions), _options.VGpu);

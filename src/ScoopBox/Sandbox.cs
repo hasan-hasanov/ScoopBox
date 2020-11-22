@@ -35,7 +35,7 @@ namespace ScoopBox
 
         /// <summary>Initializes a new instance of the <see cref="Sandbox"/> class.</summary>
         /// <param name="options">
-        /// Class that enables the user to control some aspects of Windows Sandbox.
+        /// Enables the user to control some aspects of Windows Sandbox.
         /// </param>
         public Sandbox(IOptions options)
             : this(
