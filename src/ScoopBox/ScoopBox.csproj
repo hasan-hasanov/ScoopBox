@@ -1,7 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>ScoopBox</Title>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Hasan Hasanov</Authors>
+    <Description>ScoopBox is library that helps launch Windows Sandbox with preinstalled applications and/or with predefined scripts.</Description>
+    <PackageProjectUrl>https://github.com/hasan-hasanov/ScoopBox</PackageProjectUrl>
+    <PackageIcon>Logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/hasan-hasanov/ScoopBox</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>sanbox, windows-sandbox</PackageTags>
+    <PackageReleaseNotes>The initial release of ScoopBox package manager</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
