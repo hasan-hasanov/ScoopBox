@@ -84,8 +84,7 @@ That's what ScoopBox does. It automates building of the configuration file and g
 
 ```csharp
 ISandbox sandbox = new Sandbox();
-await sandbox.Run(new ScoopPackageManagerScript(
-    new List<string>() { "curl", "fiddler", "vscode" }, new PowershellTranslator()));
+await sandbox.Run(new ScoopPackageManagerScript(new List<string>() { "curl", "fiddler", "vscode" }));
 ```
 
 ### Start Windows Sandbox with user scripts
