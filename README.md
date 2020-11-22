@@ -104,14 +104,38 @@ await sandbox.Run(new List<IScript>()
 ISandbox sandbox = new Sandbox();
 await sandbox.Run(new List<IScript>()
 {
+    // Powershell script as string to open notepad
     new LiteralScript(new List<string>() { @"Start-Process 'C:\windows\system32\notepad.exe'" }, new PowershellTranslator()),
-    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.ps1"), new PowershellTranslator()),
-    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartExplorer.ps1"), new PowershellTranslator()),
-    new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }, new PowershellTranslator()),
+
+    // Cmd script to open a browser
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\StartBrowser.cmd"), new CmdTranslator()),
+
+    // Bat script to open explorer
+    new ExternalScript(new FileInfo(@"C:\Users\Scripts\OpenExplorer.bat"), new BatTranslator()),
+
+    // Scoop package manager that installs curl and fiddler
+    new ScoopPackageManagerScript(new List<string>(){ "curl", "fiddler" }),
 });
 ```
-
 **All scripts are ran in the order they are defined.**
+
+### Modify sandbox configuration file
+
+```csharp
+IOptions options = new Options()
+{
+    AudioInput = AudioInputOptions.Enable,
+    PrinterRedirection = PrinterRedirectionOptions.Enable,
+    Networking = NetworkingOptions.Default,
+    VGpu = VGpuOptions.Enabled,
+    // ...
+};
+
+ISandbox sandbox = new Sandbox(options);
+```
+### Debugging sandbox
+
+Since there is no way of debugging windows sandbox scripts or get any feedback, ScoopBox generates log file for every script. If the user has provided 5 scripts he should see 5 log files in desktop. Sadly this is the only feedback that came to my mind. If you have a better suggestion open an issue and lets discuss it.
 
 ## Download
 
