@@ -12,6 +12,7 @@
     <PackageTags>sanbox, windows-sandbox</PackageTags>
     <PackageReleaseNotes>The initial release of ScoopBox package manager</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
