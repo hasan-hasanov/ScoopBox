@@ -1,7 +1,4 @@
-﻿using ScoopBox.Scripts.UnMaterialized;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;

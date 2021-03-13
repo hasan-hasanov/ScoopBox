@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ScoopBox.Translators
+namespace ScoopBox
 {
     /// <summary>
     /// Represents a powershell translator.

@@ -1,11 +1,9 @@
-﻿using ScoopBox.Abstractions;
-using ScoopBox.Translators;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Scripts.Materialized
+namespace ScoopBox
 {
     /// <summary>
     /// Represents a physical script file.

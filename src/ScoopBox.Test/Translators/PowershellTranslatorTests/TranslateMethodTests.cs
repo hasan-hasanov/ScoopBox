@@ -1,5 +1,4 @@
 ﻿using ScoopBox.Test.Mocks;
-using ScoopBox.Translators.Powershell;
 using System;
 using Xunit;
 

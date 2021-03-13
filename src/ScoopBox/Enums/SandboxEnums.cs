@@ -1,4 +1,4 @@
-﻿namespace ScoopBox.Enums
+﻿namespace ScoopBox
 {
     public enum VGpuOptions
     {

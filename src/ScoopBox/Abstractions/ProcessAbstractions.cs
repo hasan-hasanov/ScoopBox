@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Abstractions
+namespace ScoopBox
 {
-    public class ProcessAbstractions
+    internal class ProcessAbstractions
     {
         public static async Task StartCmdWithInput(string input)
         {

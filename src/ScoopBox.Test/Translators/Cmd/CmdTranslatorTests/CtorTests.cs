@@ -1,5 +1,4 @@
-﻿using ScoopBox.Translators.Cmd;
-using System;
+﻿using System;
 using Xunit;
 
 namespace ScoopBox.Test.Translators.Cmd.CmdTranslatorTests

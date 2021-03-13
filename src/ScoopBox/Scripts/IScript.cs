@@ -1,9 +1,8 @@
-﻿using ScoopBox.Translators;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Scripts
+namespace ScoopBox
 {
     /// <summary>
     /// Defines a script.

@@ -1,13 +1,15 @@
-﻿using ScoopBox.Scripts.UnMaterialized;
-using ScoopBox.Translators;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Abstractions
+namespace ScoopBox
 {
-    public static class ScriptFactories
+    internal static class ScriptFactories
     {
-        public static async Task<LiteralScript> ProcessLiteralScriptFactory(IList<string> scripts, IPowershellTranslator translator, string scriptName, IOptions options)
+        public static async Task<LiteralScript> ProcessLiteralScriptFactory(
+            IList<string> scripts,
+            IPowershellTranslator translator,
+            string scriptName,
+            IOptions options)
         {
             var literalScript = new LiteralScript(scripts, translator, scriptName);
             await literalScript.Process(options);

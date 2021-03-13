@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ScoopBox.Abstractions
+namespace ScoopBox
 {
-    public class DateTimeAbstractions
+    internal class DateTimeAbstractions
     {
         public static long GetTicks()
         {

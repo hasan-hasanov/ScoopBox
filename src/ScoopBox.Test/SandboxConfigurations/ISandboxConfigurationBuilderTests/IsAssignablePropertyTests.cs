@@ -1,5 +1,4 @@
-﻿using ScoopBox.SandboxConfigurations;
-using Xunit;
+﻿using Xunit;
 
 namespace ScoopBox.Test.SandboxConfigurations.ISandboxConfigurationBuilderTests
 {

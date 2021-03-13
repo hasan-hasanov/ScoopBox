@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ScoopBox.Entities
+namespace ScoopBox
 {
     [XmlRoot(ElementName = nameof(Configuration))]
     public class Configuration

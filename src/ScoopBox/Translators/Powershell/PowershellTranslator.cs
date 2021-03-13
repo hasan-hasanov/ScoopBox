@@ -1,9 +1,8 @@
-﻿using ScoopBox.Abstractions;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
-namespace ScoopBox.Translators.Powershell
+namespace ScoopBox
 {
     /// <summary>
     /// Represents a .cmd translator.

@@ -1,7 +1,4 @@
-﻿using ScoopBox.Scripts.PackageManagers;
-using ScoopBox.Scripts.PackageManagers.Scoop;
-using ScoopBox.Translators.Powershell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace ScoopBox.Test.Scripts.PackageManager.IPackageManagerTests

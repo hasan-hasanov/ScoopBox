@@ -1,12 +1,5 @@
 ﻿using Moq;
-using ScoopBox.SandboxConfigurations;
-using ScoopBox.Scripts;
-using ScoopBox.Scripts.Materialized;
-using ScoopBox.Scripts.PackageManagers.Scoop;
-using ScoopBox.Scripts.UnMaterialized;
 using ScoopBox.Test.Mocks;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
 using System;
 using System.Collections.Generic;
 using System.Text;

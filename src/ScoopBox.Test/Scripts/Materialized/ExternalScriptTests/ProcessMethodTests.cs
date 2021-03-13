@@ -1,7 +1,4 @@
-﻿using ScoopBox.Scripts.Materialized;
-using ScoopBox.Test.Mocks;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
+﻿using ScoopBox.Test.Mocks;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;

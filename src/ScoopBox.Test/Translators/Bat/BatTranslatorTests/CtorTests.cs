@@ -1,5 +1,4 @@
-﻿using ScoopBox.Translators.Bat;
-using System;
+﻿using System;
 using Xunit;
 
 namespace ScoopBox.Test.Translators.Bat.BatTranslatorTests

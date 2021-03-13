@@ -1,5 +1,4 @@
-﻿using ScoopBox.Translators.Powershell;
-using System;
+﻿using System;
 using Xunit;
 
 namespace ScoopBox.Test.Translators.PowershellTranslatorTests

@@ -1,6 +1,4 @@
-﻿using ScoopBox.Scripts.PackageManagers.Chocolatey;
-using ScoopBox.Translators.Powershell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

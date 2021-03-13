@@ -1,7 +1,4 @@
-﻿using ScoopBox.Abstractions;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Scripts.PackageManagers.Chocolatey
+namespace ScoopBox
 {
     /// <summary>
     /// Represents Chocolatey package manager.

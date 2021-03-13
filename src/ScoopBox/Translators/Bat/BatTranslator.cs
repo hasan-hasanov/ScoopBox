@@ -1,9 +1,8 @@
-﻿using ScoopBox.Abstractions;
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
-namespace ScoopBox.Translators.Bat
+namespace ScoopBox
 {
     /// <summary>
     /// Represents a .bat translator.

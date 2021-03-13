@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.Abstractions
+namespace ScoopBox
 {
-    public static class FileSystemAbstractions
+    internal static class FileSystemAbstractions
     {
         public static void CreateDirectory(string path)
         {

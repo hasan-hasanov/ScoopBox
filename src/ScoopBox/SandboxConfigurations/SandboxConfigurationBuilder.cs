@@ -1,7 +1,4 @@
-﻿using ScoopBox.Abstractions;
-using ScoopBox.Entities;
-using ScoopBox.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -12,7 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
-namespace ScoopBox.SandboxConfigurations
+namespace ScoopBox
 {
     /// <summary>
     /// Provides an implementation of <see cref="ISandboxConfigurationBuilder"/> to build a configuration file

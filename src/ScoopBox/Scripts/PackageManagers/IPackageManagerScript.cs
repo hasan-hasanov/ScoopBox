@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ScoopBox.Scripts.PackageManagers
+namespace ScoopBox
 {
     /// <summary>
     /// Represents a package manager script. This script is generated automatically based on user input.

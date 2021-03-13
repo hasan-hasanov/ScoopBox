@@ -1,7 +1,4 @@
-﻿using ScoopBox.Abstractions;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("ScoopBox.Test")]
-namespace ScoopBox.Scripts.PackageManagers.Scoop
+namespace ScoopBox
 {
     /// <summary>
     /// Represents Scoop package manager.

@@ -1,6 +1,4 @@
-﻿using ScoopBox.Entities;
-using ScoopBox.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ScoopBox
 {

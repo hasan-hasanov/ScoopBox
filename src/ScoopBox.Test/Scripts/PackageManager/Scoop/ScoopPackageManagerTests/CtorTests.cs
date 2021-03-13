@@ -1,8 +1,4 @@
-﻿using ScoopBox.Scripts.PackageManagers;
-using ScoopBox.Scripts.PackageManagers.Scoop;
-using ScoopBox.Translators;
-using ScoopBox.Translators.Powershell;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;

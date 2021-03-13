@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ScoopBox.Entities
+namespace ScoopBox
 {
     [XmlRoot(ElementName = nameof(MappedFolders))]
     public class MappedFolders

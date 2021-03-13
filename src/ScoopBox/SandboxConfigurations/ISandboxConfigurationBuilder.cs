@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScoopBox.SandboxConfigurations
+namespace ScoopBox
 {
     /// <summary>
     /// Defines an instance of Windows Sandbox Configuration Builder.

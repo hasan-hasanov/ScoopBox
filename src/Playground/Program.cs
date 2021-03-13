@@ -1,8 +1,4 @@
 ﻿using ScoopBox;
-using ScoopBox.Scripts;
-using ScoopBox.Scripts.Materialized;
-using ScoopBox.Translators.Bat;
-using ScoopBox.Translators.Cmd;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
