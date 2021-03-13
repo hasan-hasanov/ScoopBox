@@ -18,7 +18,10 @@ namespace ScoopBox.Test.SandboxConfigurations.SandboxConfigurationBuilderTests
             string builderContent = string.Empty;
             string mockLogonCommand = "Mock logon command";
 
-            IOptions options = new Options();
+            IOptions options = new Options()
+            {
+                RootFilesDirectoryLocation = @"C:\Sandbox",
+            };
             Configuration configuration = new Configuration();
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Configuration));
             XmlSerializerNamespaces xmlSerializerNamespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
@@ -45,7 +48,7 @@ namespace ScoopBox.Test.SandboxConfigurations.SandboxConfigurationBuilderTests
   <Networking>Default</Networking>
   <MappedFolders>
     <MappedFolder>
-      <HostFolder>C:\Users\Hasan Hasanov\AppData\Local\Temp\Sandbox</HostFolder>
+      <HostFolder>C:\Sandbox</HostFolder>
       <SandboxFolder>C:\Users\WDAGUtilityAccount\Desktop\Sandbox\</SandboxFolder>
       <ReadOnly>false</ReadOnly>
     </MappedFolder>
@@ -61,7 +64,7 @@ namespace ScoopBox.Test.SandboxConfigurations.SandboxConfigurationBuilderTests
   <MemoryInMB>0</MemoryInMB>
 </Configuration>";
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
         [Fact]

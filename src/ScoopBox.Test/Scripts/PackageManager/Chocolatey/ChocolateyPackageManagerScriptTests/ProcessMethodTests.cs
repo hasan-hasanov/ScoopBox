@@ -39,7 +39,7 @@ Write-Host Finished executing chocolatey package manager
 ";
             string actual = sbChocolateyPackageManagerBuilder.ToString();
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
         [Fact]

@@ -68,7 +68,7 @@ namespace ScoopBox.Test.Scripts.UnMaterialized.LiteralScriptTests
 Start-Process .";
             string actual = strContent;
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
     }
 }

@@ -46,7 +46,7 @@ Write-Host Finished executing scoop package manager
 ";
             string actual = sbScoopPackageManagerBuilder.ToString();
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
         [Fact]
