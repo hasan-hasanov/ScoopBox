@@ -153,6 +153,10 @@ dotnet add package ScoopBox --version 1.0.0
 ```
 <PackageReference Include="ScoopBox" Version="1.0.0" />
 ```
+## Applications using ScoopBox
+
+[ScoopBoxManager](https://github.com/LAB02-Research/ScoopBoxManager) - Graphical interface for ScoopBox by [@LAB02-Research](https://github.com/LAB02-Research). Which in turn manages Windows Sandbox.
+
 ## Contribute
 
 ### Did you find a bug?
@@ -167,3 +171,5 @@ Ensure the PR description clearly describes the problem and solution. Include th
 
 ## Did you fix whitespace, format code, or make a purely cosmetic patch?
 Open a new GitHub pull request with the patch.
+
+## If you are using ScoopBox and want you name to appear in the above section open an issue or PM me directly.
