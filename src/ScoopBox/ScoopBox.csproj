@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <Title>ScoopBox</Title>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
     <Authors>Hasan Hasanov</Authors>
     <Description>ScoopBox is library that helps launch Windows Sandbox with preinstalled applications and/or with predefined scripts.</Description>
     <PackageProjectUrl>https://github.com/hasan-hasanov/ScoopBox</PackageProjectUrl>

@@ -34,14 +34,15 @@ namespace ScoopBox
 
         public static async Task WriteAllBytesAsync(string scriptPath, byte[] content, CancellationToken token)
         {
-            await File.WriteAllBytesAsync(scriptPath, content, token);
+            using var file = new FileStream(scriptPath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 81920, useAsync: true);
+            await file.WriteAsync(content, 0, content.Length, token).ConfigureAwait(false);
         }
 
         public static async Task CopyFileToDestination(string source, string destination, CancellationToken token)
         {
             using FileStream sourceStream = File.Open(source, FileMode.Open);
             using FileStream destinationStream = File.Create(destination);
-            await sourceStream.CopyToAsync(destinationStream, token);
+            await sourceStream.CopyToAsync(destinationStream, bufferSize: 81920, token);
         }
     }
 }
